@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/10 20:44:11 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/10 21:09:23 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,17 +64,16 @@ typedef struct s_pipeline{
 	long exit_status;
 } t_pipeline;
 
-union u_data{
+typedef union u_data{
 	t_command command;
 	t_pipeline pipeline;
-};
+} t_data;
 
 typedef struct s_tree_node{
 	t_node_kind kind;
 	struct s_tree_node *left;
 	struct s_tree_node *right;
-	u_data data;
+	t_data data;
 } t_tree_node;
 
 #endif
-
