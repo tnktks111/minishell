@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/10 22:03:43 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/10 23:48:00 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,10 @@ typedef struct s_token
 }					t_token;
 
 typedef enum e_redirect_kind{
-	REDIR_IN,
-	REDIR_OUT,
-	REDIR_APPEND,
-	REDIR_HEREDOC
+	REDIR_IN, /* < */
+	REDIR_OUT, /* > */
+	REDIR_APPEND, /* >> */
+	REDIR_HEREDOC /* << */
 } t_redirect_kind;
 
 typedef enum e_node_kind{
@@ -50,6 +50,14 @@ typedef enum e_node_kind{
 	NODE_PIPE_LINE
 } t_node_kind;
 
+/*
+> file1 2> file2 << END
+のときは、
+{REDIR_OUT, 1, file1, (2>file2のノード)}
+{REDIR_OUT, 2, file2, (<<ENDのノード)}
+{REDIR_HEREDOC, 0, END, (NULL)}
+となる
+*/
 typedef struct s_redirect{
 	t_redirect_kind kind;
 	int io_number;
