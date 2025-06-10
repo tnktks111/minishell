@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/10 14:51:46 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/10 19:57:49 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ typedef enum e_status
 	NORMAL
 }					t_status;
 
+/*分割すべき文字...space / tab / \n / '|' / '<''>''<<''>>' / '&&' '||' / ; /*/
 typedef struct s_token
 {
 	char			*str;
@@ -66,7 +67,6 @@ typedef struct s_tree_node{
 	struct s_tree_node *left;
 	struct s_tree_node *right;
 	u_data data;
-	bool is_background;
 } t_tree_node;
 
 #endif
