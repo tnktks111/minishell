@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/10 19:57:49 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/10 20:44:11 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ typedef enum e_node_kind{
 	NODE_PIPE, /* | */
 	NODE_AND, /* '&&' */
 	NODE_OR,  /* '||' */
-	NODE_SIMPLE_COMMAND
+	NODE_SIMPLE_COMMAND,
+	NODE_PIPE_LINE
 } t_node_kind;
 
 typedef struct s_redirect{
@@ -58,8 +59,14 @@ typedef struct s_command{
 	t_redirect *redirects;
 } t_command;
 
+typedef struct s_pipeline{
+	bool have_bang;
+	long exit_status;
+} t_pipeline;
+
 union u_data{
 	t_command command;
+	t_pipeline pipeline;
 };
 
 typedef struct s_tree_node{
