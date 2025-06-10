@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/10 21:09:23 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/10 21:14:08 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ typedef union u_data{
 
 typedef struct s_tree_node{
 	t_node_kind kind;
+	struct s_tree_node *parent;
 	struct s_tree_node *left;
 	struct s_tree_node *right;
 	t_data data;
