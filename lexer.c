@@ -69,12 +69,13 @@ t_token	*tokenize_str(char *str)
 			else
 				dubquote = false;
 		}
-		if (is_splitable(str[i])) 
+		if (is_splitable(str[i]))
 		{
-			// space / tab / \n / '|' / '<''>'
+			
 		}
 		else if (str[i + 1] && is_twoword_splitable(str[i], str[i + 1]))
 		{
+			// space / tab / \n / '|' / '<''>'
 			//'<<''>>' / '&&' '||'
 		}
 		else
