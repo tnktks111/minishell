@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/11 17:13:22 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/11 18:31:14 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,12 @@ long exec_cmd_lst(t_tree_node **lst, int size)
     while(++i < size - 1)
         wait(NULL);
     return (status);
+}
+
+int here_doc_handler(char *limiter)
+{
+    
+    readline("> ");
 }
 
 void exec_redirection(t_redirect *redirect)

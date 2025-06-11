@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/11 17:29:55 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/11 22:28:50 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,13 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
- 
+#include <readline/readline.h>
+#include <readline/history.h>
+#include <sys/errno.h>
+
+#define DEFAULT_TMPDIR "."
+#define PATH_MAX 1024
+#define RANDOM_SIZE 512
 typedef enum e_status
 {
 	IN_SINGLE,
