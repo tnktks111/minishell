@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/10 23:48:00 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/11 17:29:55 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef enum e_node_kind{
 typedef struct s_redirect{
 	t_redirect_kind kind;
 	int io_number;
+	bool is_expandable;
 	char *filename;
 	struct s_redirect *next;
 } t_redirect;
