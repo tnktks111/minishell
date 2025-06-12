@@ -42,6 +42,26 @@ int	main(void)
 	return (0);
 }
 
+bool	is_splitable(char c)
+{
+	return (c == ' ' || c == '\t' || c == '\n' || c == '|' || c == '<'
+		|| c == '>');
+}
+
+bool	is_two_word_splitable(char c1, char c2)
+{
+	if (c1 == '<' && c2 == '<')
+		return (true);
+	else if (c1 == '>' && c2 == '>')
+		return (true);
+	else if (c1 == '|' && c2 == '|')
+		return (true);
+	else if (c1 == '&' && c2 == '&')
+		return (true);
+	else
+		return (false);
+}
+
 t_token	*tokenize_str(char *str)
 {
 	t_token	*head;
@@ -55,14 +75,14 @@ t_token	*tokenize_str(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] = "'")
+		if (str[i] = 39)
 		{
 			if (!singquote)
 				singquote = true;
 			else
 				singquote = false;
 		}
-		if (str[i] = '"')
+		if (str[i] = 34)
 		{
 			if (!dubquote)
 				dubquote = true;
@@ -71,15 +91,16 @@ t_token	*tokenize_str(char *str)
 		}
 		if (is_splitable(str[i]))
 		{
-			
 		}
-		else if (str[i + 1] && is_twoword_splitable(str[i], str[i + 1]))
+		else if (str[i + 1] && is_two_word_splitable(str[i], str[i + 1]))
 		{
 			// space / tab / \n / '|' / '<''>'
 			//'<<''>>' / '&&' '||'
 		}
 		else
-			i++;
+		{
+		}
+		i++;
 	}
 	return (head);
 }
