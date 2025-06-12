@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/12 14:37:56 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/12 14:55:27 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 */
 
 #include "minishell.h"
-void exec_ast(t_tree_node *root)
+long exec_ast(t_tree_node *root)
 {
     t_tree_node *curr;
     long prev_exit_status;
@@ -30,27 +30,18 @@ void exec_ast(t_tree_node *root)
         prev_exit_status = exec_and_or(curr->right);
         curr = curr->parent;
     }
-    
+    if (curr->kind == NODE_ROOT)
+        return (prev_exit_status);
 }
 
 long exec_and_or(t_tree_node *root)
 {
-    t_tree_node *curr;
-
-    curr->data.pipeline.exit_status = exec_pipeline(curr->left);
-    if (curr->data.pipeline.have_bang == true)
-        curr->data.pipeline.exit_status != curr->data.pipeline.exit_status;
-    while (curr->data.pipeline.exit_status != 0 && curr->parent->kind == NODE_OR ||
-    curr->data.pipeline.exit_status == 0 && curr->parent->kind == NODE_AND)
-    {
-        curr = curr->parent; 0-
-        curr->data.pipeline.exit_status = exec_pipeline(curr->right);
-        if (curr->data.pipeline.have_bang == true)
-            curr->data.pipeline.exit_status != curr->data.pipeline.exit_status;
-    }
-    
-};
-
+    root->data.pipeline.exit_status = exec_pipeline(root->left);
+    if (root->data.pipeline.have_bang == true)
+        return (!root->data.pipeline.exit_status);
+    else
+        return (root->data.pipeline.exit_status);
+}
 long exec_pipeline(t_tree_node *root)
 {
     t_tree_node *curr;

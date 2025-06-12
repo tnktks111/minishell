@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/12 14:39:21 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/12 14:57:06 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ typedef enum e_status
 typedef struct s_token
 {
 	char			*str;
-	bool			is_meta;
 	t_status		status;
 	struct s_token	*next;
 	struct s_token	*prev;
@@ -56,6 +55,12 @@ typedef enum e_node_kind{
 	NODE_PIPE_LINE,
 	NODE_ROOT
 } t_node_kind;
+
+typedef struct s_pipefd
+{
+	int in_fd;
+	int out_fd;
+} t_pipefd;
 
 /*
 > file1 2> file2 << END
