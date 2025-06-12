@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/11 22:28:50 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/12 14:39:21 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ typedef enum e_node_kind{
 	NODE_AND, /* '&&' */
 	NODE_OR,  /* '||' */
 	NODE_SIMPLE_COMMAND,
-	NODE_PIPE_LINE
+	NODE_PIPE_LINE,
+	NODE_ROOT
 } t_node_kind;
 
 /*
