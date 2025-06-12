@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/11 22:37:46 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/12 14:37:56 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,41 @@
 */
 
 #include "minishell.h"
-exec_ast();
-exec_and_or();
+void exec_ast(t_tree_node *root)
+{
+    t_tree_node *curr;
+    long prev_exit_status;
+
+    curr = root->left;
+    while (curr->kind == NODE_AND || curr->kind == NODE_OR)
+        curr = curr->left;
+    exec_and_or(curr);
+    curr = curr->parent;
+    while ((prev_exit_status && curr->kind == NODE_AND)|| (!prev_exit_status && curr->kind == NODE_OR))
+    {
+        prev_exit_status = exec_and_or(curr->right);
+        curr = curr->parent;
+    }
+    
+}
+
+long exec_and_or(t_tree_node *root)
+{
+    t_tree_node *curr;
+
+    curr->data.pipeline.exit_status = exec_pipeline(curr->left);
+    if (curr->data.pipeline.have_bang == true)
+        curr->data.pipeline.exit_status != curr->data.pipeline.exit_status;
+    while (curr->data.pipeline.exit_status != 0 && curr->parent->kind == NODE_OR ||
+    curr->data.pipeline.exit_status == 0 && curr->parent->kind == NODE_AND)
+    {
+        curr = curr->parent; 0-
+        curr->data.pipeline.exit_status = exec_pipeline(curr->right);
+        if (curr->data.pipeline.have_bang == true)
+            curr->data.pipeline.exit_status != curr->data.pipeline.exit_status;
+    }
+    
+};
 
 long exec_pipeline(t_tree_node *root)
 {
@@ -73,8 +106,31 @@ long exec_cmd_lst(t_tree_node **lst, int size)
 
 int here_doc_handler(char *limiter)
 {
-    
-    readline("> ");
+    int fd;
+    char *tmpfile;
+    char *s;
+    int lim_len;
+
+    fd = sh_mktmpfd(&tmpfile);
+    if (fd == -1)
+        return (EXIT_FAILURE);
+    s = readline("> ");
+    while(s)
+    {
+        if (ft_strncmp(s, limiter, lim_len) == 0 && s[lim_len] == 0)
+        {
+            free(s);
+            break;
+        }
+        ft_putendl_fd(s, fd);
+        free(s);
+        s = readline("> ");
+    }
+    dup2(fd, STDIN_FILENO);
+    close(fd);
+    unlink(tmpfile);
+    free(tmpfile);
+    return (EXIT_SUCCESS);
 }
 
 void exec_redirection(t_redirect *redirect)
@@ -88,10 +144,8 @@ void exec_redirection(t_redirect *redirect)
     {
         if (curr->kind == REDIR_HEREDOC)
         {
-            fd = here_doc_handler(curr->filename);
-            if (fd == -1)
-                ;
-            dup2(fd, STDIN_FILENO);
+            if (here_doc_handler(curr->filename) == EXIT_FAILURE)
+                return ;
         }
         else
         {
@@ -104,12 +158,12 @@ void exec_redirection(t_redirect *redirect)
             fd = open(curr->filename, open_flags, 0644);
             if (fd == -1)
             {
-                perror();
+                perror("open :");
                 return ;
             }
             dup2(fd, curr->io_number);
+            close(fd);
         }
-        close(fd);
         curr = curr->next;
     }
 }
