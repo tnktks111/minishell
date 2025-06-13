@@ -14,6 +14,16 @@
 #include <readline/history.h>
 #include <readline/readline.h>
 
+bool	is_d_quote(char c)
+{
+	return (c == 34);
+}
+
+bool	is_s_quote(char c)
+{
+	return (c == 39);
+}
+
 bool	is_splitable(char c)
 {
 	return (c == ' ' || c == '\t' || c == '\n' || c == '|' || c == '<'
@@ -81,7 +91,7 @@ void	append_token(t_token **head, t_token *new)
 	new->prev = last;
 }
 
-size_t	get_token_strlen(char *str)
+size_t	token_strlen(char *str)
 {
 	size_t	len;
 
@@ -92,13 +102,35 @@ size_t	get_token_strlen(char *str)
 	return (len);
 }
 
-size_t	append_token_and_move_index(t_token **head, char *str)
+size_t	in_quote_token_strlen(char *str)
+{
+	size_t	len;
+
+	len = 0;
+	while (str[len] && !is_d_quote(str[len]))
+		len++;
+	return (len);
+}
+
+size_t	append_token_and_move_index(t_token **head, char *str, bool d_quote,
+		bool s_quote)
 {
 	size_t	len;
 	t_token	*new;
 
-	len = get_token_strlen(str);
+	if (d_quote || s_quote)
+		len = in_quote_token_strlen(str);
+	else
+		len = token_strlen(str);
 	new = new_token(str, len);
+	if (d_quote)
+		new->status = IN_DOUBLE;
+	else if (s_quote)
+		new->status = IN_SINGLE;
+	else
+		new->status = NORMAL;
+	if (d_quote)
+		d_quote = !d_quote;
 	if (!new)
 		return (0);
 	append_token(head, new);
@@ -134,22 +166,32 @@ size_t	append_two_word_splitable(t_token **head, char *str)
 t_token	*tokenize_str(char *str)
 {
 	t_token	*head;
+	bool	s_quote;
 	bool	d_quote;
 	size_t	i;
 
+	s_quote = false;
 	d_quote = false;
 	head = NULL;
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == 34)
-			d_quote = true;
-		if (str[i + 1] && is_two_word_splitable(str[i], str[i + 1]))
-			i += append_two_word_splitable(&head, &str[i]);
-		else if (is_splitable(str[i]))
-			i += append_splitable(&head, &str[i]);
+		if (is_d_quote(str[i]))
+			d_quote = !d_quote;
+		else if (is_s_quote(str[i]))
+			s_quote = !s_quote;
+		if (!d_quote && !s_quote)
+		{
+			if (str[i + 1] && is_two_word_splitable(str[i], str[i + 1]))
+				i += append_two_word_splitable(&head, &str[i]);
+			else if (is_splitable(str[i]))
+				i += append_splitable(&head, &str[i]);
+			else
+				i += append_token_and_move_index(&head, &str[i], d_quote,
+						s_quote);
+		}
 		else
-			i += append_token_and_move_index(&head, &str[i]);
+			i += append_token_and_move_index(&head, &str[i], d_quote, s_quote);
 	}
 	return (head);
 }
@@ -159,6 +201,7 @@ void	print_tokens(t_token *head)
 	while (head)
 	{
 		printf("Token: [%s]\n", head->str);
+		printf("Status: [%u]\n", head->status);
 		head = head->next;
 	}
 }
