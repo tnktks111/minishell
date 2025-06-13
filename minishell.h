@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/12 14:57:06 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/13 17:14:34 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 #define DEFAULT_TMPDIR "."
 #define PATH_MAX 1024
 #define RANDOM_SIZE 512
+#define HASH_SIZE 1024
+
 typedef enum e_status
 {
 	IN_SINGLE,
@@ -56,10 +58,26 @@ typedef enum e_node_kind{
 	NODE_ROOT
 } t_node_kind;
 
+typedef struct s_env_node
+{
+    bool is_empty;
+    char *key;
+    char *val;
+    struct s_env_node *next;
+} t_env_node;
+
+typedef struct s_env
+{
+	t_env_node table[HASH_SIZE];
+	char **envp;
+	bool is_malloced;
+	size_t entry_cnt;
+} t_env;
+
 typedef struct s_pipefd
 {
-	int in_fd;
-	int out_fd;
+	int read_fd;
+	int write_fd;
 } t_pipefd;
 
 /*

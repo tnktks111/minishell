@@ -12,8 +12,8 @@ int sh_mktmpfd(char **file_path_ptr);
 
 static int get_random_string(char *buffer)
 {
-    const char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    const int charset_size = sizeof(charset) - 1;
+    static const char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    static const int charset_size = sizeof(charset) - 1;
     char random_bytes[RANDOM_SIZE];
     int urandom_fd;
     int i;
