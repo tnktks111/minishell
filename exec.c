@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/13 17:43:22 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/13 21:02:13 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,24 @@
 */
 
 #include "minishell.h"
-
-long exec_ast(t_tree_node *root);
-long exec_and_or(t_tree_node *root);
-long exec_pipeline(t_tree_node *root);
-long exec_cmd_lst(t_tree_node **lst, int size);
+/*astの探査*/
+long exec_ast(t_tree_node *root, t_env *env);
+long exec_and_or(t_tree_node *root, t_env *env);
+long exec_pipeline(t_tree_node *root, t_env *env);
+long exec_cmd_lst(t_tree_node **lst, int size, t_env *env);
+/*redirection & here_doc*/
 int here_doc_handler(char *limiter);
 void exec_redirection(t_redirect *redirect);
-char **get_env_table(char *var_name);
-void find_builtin(t_tree_node *cmd_node, char *envp[]);
-void find_path(t_tree_node *cmd_node, char *envp[]);
-long exec_command_helper(t_tree_node *cmd_node);
+/*utils*/
+char **get_path_prefix(t_env *env);
 bool is_builtin(char *s);
+/*個々のコマンドの実行*/
+void find_builtin(t_tree_node *cmd_node, t_env *env);
+void find_path(t_tree_node *cmd_node, t_env *env);
+long exec_command_helper(t_tree_node *cmd_node, t_env *env);
+long exec_builtin(t_tree_node *node, t_env *env);
 
-long exec_ast(t_tree_node *root)
+long exec_ast(t_tree_node *root, t_env *env)
 {
     t_tree_node *curr;
     long prev_exit_status;
@@ -36,26 +40,26 @@ long exec_ast(t_tree_node *root)
     curr = root->left;
     while (curr->kind == NODE_AND || curr->kind == NODE_OR)
         curr = curr->left;
-    exec_and_or(curr);
+    exec_and_or(curr, env);
     curr = curr->parent;
     while ((prev_exit_status && curr->kind == NODE_AND)|| (!prev_exit_status && curr->kind == NODE_OR))
     {
-        prev_exit_status = exec_and_or(curr->right);
+        prev_exit_status = exec_and_or(curr->right, env);
         curr = curr->parent;
     }
     if (curr->kind == NODE_ROOT)
         return (prev_exit_status);
 }
 
-long exec_and_or(t_tree_node *root)
+long exec_and_or(t_tree_node *root, t_env *env)
 {
-    root->data.pipeline.exit_status = exec_pipeline(root->left);
+    root->data.pipeline.exit_status = exec_pipeline(root->left, env);
     if (root->data.pipeline.have_bang == true)
         return (!root->data.pipeline.exit_status);
     else
         return (root->data.pipeline.exit_status);
 }
-long exec_pipeline(t_tree_node *root)
+long exec_pipeline(t_tree_node *root, t_env *env)
 {
     t_tree_node *curr;
     t_tree_node **cmd_list;
@@ -70,7 +74,7 @@ long exec_pipeline(t_tree_node *root)
         curr = curr->left;
     }
     if (cmd_cnt == 1)
-        return (exec_solo_cmd(curr));
+        return (exec_solo_cmd(curr, env));
     cmd_list = (t_tree_node **)malloc(sizeof(t_tree_node *) * cmd_cnt);
     i = -1;
     while (++i < cmd_cnt)
@@ -80,16 +84,16 @@ long exec_pipeline(t_tree_node *root)
             curr = curr->parent;
         curr = curr->parent->right;
     }
-    return (exec_cmd_lst(cmd_list, cmd_cnt));
+    return (exec_cmd_lst(cmd_list, cmd_cnt, env));
 }
 
-long exec_solo_cmd(t_tree_node *curr)
+long exec_solo_cmd(t_tree_node *curr, t_env *env)
 {
     pid_t pid;
     int status;
 
     if (is_builtin(curr->data.command.args[0]))
-        return(exec_builtin(curr));
+        return(exec_builtin(curr, env));
     else
     {
         pid = fork();
@@ -102,8 +106,8 @@ long exec_solo_cmd(t_tree_node *curr)
         {
             exec_redirection(curr->data.command.redirects);
             if (!ft_strchr(curr->data.command.args[0], '/'))
-                find_path(curr, envp);
-            execve(curr->data.command.args[0], curr->data.command.args, envp);
+                find_path(curr, env);
+            execve(curr->data.command.args[0], curr->data.command.args, env);
             exit(EXIT_FAILURE);
         }
         else
@@ -112,7 +116,7 @@ long exec_solo_cmd(t_tree_node *curr)
     }
 }
 
-long exec_cmd_lst(t_tree_node **lst, int size)
+long exec_cmd_lst(t_tree_node **lst, int size, t_env *env)
 {
     int i;
     pid_t pid;
@@ -142,7 +146,7 @@ long exec_cmd_lst(t_tree_node **lst, int size)
                 dup2(pipefd[1], STDOUT_FILENO);
                 close(pipefd[1]);
             }
-            exec_command_helper(lst[i]);
+            exec_command_helper(lst[i], env);
         }
         if (read_fd != STDIN_FILENO)
             close(read_fd);
@@ -223,39 +227,35 @@ void exec_redirection(t_redirect *redirect)
     }
 }
 
-char **get_env_table(char *var_name)
+char **get_path_prefix(t_env *env)
 {
-    char *envp;
-    char **env_table;
+    char *val;
+    char **res;
 
-    envp = getenv(var_name);
-    env_table = ft_split(envp, ';');
-    return (env_table);
+    val = ft_search("PATH", env);
+    if (!val)
+        return (NULL);
+    res = ft_split(val, ':');
+    return (res);
 }
 
-void find_builtin(t_tree_node *cmd_node, char *envp[])
+void find_builtin(t_tree_node *cmd_node, t_env *env)
 {
-    char *tmp_path;
     long exit_status;
 
-    tmp_path = ft_strjoin("./builtin/", cmd_node->data.command.args[0]);
-    if (!tmp_path)
-    {
-        perror("malloc :");
-        return (NULL);
-    }
-    exit_status = exec_builtin(cmd_node);
-    free(tmp_path);
+    if (!is_builtin(cmd_node->data.command.args[0]))
+        return;
+    exit_status = exec_builtin(cmd_node, env);
     exit(exit_status);
 }
 
-void find_path(t_tree_node *cmd_node, char *envp[])
+void find_path(t_tree_node *cmd_node, t_env *env)
 {
     char **prefix_table;
     char *tmp_path;
     int i;
 
-    prefix_table = get_env_table("PATH");
+    prefix_table = get_path_prefix(env);
     i = -1;
     while(prefix_table[++i])
     {
@@ -265,7 +265,7 @@ void find_path(t_tree_node *cmd_node, char *envp[])
             perror("malloc :");
             return (NULL);
         }
-        execve(tmp_path, cmd_node->data.command.args, envp);
+        execve(tmp_path, cmd_node->data.command.args, env->envp);
         free(tmp_path);
     }
     free_splited_data(prefix_table);
@@ -273,17 +273,17 @@ void find_path(t_tree_node *cmd_node, char *envp[])
     exit(127);
 }
 
-long exec_command_helper(t_tree_node *cmd_node)
+long exec_command_helper(t_tree_node *cmd_node, t_env *env)
 {
     char *cmd_path;
 
     exec_redirection(cmd_node->data.command.redirects);
     if (!ft_strchr(cmd_node->data.command.args[0], '/'))
     {
-        find_builtin(cmd_node, envp);
-        find_path(cmd_node, envp);
+        find_builtin(cmd_node, env);
+        find_path(cmd_node, env);
     }
-    execve(args[0], args, envp);
+    execve(cmd_node->data.command.args[0], cmd_node->data.command.args, env->envp);
     exit(EXIT_FAILURE);
 }
 
@@ -306,20 +306,32 @@ bool is_builtin(char *s)
     return (false);
 }
 
-long exec_builtin(t_tree_node *node)
+long exec_builtin(t_tree_node *node, t_env *env)
 {
     if (ft_strncmp(node->data.command.args[0], "echo", 4) == 0 && node->data.command.args[0][4] == 0)
-        return (builtin_echo(node));
+        return (builtin_echo(node, env));
     if (ft_strncmp(node->data.command.args[0], "cd", 2) == 0 && node->data.command.args[0][2] == 0)
-        return (builtin_cd(node));
+        return (builtin_cd(node, env));
     if (ft_strncmp(node->data.command.args[0], "pwd", 3) == 0 && node->data.command.args[0][3] == 0)
-        return (builtin_pwd(node));
+        return (builtin_pwd(node, env));
     if (ft_strncmp(node->data.command.args[0], "export", 4) == 0 && node->data.command.args[0][4] == 0)
-        return (builtin_export(node));
+        return (builtin_export(node, env));
     if (ft_strncmp(node->data.command.args[0], "unset", 5) == 0 && node->data.command.args[0][5] == 0)
-        return (builtin_unset(node));
+        return (builtin_unset(node, env));
     if (ft_strncmp(node->data.command.args[0], "env", 3) == 0 && node->data.command.args[0][3] == 0)
-        return (builtin_env(node));
+        return (builtin_env(node, env));
     if (ft_strncmp(node->data.command.args[0], "exit", 4) == 0 && node->data.command.args[0][4] == 0)
-        return (builtin_exit(node));
+        return (builtin_exit(node, env));
+}
+
+int main()
+{
+    t_tree_node root;
+    t_tree_node ;
+    t_tree_node ;
+    t_tree_node ;
+    t_tree_node ;
+    t_tree_node ;
+    t_tree_node ;
+    t_tree_node ;
 }
