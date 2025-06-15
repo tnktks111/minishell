@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/13 17:14:34 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/15 22:05:26 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <sys/errno.h>
+#include <limits.h>
 
 #define DEFAULT_TMPDIR "."
 #define PATH_MAX 1024
@@ -71,14 +72,15 @@ typedef struct s_env
 {
 	t_env_node table[HASH_SIZE];
 	char **envp;
+	unsigned char prev_exit_status; /* preserve $? */
 	bool is_malloced;
 	size_t entry_cnt;
 } t_env;
 
 typedef struct s_pipefd
 {
+	int pipefd[2];
 	int read_fd;
-	int write_fd;
 } t_pipefd;
 
 /*
