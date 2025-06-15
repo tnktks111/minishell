@@ -14,23 +14,576 @@
 #include <readline/history.h>
 #include <readline/readline.h>
 
-bool		is_d_quote(char c);
-bool		is_s_quote(char c);
-bool		is_splitable(char c);
-bool		is_two_word_splitable(char c1, char c2);
-char		*ft_strdup(char *src, size_t len);
-t_token		*new_token(char *start, size_t len);
-void		append_token(t_token **head, t_token *new);
-size_t		token_strlen(char *str);
-size_t		in_d_quote_token_strlen(char *str);
-size_t		in_s_quote_token_strlen(char *str);
-size_t		append_token_and_move_index(t_token **head, char *str, bool d_quote,
-				bool s_quote);
-size_t		append_splitable(t_token **head, char *str);
-size_t		append_two_word_splitable(t_token **head, char *str);
-t_token		*tokenize_str(char *str);
-void		print_tokens(t_token *head);
-t_token		*lexer(char *str);
+bool			is_d_quote(char c);
+bool			is_s_quote(char c);
+bool			is_splitable(char c);
+bool			is_two_word_splitable(char c1, char c2);
+char			*ft_strdup_len(char *src, size_t len);
+
+t_token			*new_token(char *start, size_t len);
+void			append_token(t_token **head, t_token *new);
+size_t			token_strlen(char *str);
+size_t			in_d_quote_token_strlen(char *str);
+size_t			in_s_quote_token_strlen(char *str);
+size_t			append_token_and_move_index(t_token **head, char *str,
+					bool d_quote, bool s_quote);
+size_t			append_splitable(t_token **head, char *str);
+size_t			append_two_word_splitable(t_token **head, char *str);
+t_token			*tokenize_str(char *str);
+// void		print_tokens(t_token *head);
+t_token			*lexer(char *str);
+
+/* parser */
+
+t_tree_node		*init_tree_root(void);
+t_tree_node		*create_tree(t_token *head, t_token *tail);
+t_tree_node		*parser(t_token *head);
+
+int				ft_strncmp(const char *s1, const char *s2, size_t n);
+
+size_t	ft_strlen(char *str)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
+}
+
+t_tree_node	*add_tree_root(t_tree_node *root)
+{
+	t_tree_node	*new_root;
+
+	new_root = malloc(sizeof(t_tree_node));
+	if (!new_root)
+		return (NULL);
+	new_root->kind = NODE_ROOT;
+	new_root->parent = NULL;
+	new_root->left = root;
+	new_root->right = NULL;
+	new_root->data.pipeline.have_bang = false;
+	new_root->data.pipeline.exit_status = 0;
+	if (root)
+		root->parent = new_root;
+	return (new_root);
+}
+
+t_node_kind	get_node_kind(t_token *token)
+{
+	if (ft_strncmp(token->str, "||", 3) == 0)
+		return (NODE_OR);
+	else if (ft_strncmp(token->str, "&&", 3) == 0)
+		return (NODE_AND);
+	else if (ft_strncmp(token->str, "|", 2) == 0)
+		return (NODE_PIPE);
+	else
+		return (NODE_SIMPLE_COMMAND);
+}
+
+t_token	*find_third_lowest_precedence_operator(t_token *head, t_token *tail)
+{
+	t_token	*cur;
+
+	cur = tail;
+	while (cur && cur != head->prev)
+	{
+		if (cur->status == PIPE)
+			return (cur);
+		cur = cur->prev;
+	}
+	return (NULL);
+}
+
+t_token	*find_second_lowest_precedence_operator(t_token *head, t_token *tail)
+{
+	t_token	*cur;
+
+	cur = tail;
+	while (cur && cur != head->prev)
+	{
+		if (cur->status == AND_OR && get_node_kind(cur) == NODE_AND)
+			return (cur);
+		cur = cur->prev;
+	}
+	return (find_third_lowest_precedence_operator(head, tail));
+}
+
+t_token	*find_lowest_precedence_operator(t_token *head, t_token *tail)
+{
+	t_token	*cur;
+
+	cur = tail;
+	while (cur && cur != head->prev)
+	{
+		if (cur->status == AND_OR && get_node_kind(cur) == NODE_OR)
+			return (cur);
+		cur = cur->prev;
+	}
+	return (find_second_lowest_precedence_operator(head, tail));
+}
+
+t_token	*find_logical_operator(t_token *head, t_token *tail)
+{
+	t_token	*cur;
+
+	cur = tail;
+	while (cur && cur != head->prev)
+	{
+		if (cur->status == AND_OR && get_node_kind(cur) == NODE_OR)
+			return (cur);
+		cur = cur->prev;
+	}
+	cur = tail;
+	while (cur && cur != head->prev)
+	{
+		if (cur->status == AND_OR && get_node_kind(cur) == NODE_AND)
+			return (cur);
+		cur = cur->prev;
+	}
+	return (NULL);
+}
+
+char	**extract_args(t_token *head, t_token *tail)
+{
+	char	**cmd_args;
+	size_t	count;
+	t_token	*cur;
+
+	count = 0;
+	cur = head;
+	while (cur && cur != tail->next && cur->status != PIPE)
+	{
+		if (cur->status != SPLITABLE && cur->status != USED)
+			count++;
+		cur = cur->next;
+	}
+	cmd_args = malloc(sizeof(char *) * (count + 1));
+	if (!cmd_args)
+		return (NULL);
+	cur = head;
+	count = 0;
+	while (cur && cur != tail->next && cur->status != PIPE)
+	{
+		if (cur->status != SPLITABLE && cur->status != USED)
+			cmd_args[count++] = ft_strdup_len(cur->str, ft_strlen(cur->str));
+		cur = cur->next;
+	}
+	cmd_args[count] = NULL;
+	return (cmd_args);
+}
+
+t_redirect_kind	get_redirect_kind(t_token *redirect_token)
+{
+	char	*redirect_str;
+
+	redirect_str = redirect_token->str;
+	if (ft_strncmp(redirect_str, ">>", 2) == 0)
+		return (REDIR_APPEND);
+	else if (ft_strncmp(redirect_str, "<<", 2) == 0)
+		return (REDIR_HEREDOC);
+	else if (ft_strncmp(redirect_str, "<", 2) == 0)
+		return (REDIR_IN);
+	else if (ft_strncmp(redirect_str, ">", 2) == 0)
+		return (REDIR_OUT);
+	else
+		return (REDIR_IN);
+}
+
+int	ft_atoi(const char *nptr)
+{
+	size_t	i;
+	int		sign;
+	int		result;
+
+	i = 0;
+	sign = 1;
+	result = 0;
+	while ((nptr[i] == ' ') || ((nptr[i] >= 9) && (nptr[i] <= 13)))
+		i++;
+	if (nptr[i] == '+' || nptr[i] == '-')
+	{
+		if (nptr[i] == '-')
+			sign = -1;
+		i++;
+	}
+	while ((nptr[i] >= '0') && (nptr[i] <= '9'))
+	{
+		result = result * 10 + (nptr[i] - '0');
+		i++;
+	}
+	return (sign * result);
+}
+
+int	get_io_number(t_redirect_kind kind, t_token *redirect_token)
+{
+	t_token	*prev;
+
+	prev = redirect_token->prev;
+	if (!prev || prev->status != NORMAL)
+	{
+		if (kind == REDIR_IN || kind == REDIR_HEREDOC)
+			return (0);
+		else if (kind == REDIR_OUT || kind == REDIR_APPEND)
+			return (1);
+		else
+			return (1);
+	}
+	prev->status = USED;
+	return (ft_atoi(prev->str));
+}
+
+char	*get_output_name(t_token *redirect_token)
+{
+	t_token	*cur;
+
+	cur = redirect_token->next;
+	while (cur && cur->status == SPLITABLE)
+		cur = cur->next;
+	if (!cur || cur->status != NORMAL)
+	{
+		// syntax_error();
+		return (NULL);
+	}
+	cur->status = USED;
+	return (cur->str);
+}
+
+char	*ft_strchr(const char *s, int c)
+{
+	size_t			i;
+	unsigned char	char_c;
+
+	i = 0;
+	char_c = (unsigned char)c;
+	while (s[i])
+	{
+		if (s[i] == char_c)
+			return ((char *)&s[i]);
+		i++;
+	}
+	if ((char)c == '\0')
+		return ((char *)&s[i]);
+	return (NULL);
+}
+
+bool	check_if_expandable(char *filename)
+{
+	size_t	len;
+
+	if (!filename)
+		return (false);
+	len = ft_strlen(filename);
+	if (len >= 2 && is_s_quote(filename[0]) && is_s_quote(filename[len - 1]))
+		return (false);
+	return (ft_strchr(filename, '$') != NULL);
+}
+
+void	append_redirects(t_redirect **head, t_token *redirect_token)
+{
+	t_redirect	*new;
+	t_token		*output_name;
+	t_redirect	*cur;
+
+	if (!redirect_token || !redirect_token->next)
+		return ;
+	new = malloc(sizeof(t_redirect));
+	if (!new)
+		return ;
+	new->kind = get_redirect_kind(redirect_token);
+	new->io_number = get_io_number(new->kind, redirect_token);
+	new->filename = get_output_name(redirect_token);
+	new->is_expandable = check_if_expandable(new->filename);
+	new->next = NULL;
+	redirect_token->status = USED;
+	if (*head == NULL)
+		*head = new;
+	else
+	{
+		cur = *head;
+		while (cur->next)
+			cur = cur->next;
+		cur->next = new;
+	}
+}
+
+t_redirect	*extract_redirects(t_token *head, t_token *tail)
+{
+	t_redirect	*redirect_head;
+	t_token		*cur;
+
+	redirect_head = NULL;
+	cur = head;
+	while (cur && cur != tail->next && cur->status != PIPE)
+	{
+		if (cur->status == REDIRECT)
+			append_redirects(&redirect_head, cur);
+		cur = cur->next;
+	}
+	return (redirect_head);
+}
+
+t_tree_node	*create_simple_cmd_node(t_token *head, t_token *tail)
+{
+	t_tree_node	*cmd_node;
+
+	cmd_node = malloc(sizeof(t_tree_node));
+	if (!cmd_node)
+		return (NULL);
+	cmd_node->kind = NODE_SIMPLE_COMMAND;
+	cmd_node->parent = NULL;
+	cmd_node->left = NULL;
+	cmd_node->right = NULL;
+	cmd_node->data.command.redirects = extract_redirects(head, tail);
+	cmd_node->data.command.args = extract_args(head, tail);
+	return (cmd_node);
+}
+
+t_tree_node		*create_operator_node(t_token *op, t_tree_node *left,
+					t_tree_node *right);
+
+t_tree_node	*create_pipeline_node(t_tree_node *pipe_root)
+{
+	t_tree_node	*node;
+
+	node = malloc(sizeof(t_tree_node));
+	if (!node)
+		return (NULL);
+	node->kind = NODE_PIPE_LINE;
+	node->parent = NULL;
+	node->left = pipe_root;
+	node->right = NULL;
+	if (pipe_root)
+		pipe_root->parent = node;
+	return (node);
+}
+
+t_tree_node	*create_operator_node(t_token *op, t_tree_node *left,
+		t_tree_node *right)
+{
+	t_tree_node	*op_node;
+
+	op_node = malloc(sizeof(t_tree_node));
+	if (!op_node)
+		return (NULL);
+	op_node->kind = get_node_kind(op);
+	op_node->parent = NULL;
+	op_node->left = left;
+	op_node->right = right;
+	if (left)
+		left->parent = op_node;
+	if (right)
+		right->parent = op_node;
+	return (op_node);
+}
+
+t_tree_node	*create_pipeline_tree(t_token *head, t_token *tail)
+{
+	t_token		*op;
+	t_tree_node	*left;
+	t_tree_node	*right;
+	t_tree_node	*root;
+
+	op = find_third_lowest_precedence_operator(head, tail);
+	if (!op)
+		return (create_simple_cmd_node(head, tail));
+	left = create_pipeline_tree(head, op->prev);
+	right = create_pipeline_tree(op->next, tail);
+	return (create_operator_node(op, left, right));
+}
+
+t_tree_node	*create_tree(t_token *head, t_token *tail)
+{
+	t_token		*op;
+	t_tree_node	*left;
+	t_tree_node	*right;
+	t_tree_node	*pipeline_root;
+
+	if (!head || !tail)
+		return (NULL);
+	op = find_logical_operator(head, tail);
+	if (!op)
+	{
+		if (find_third_lowest_precedence_operator(head, tail))
+		{
+			pipeline_root = create_pipeline_tree(head, tail);
+			return (create_pipeline_node(pipeline_root));
+		}
+		else
+			return (create_simple_cmd_node(head, tail));
+	}
+	left = create_tree(head, op->prev);
+	right = create_tree(op->next, tail);
+	return (create_operator_node(op, left, right));
+}
+
+t_token	*get_tail(t_token *head)
+{
+	t_token	*cur;
+
+	if (!head)
+		return (NULL);
+	cur = head;
+	while (cur->next)
+		cur = cur->next;
+	return (cur);
+}
+
+void	free_token(t_token *head, t_token *tail)
+{
+	t_token	*cur;
+	t_token	*next;
+
+	cur = head;
+	while (cur && cur != tail->next)
+	{
+		next = cur->next;
+		if (cur->str)
+			free(cur->str);
+		free(cur);
+		cur = next;
+	}
+}
+
+void	print_indent(int level)
+{
+	for (int i = 0; i < level; i++)
+		printf("  ");
+}
+
+void	print_node_kind(t_node_kind kind)
+{
+	if (kind == NODE_SIMPLE_COMMAND)
+		printf("NODE_SIMPLE_COMMAND\n");
+	else if (kind == NODE_PIPE_LINE)
+		printf("NODE_PIPE_LINE\n");
+	else if (kind == NODE_PIPE)
+		printf("NODE_PIPE '|'\n");
+	else if (kind == NODE_AND)
+		printf("NODE_AND '&&'\n");
+	else if (kind == NODE_OR)
+		printf("NODE_OR '||'\n");
+	else if (kind == NODE_ROOT)
+		printf("NODE_ROOT\n");
+	else
+		printf("UNKNOWN_NODE\n");
+}
+
+void	print_redirect_info(t_redirect *redirects, int indent)
+{
+	t_redirect	*cur;
+
+	cur = redirects;
+	while (cur)
+	{
+		print_indent(indent);
+		printf("Redirect: ");
+		printf("io[%d] ", cur->io_number);
+		if (cur->kind == REDIR_IN)
+			printf("< ");
+		else if (cur->kind == REDIR_OUT)
+			printf("> ");
+		else if (cur->kind == REDIR_APPEND)
+			printf(">> ");
+		else if (cur->kind == REDIR_HEREDOC)
+			printf("<< ");
+		if (cur->is_expandable)
+			printf("filename(expandable): %s\n", cur->filename);
+		else
+			printf("filename: %s\n", cur->filename);
+		cur = cur->next;
+	}
+}
+
+void	print_args(char **args, int level)
+{
+	if (!args)
+		return ;
+	for (int i = 0; args[i]; i++)
+	{
+		print_indent(level);
+		printf("arg[%d]: %s\n", i, args[i]);
+	}
+}
+
+// void	print_tree(t_tree_node *node)
+// {
+// 	static int	level = 0;
+
+// 	if (!node)
+// 		return ;
+// 	print_indent(level);
+// 	print_node_kind(node->kind);
+// 	if (node->kind == NODE_SIMPLE_COMMAND)
+// 	{
+// 		print_args(node->data.command.args, level + 1);
+// 		if (node->data.command.redirects)
+// 			print_redirect_info(node->data.command.redirects, level + 1);
+// 	}
+// 	level++;
+// 	print_tree(node->left);
+// 	print_tree(node->right);
+// 	level--;
+// }
+
+void	print_tree(t_tree_node *node)
+{
+	static int	level = 0;
+
+	if (!node)
+		return ;
+	print_indent(level);
+	print_node_kind(node->kind);
+	if (node->kind == NODE_SIMPLE_COMMAND)
+	{
+		print_args(node->data.command.args, level + 1);
+		if (node->data.command.redirects)
+			print_redirect_info(node->data.command.redirects, level + 1);
+	}
+	level++;
+	// PIPE_LINEノードは left しか持たない♥️
+	if (node->kind == NODE_PIPE_LINE)
+	{
+		print_tree(node->left);
+	}
+	else
+	{
+		print_tree(node->left);
+		print_tree(node->right);
+	}
+	level--;
+}
+
+t_tree_node	*parser(t_token *head)
+{
+	t_tree_node	*root;
+	t_token		*tail;
+
+	tail = get_tail(head);
+	root = create_tree(head, tail);
+	root = add_tree_root(root);
+	print_tree(root);
+	free_token(head, tail);
+	return (root);
+}
+
+/* lexer */
+
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < n)
+	{
+		if ((unsigned char)s1[i] != (unsigned char)s2[i])
+			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+		if (!s1[i] || !s2[i])
+			return (0);
+		i++;
+	}
+	return (0);
+}
 
 bool	is_d_quote(char c)
 {
@@ -62,7 +615,7 @@ bool	is_two_word_splitable(char c1, char c2)
 		return (false);
 }
 
-char	*ft_strdup(char *src, size_t len)
+char	*ft_strdup_len(char *src, size_t len)
 {
 	char	*res;
 	size_t	i;
@@ -87,7 +640,7 @@ t_token	*new_token(char *start, size_t len)
 	token = malloc(sizeof(t_token));
 	if (!token)
 		return (NULL);
-	token->str = ft_strdup(start, len);
+	token->str = ft_strdup_len(start, len);
 	token->prev = NULL;
 	token->next = NULL;
 	return (token);
@@ -165,7 +718,7 @@ size_t	append_token_and_move_index(t_token **head, char *str, bool d_quote,
 		return (0);
 	if (d_quote)
 		new->status = IN_DOUBLE;
-	else if (!s_quote)
+	else if (s_quote)
 		new->status = IN_SINGLE;
 	else
 		new->status = NORMAL;
@@ -182,6 +735,14 @@ size_t	append_splitable(t_token **head, char *str)
 	new = new_token(str, len);
 	if (!new)
 		return (0);
+	if (ft_strncmp(new->str, "|", 2) == 0)
+		new->status = PIPE;
+	else if (ft_strncmp(new->str, "<", 2) == 0)
+		new->status = REDIRECT;
+	else if (ft_strncmp(new->str, ">", 2) == 0)
+		new->status = REDIRECT;
+	else
+		new->status = SPLITABLE;
 	append_token(head, new);
 	return (len);
 }
@@ -195,6 +756,16 @@ size_t	append_two_word_splitable(t_token **head, char *str)
 	new = new_token(str, len);
 	if (!new)
 		return (0);
+	if (ft_strncmp(new->str, "||", 3) == 0)
+		new->status = AND_OR;
+	else if (ft_strncmp(new->str, "&&", 3) == 0)
+		new->status = AND_OR;
+	else if (ft_strncmp(new->str, "<<", 3) == 0)
+		new->status = REDIRECT;
+	else if (ft_strncmp(new->str, ">>", 3) == 0)
+		new->status = REDIRECT;
+	else
+		new->status = SPLITABLE;
 	append_token(head, new);
 	return (len);
 }
@@ -222,101 +793,29 @@ t_token	*tokenize_str(char *str)
 	return (head);
 }
 
-void	print_tokens(t_token *head)
-{
-	while (head)
-	{
-		printf("Token: [%s]\n", head->str);
-		printf("Status: [%u]\n", head->status);
-		head = head->next;
-	}
-}
+// void	print_tokens(t_token *head)
+// {
+// 	while (head)
+// 	{
+// 		printf("Token: [%s]\n", head->str);
+// 		printf("Status: [%u]\n", head->status);
+// 		head = head->next;
+// 	}
+// }
 
 t_token	*lexer(char *str)
 {
 	t_token	*head;
 
 	head = tokenize_str(str);
-	print_tokens(head);
+	// print_tokens(head);
+	parser(head);
 	return (head);
 }
 
 /* expander */
 
-/* parser */
-
-t_tree_node	*init_tree_root(void);
-t_tree_node	*create_tree(t_token *head, t_token *tail);
-t_tree_node	*parser(t_token *head);
-
-t_tree_node	*init_tree_root(void)
-{
-	t_tree_node	*root;
-
-	root = malloc(sizeof(t_tree_node));
-	if (!root)
-		return (NULL);
-	root->kind = NODE_ROOT;
-	root->parent = NULL;
-	root->left = NULL;
-	root->right = NULL;
-	root->data.pipeline.have_bang = false;
-	root->data.pipeline.exit_status = 0;
-	return (root);
-}
-
-t_token	*find_lowest_precedence_operator(t_token *head, t_token *tail)
-{
-	t_token	*op;
-	size_t	i;
-
-	i = 0;
-	if (head->status == SPLITABLE) // '<<' '<' '||' '|' ...
-	{
-		op = head;
-		return (op);
-	}
-	else if (head->status == IN_DOUBLE || head->status == IN_SINGLE) // IN_QUOTE
-		return (NULL);
-	else // NORMAL cmd
-		return (NULL);
-}
-
-t_tree_node	*create_tree(t_token *head, t_token *tail)
-{
-	t_tree_node	*root;
-	t_token		*op;
-	t_tree_node	*left;
-	t_tree_node	*right;
-
-	if (!head || !tail)
-		return (NULL);
-	root = init_tree_root();
-	op = find_lowest_precedence_operator(head, tail);
-	if (op)
-	{
-		root->kind = get_node_kind(op);
-		left = create_tree(head, op->prev);
-		right = create_tree(op->next, tail);
-	}
-	else
-		create_simple_cmd_node(root, head, tail);
-	return (root);
-}
-
-t_tree_node	*parser(t_token *head)
-{
-	t_tree_node	*root;
-	t_token		*tail;
-
-	tail = get_tail(head);
-	root = create_tree(head, tail);
-	print_tree(root);
-	free_token(head);
-	return (root);
-}
-
-////////////////////////\(^o^)/////////////////////////////////
+// /////////////////////// \(^o^)/ ////////////////////////////////
 
 int	main(void)
 {
@@ -346,4 +845,4 @@ int	main(void)
 	return (0);
 }
 
-/* */
+// /* */
