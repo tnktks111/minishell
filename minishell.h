@@ -30,7 +30,8 @@ typedef enum e_status
 {
 	IN_SINGLE,
 	IN_DOUBLE,
-	NORMAL
+	NORMAL,
+	SPLITABLE
 }					t_status;
 
 /*分割すべき文字...space / tab / \n / '|' / '<''>''<<''>>' / '&&' '||' / ; /*/
