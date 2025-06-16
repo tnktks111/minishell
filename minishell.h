@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/15 22:05:26 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/16 18:44:45 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 #include <readline/history.h>
 #include <sys/errno.h>
 #include <limits.h>
+#include <dirent.h>
 
 #define DEFAULT_TMPDIR "."
 #define PATH_MAX 1024
