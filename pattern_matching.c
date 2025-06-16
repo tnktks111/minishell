@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 18:33:15 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/16 18:42:54 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/16 18:50:32 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,12 +73,12 @@ void init_dp_table(int *dp, int *is_wildcard, size_t size)
 
 int ft_ismatch(char *str, char *pattern, int *is_wildcard, size_t pat_len)
 {
-    int dp[1025];
-    int next_dp[1025];
+    int dp[PATH_MAX + 1];
+    int next_dp[PATH_MAX + 1];
     size_t i;
     size_t j;
 
-    ft_init_int_array(dp, 1025);
+    ft_init_int_array(dp, PATH_MAX + 1);
     init_dp_table(dp, is_wildcard, pat_len + 1);
     i = 0;
     while (++i < ft_strlen(str) + 1)
