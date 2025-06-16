@@ -372,7 +372,7 @@ t_tree_node	*create_simple_cmd_node(t_token *head, t_token *tail)
 	return (cmd_node);
 }
 
-t_tree_node	*create_pipeline_node(t_tree_node *pipe_root)
+t_tree_node	*create_pipeline_node(t_tree_node *cur_root)
 {
 	t_tree_node	*node;
 
@@ -381,30 +381,11 @@ t_tree_node	*create_pipeline_node(t_tree_node *pipe_root)
 		return (NULL);
 	node->kind = NODE_PIPE_LINE;
 	node->parent = NULL;
-	node->left = pipe_root;
+	node->left = cur_root;
 	node->right = NULL;
-	if (pipe_root)
-		pipe_root->parent = node;
+	if (cur_root)
+		cur_root->parent = node;
 	return (node);
-}
-
-t_tree_node	*create_operator_node(t_token *op, t_tree_node *left,
-		t_tree_node *right)
-{
-	t_tree_node	*op_node;
-
-	op_node = malloc(sizeof(t_tree_node));
-	if (!op_node)
-		return (NULL);
-	op_node->kind = get_node_kind(op);
-	op_node->parent = NULL;
-	op_node->left = left;
-	op_node->right = right;
-	if (left)
-		left->parent = op_node;
-	if (right)
-		right->parent = op_node;
-	return (op_node);
 }
 
 t_tree_node	*create_pipeline_tree(t_token *head, t_token *tail)
@@ -412,7 +393,6 @@ t_tree_node	*create_pipeline_tree(t_token *head, t_token *tail)
 	t_token		*op;
 	t_tree_node	*left;
 	t_tree_node	*right;
-	t_tree_node	*root;
 
 	op = find_third_lowest_precedence_operator(head, tail);
 	if (!op)
@@ -422,25 +402,103 @@ t_tree_node	*create_pipeline_tree(t_token *head, t_token *tail)
 	return (create_operator_node(op, left, right));
 }
 
+t_tree_node	*create_subshell_node(t_tree_node *cur_root)
+{
+	t_tree_node	*node;
+
+	node = malloc(sizeof(t_tree_node));
+	if (!node)
+		return (NULL);
+	node->kind = NODE_SUBSHELL;
+	node->left = cur_root;
+	node->right = NULL;
+	node->parent = NULL;
+	if (cur_root)
+		cur_root->parent = node;
+	return (node);
+}
+
+bool	is_parentheses_group(t_token *head, t_token *tail)
+{
+	int		paren_level;
+	t_token	*cur;
+
+	paren_level = 0;
+	cur = head;
+	if (!head || !tail)
+		return (false);
+	if (head->status != LEFT_PAREN || tail->status != RIGHT_PAREN)
+		return (false);
+	while (cur && cur != tail->next)
+	{
+		if (cur->status == LEFT_PAREN)
+			paren_level++;
+		else if (cur->status == RIGHT_PAREN)
+			paren_level--;
+		if (paren_level == 0 && cur != tail)
+			return (false);
+		cur = cur->next;
+	}
+	return (paren_level == 0);
+}
+
+t_tree_node	*create_operator_node(t_token *op, t_tree_node *left,
+		t_tree_node *right)
+{
+	t_tree_node	*node;
+
+	node = malloc(sizeof(t_tree_node));
+	if (!node)
+		return (NULL);
+	node->kind = get_node_kind(op);
+	node->parent = NULL;
+	node->left = left;
+	node->right = right;
+	if (left)
+		left->parent = node;
+	if (right)
+		right->parent = node;
+	return (node);
+}
+
+t_token	*skip_splitable_forward(t_token *token)
+{
+	while (token && token->status == SPLITABLE)
+		token = token->next;
+	return (token);
+}
+
+t_token	*skip_splitable_backward(t_token *token)
+{
+	while (token && token->status == SPLITABLE)
+		token = token->prev;
+	return (token);
+}
+
 t_tree_node	*create_tree(t_token *head, t_token *tail)
 {
 	t_token		*op;
 	t_tree_node	*left;
 	t_tree_node	*right;
 	t_tree_node	*pipeline_root;
+	t_tree_node	*paratheneses_root;
 
 	if (!head || !tail)
 		return (NULL);
+	head = skip_splitable_forward(head);
+	tail = skip_splitable_backward(tail);
+	if (is_parentheses_group(head, tail))
+	{
+		pipeline_root = create_tree(head->next, tail->prev);
+		// paratheneses_root = create_pipeline_node(pipeline_root);
+		paratheneses_root = create_subshell_node(pipeline_root);
+		return (create_pipeline_node(paratheneses_root));
+	}
 	op = find_logical_operator(head, tail);
 	if (!op)
 	{
-		if (find_third_lowest_precedence_operator(head, tail))
-		{
-			pipeline_root = create_pipeline_tree(head, tail);
-			return (create_pipeline_node(pipeline_root));
-		}
-		else
-			return (create_simple_cmd_node(head, tail));
+		pipeline_root = create_pipeline_tree(head, tail);
+		return (create_pipeline_node(pipeline_root));
 	}
 	left = create_tree(head, op->prev);
 	right = create_tree(op->next, tail);
@@ -449,14 +507,18 @@ t_tree_node	*create_tree(t_token *head, t_token *tail)
 
 t_token	*get_tail(t_token *head)
 {
-	t_token	*cur;
+	t_token	*tail;
+	t_token	*last_valid;
 
-	if (!head)
-		return (NULL);
-	cur = head;
-	while (cur->next)
-		cur = cur->next;
-	return (cur);
+	tail = head;
+	last_valid = head;
+	while (tail)
+	{
+		if (tail->str && tail->str[0] != '\0')
+			last_valid = tail;
+		tail = tail->next;
+	}
+	return (last_valid);
 }
 
 void	free_token(t_token *head, t_token *tail)
@@ -485,6 +547,8 @@ void	print_node_kind(t_node_kind kind)
 {
 	if (kind == NODE_SIMPLE_COMMAND)
 		printf("NODE_SIMPLE_COMMAND\n");
+	else if (kind == NODE_SUBSHELL)
+		printf("NODE_SUBSHELL\n");
 	else if (kind == NODE_PIPE_LINE)
 		printf("NODE_PIPE_LINE\n");
 	else if (kind == NODE_PIPE)
@@ -536,26 +600,6 @@ void	print_args(char **args, int level)
 	}
 }
 
-// void	print_tree(t_tree_node *node)
-// {
-// 	static int	level = 0;
-
-// 	if (!node)
-// 		return ;
-// 	print_indent(level);
-// 	print_node_kind(node->kind);
-// 	if (node->kind == NODE_SIMPLE_COMMAND)
-// 	{
-// 		print_args(node->data.command.args, level + 1);
-// 		if (node->data.command.redirects)
-// 			print_redirect_info(node->data.command.redirects, level + 1);
-// 	}
-// 	level++;
-// 	print_tree(node->left);
-// 	print_tree(node->right);
-// 	level--;
-// }
-
 void	print_tree(t_tree_node *node)
 {
 	static int	level = 0;
@@ -592,7 +636,7 @@ t_tree_node	*parser(t_token *head)
 	tail = get_tail(head);
 	root = create_tree(head, tail);
 	root = add_tree_root(root);
-	// print_tree(root);
+	print_tree(root);
 	free_token(head, tail);
 	return (root);
 }
@@ -613,6 +657,11 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 		i++;
 	}
 	return (0);
+}
+
+bool	is_param(char c)
+{
+	return (c == '(' || c == ')');
 }
 
 bool	is_d_quote(char c)
@@ -697,8 +746,8 @@ size_t	token_strlen(char *str)
 	size_t	len;
 
 	len = 0;
-	while (str[len] && !is_splitable(str[len]) && !(str[len + 1]
-			&& is_two_word_splitable(str[len], str[len + 1])))
+	while (str[len] && !is_splitable(str[len]) && !is_param(str[len])
+		&& !(str[len + 1] && is_two_word_splitable(str[len], str[len + 1])))
 		len++;
 	return (len);
 }
@@ -728,6 +777,23 @@ size_t	in_s_quote_token_strlen(char *str)
 		len++;
 	if (is_s_quote(str[len]))
 		len++;
+	return (len);
+}
+
+size_t	append_param_token_and_move_index(t_token **head, char *str)
+{
+	size_t	len;
+	t_token	*new;
+
+	len = 1;
+	new = new_token(str, len);
+	if (!new)
+		return (0);
+	if (ft_strncmp(str, "(", 1) == 0)
+		new->status = LEFT_PAREN;
+	else if (ft_strncmp(str, ")", 1) == 0)
+		new->status = RIGHT_PAREN;
+	append_token(head, new);
 	return (len);
 }
 
@@ -809,9 +875,11 @@ t_token	*tokenize_str(char *str)
 	i = 0;
 	while (str[i])
 	{
+		if (is_param(str[i]))
+			i += append_param_token_and_move_index(&head, &str[i]);
 		if (is_d_quote(str[i]))
 			i += append_token_and_move_index(&head, &str[i], true, false);
-		else if (is_s_quote(str[i]))
+		if (is_s_quote(str[i]))
 			i += append_token_and_move_index(&head, &str[i], false, true);
 		if (str[i + 1] && is_two_word_splitable(str[i], str[i + 1]))
 			i += append_two_word_splitable(&head, &str[i]);
@@ -823,15 +891,36 @@ t_token	*tokenize_str(char *str)
 	return (head);
 }
 
-// void	print_tokens(t_token *head)
-// {
-// 	while (head)
-// 	{
-// 		printf("Token: [%s]\n", head->str);
-// 		printf("Status: [%u]\n", head->status);
-// 		head = head->next;
-// 	}
-// }
+void	print_tokens(t_token *head)
+{
+	while (head)
+	{
+		printf("Token: [%s]\n", head->str);
+		if (head->status == IN_SINGLE)
+			printf("IN_SINGLE \n");
+		else if (head->status == IN_DOUBLE)
+			printf("IN_DOUBLE \n");
+		else if (head->status == LEFT_PAREN)
+			printf("LEFT_PAREN \n");
+		else if (head->status == RIGHT_PAREN)
+			printf("RIGHT_PAREN \n");
+		else if (head->status == AND_OR)
+			printf("AND_OR \n");
+		else if (head->status == REDIRECT)
+			printf("REDIRECT \n");
+		else if (head->status == SPLITABLE)
+			printf("SPLITABLE \n");
+		else if (head->status == PIPE)
+			printf("PIPE \n");
+		else if (head->status == NORMAL)
+			printf("NORMAL \n");
+		else if (head->status == USED)
+			printf("USED \n");
+		else
+			printf("UNKNOWN (不明な状態: %u)\n", head->status);
+		head = head->next;
+	}
+}
 
 t_token	*lexer(char *str)
 {

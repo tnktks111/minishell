@@ -32,6 +32,8 @@ typedef enum e_status
 {
 	IN_SINGLE,
 	IN_DOUBLE,
+	LEFT_PAREN,
+	RIGHT_PAREN,
 	AND_OR,
 	REDIRECT,
 	SPLITABLE,
@@ -64,6 +66,7 @@ typedef enum e_node_kind
 	NODE_OR,   /* '||' */
 	NODE_SIMPLE_COMMAND,
 	NODE_PIPE_LINE,
+	NODE_SUBSHELL,
 	NODE_ROOT
 }						t_node_kind;
 
