@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 12:49:45 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/17 17:03:27 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/17 19:20:03 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -305,7 +305,7 @@ bool	check_if_expandable(char *filename)
 void	append_redirects(t_redirect **head, t_token *redirect_token)
 {
 	t_redirect	*new;
-	t_token		*output_name;
+//	t_token		*output_name;
 	t_redirect	*cur;
 
 	if (!redirect_token || !redirect_token->next)
@@ -951,7 +951,9 @@ int	main(int ac, char **av, char **envp)
 {
 	char	*input;
 	t_env	env;
-
+	
+	(void)ac;
+	(void)av;
 	encode_envp(&env, envp);
 	while (1)
 	{

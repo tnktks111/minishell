@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/17 18:48:24 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/17 19:19:00 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ bool			is_builtin(char *s);
 /*個々のコマンドの実行*/
 void			find_builtin(t_tree_node *cmd_node, t_env *env);
 void			find_path(t_tree_node *cmd_node, t_env *env);
-unsigned char	exec_command_helper(t_tree_node *cmd_node, t_env *env, t_pipefd *fd);
+unsigned char	exec_command_helper(t_tree_node *cmd_node, t_env *env);
 unsigned char	exec_builtin(t_tree_node *node, t_env *env);
 unsigned char	exec_solo_cmd(t_tree_node *curr, t_env *env);
 
@@ -125,7 +125,7 @@ unsigned char	exec_pipeline(t_tree_node *root, t_env *env)
 		if (pid == 0)
 		{
 			setup_pipefd(&fd, curr, true);
-			exec_command_helper(curr, env, &fd);
+			exec_command_helper(curr, env);
 		}
 		setup_pipefd(&fd, curr, false);
 		curr = curr->parent;
@@ -317,10 +317,9 @@ void	find_path(t_tree_node *cmd_node, t_env *env)
 	exit(127);
 }
 
-unsigned char	exec_command_helper(t_tree_node *node, t_env *env, t_pipefd *fd)
+unsigned char	exec_command_helper(t_tree_node *node, t_env *env)
 {
 	t_tree_node	*cmd_node;
-	char		*cmd_path;
 
 	if (node->right)
 		cmd_node = node->right;
