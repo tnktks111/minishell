@@ -4,11 +4,20 @@
 here_doc用に一時ファイルを作るための関数群
 */
 
+static int file_iswdir(char *filepath)
 static int get_random_string(char *buffer);
 static char *get_sys_tmpdir(void);
 static char *get_tmpdir(void);
 static char *sh_mktmpname(void);
 int sh_mktmpfd(char **file_path_ptr);
+
+int file_iswdir(char *filepath)
+{
+    struct stat sb;
+    if (stat(filepath, &sb))
+        return 0;
+    return (S_ISDIR(sb.st_mode) && access(filepath, W_OK) == 0);
+}
 
 static int get_random_string(char *buffer)
 {

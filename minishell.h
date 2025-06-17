@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/17 14:40:18 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/17 14:59:07 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 #include <sys/errno.h>
 #include <limits.h>
 #include <dirent.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #define DEFAULT_TMPDIR "."
 #ifndef PATH_MAX
@@ -201,10 +203,6 @@ unsigned char builtin_unset(t_tree_node *node, t_env *env);
 unsigned char builtin_env(t_tree_node *node, t_env *env);
 unsigned char builtin_exit(t_tree_node *node, t_env *env);
 
-static int get_random_string(char *buffer);
-static char *get_sys_tmpdir(void);
-static char *get_tmpdir(void);
-static char *sh_mktmpname(void);
 int sh_mktmpfd(char **file_path_ptr);
 
 #endif
