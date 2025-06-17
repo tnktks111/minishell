@@ -4,7 +4,7 @@
 here_doc用に一時ファイルを作るための関数群
 */
 
-static int file_iswdir(char *filepath)
+static int file_iswdir(char *filepath);
 static int get_random_string(char *buffer);
 static char *get_sys_tmpdir(void);
 static char *get_tmpdir(void);
