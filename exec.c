@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/17 16:31:12 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/17 18:48:24 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ bool			is_builtin(char *s);
 /*個々のコマンドの実行*/
 void			find_builtin(t_tree_node *cmd_node, t_env *env);
 void			find_path(t_tree_node *cmd_node, t_env *env);
-unsigned char	exec_command_helper(t_tree_node *cmd_node, t_env *env);
+unsigned char	exec_command_helper(t_tree_node *cmd_node, t_env *env, t_pipefd *fd);
 unsigned char	exec_builtin(t_tree_node *node, t_env *env);
 unsigned char	exec_solo_cmd(t_tree_node *curr, t_env *env);
 
@@ -43,7 +43,7 @@ unsigned char	exec_ast(t_tree_node *root, t_env *env)
 	curr = root->left;
 	while (curr->kind == NODE_AND || curr->kind == NODE_OR)
 		curr = curr->left;
-	exec_and_or(curr, env);
+	prev_exit_status = exec_and_or(curr, env);
 	curr = curr->parent;
 	while ((!prev_exit_status && curr->kind == NODE_AND) || (prev_exit_status
 			&& curr->kind == NODE_OR))
@@ -59,9 +59,15 @@ unsigned char	exec_and_or(t_tree_node *root, t_env *env)
 	// env->envp = decode_table(env);
 	root->data.pipeline.exit_status = exec_pipeline(root->left, env);
 	if (root->data.pipeline.have_bang == true)
+	{
+		env->prev_exit_status = !root->data.pipeline.exit_status;
 		return (!root->data.pipeline.exit_status);
+	}
 	else
+	{
+		env->prev_exit_status = root->data.pipeline.exit_status;
 		return (root->data.pipeline.exit_status);
+	}
 }
 
 void	setup_pipefd(t_pipefd *fd, t_tree_node *node, bool is_start)
@@ -73,7 +79,7 @@ void	setup_pipefd(t_pipefd *fd, t_tree_node *node, bool is_start)
 			dup2(fd->read_fd, STDIN_FILENO);
 			close(fd->read_fd);
 		}
-		if (node->parent == NODE_PIPE)
+		if (node->parent->kind == NODE_PIPE)
 		{
 			close(fd->pipefd[0]);
 			dup2(fd->pipefd[1], STDOUT_FILENO);
@@ -84,7 +90,7 @@ void	setup_pipefd(t_pipefd *fd, t_tree_node *node, bool is_start)
 	{
 		if (fd->read_fd != STDIN_FILENO)
 			close(fd->read_fd);
-		if (node->parent == NODE_PIPE)
+		if (node->parent->kind == NODE_PIPE)
 		{
 			close(fd->pipefd[1]);
 			fd->read_fd = fd->pipefd[0];
@@ -110,7 +116,7 @@ unsigned char	exec_pipeline(t_tree_node *root, t_env *env)
 		curr = curr->left;
 	while (curr->kind != NODE_PIPE_LINE)
 	{
-		if (curr->parent == NODE_PIPE && pipe(fd.pipefd) == -1)
+		if (curr->parent->kind == NODE_PIPE && pipe(fd.pipefd) == -1)
 			return (perror_string("pipe: "));
 		cnt++;
 		pid = fork();
@@ -119,7 +125,7 @@ unsigned char	exec_pipeline(t_tree_node *root, t_env *env)
 		if (pid == 0)
 		{
 			setup_pipefd(&fd, curr, true);
-			exec_command_helper(curr, env);
+			exec_command_helper(curr, env, &fd);
 		}
 		setup_pipefd(&fd, curr, false);
 		curr = curr->parent;
@@ -127,7 +133,15 @@ unsigned char	exec_pipeline(t_tree_node *root, t_env *env)
 	waitpid(pid, &status, 0);
 	while (--cnt > 0)
 		wait(NULL);
-	return (status);
+	if (WIFEXITED(status))
+	{
+		return ((unsigned char)WEXITSTATUS(status));
+	}
+	else
+	{
+		/*ここにシグナルの扱い*/
+		return ((unsigned char)WEXITSTATUS(status));
+	}
 }
 
 void	backup_stdin_out(int *stdin_out)
@@ -180,7 +194,16 @@ unsigned char	exec_solo_cmd(t_tree_node *curr, t_env *env)
 		}
 		else
 			wait(&wait_status);
-		return ((unsigned char)wait_status);
+		if (WIFEXITED(wait_status))
+		{
+			return ((unsigned char)WEXITSTATUS(wait_status));
+		}
+		else
+		{
+			/*ここにシグナルの扱い*/
+			return ((unsigned char)WEXITSTATUS(wait_status));
+			
+		}
 	}
 }
 
@@ -294,7 +317,7 @@ void	find_path(t_tree_node *cmd_node, t_env *env)
 	exit(127);
 }
 
-unsigned char	exec_command_helper(t_tree_node *node, t_env *env)
+unsigned char	exec_command_helper(t_tree_node *node, t_env *env, t_pipefd *fd)
 {
 	t_tree_node	*cmd_node;
 	char		*cmd_path;
@@ -304,7 +327,7 @@ unsigned char	exec_command_helper(t_tree_node *node, t_env *env)
 	else
 		cmd_node = node;
 	exec_redirection(cmd_node->data.command.redirects);
-	if (node->kind == NODE_SIMPLE_COMMAND)
+	if (cmd_node->kind == NODE_SIMPLE_COMMAND)
 	{
 		if (!ft_strchr(cmd_node->data.command.args[0], '/'))
 		{
@@ -315,7 +338,9 @@ unsigned char	exec_command_helper(t_tree_node *node, t_env *env)
 		exit(EXIT_FAILURE);
 	}
 	else
-		exit(exec_ast(node, env));
+	{
+		exit(exec_ast(cmd_node, env));
+	}
 }
 
 bool	is_builtin(char *s)

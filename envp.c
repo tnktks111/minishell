@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 23:26:08 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/17 16:22:14 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/17 16:35:05 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,7 +218,7 @@ char **decode_table(t_env *env)
             curr = curr->next;
         }
     }
-    res[res_idx] = NULL;
+    res[env->entry_cnt] = NULL;
     return (res);
 }
 

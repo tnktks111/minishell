@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/17 15:04:00 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/17 17:02:59 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,7 +187,7 @@ bool			is_builtin(char *s);
 /*個々のコマンドの実行*/
 void			find_builtin(t_tree_node *cmd_node, t_env *env);
 void			find_path(t_tree_node *cmd_node, t_env *env);
-unsigned char	exec_command_helper(t_tree_node *cmd_node, t_env *env);
+unsigned char	exec_command_helper(t_tree_node *cmd_node, t_env *env, t_pipefd *fd);
 unsigned char	exec_builtin(t_tree_node *node, t_env *env);
 unsigned char	exec_solo_cmd(t_tree_node *curr, t_env *env);
 
