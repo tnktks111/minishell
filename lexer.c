@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 12:49:45 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/17 19:20:03 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/17 19:27:04 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -957,7 +957,7 @@ int	main(int ac, char **av, char **envp)
 	encode_envp(&env, envp);
 	while (1)
 	{
-		input = readline(">>minishell ");
+		input = readline("minishell$ ");
 		if (input == NULL)
 		{
 			printf("\nBye...\n");

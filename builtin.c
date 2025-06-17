@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 21:06:08 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/17 19:17:48 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/17 19:22:01 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ unsigned char	builtin_echo(t_tree_node *node, t_env *env)
 	{
 		if (!first_arg)
 			ft_putstr_fd(" ", STDOUT_FILENO);
+		first_arg = false;
 		ft_putstr_fd(node->data.command.args[i], STDOUT_FILENO);
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 23:26:08 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/17 16:35:05 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/17 20:19:24 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,27 +38,6 @@ int ft_add_key_val_pair(char *key, char *val, t_env *env);
 void ft_remove_key(char *key, t_env *env);
 /* ハッシュテーブルのリソース解放 */
 void free_table(t_env *env);
-
-// char **free_allocated_data(char **datas, size_t allocated)
-// {
-//     size_t i;
-
-//     i = 0;
-//     while (i < allocated)
-//         free(datas[i++]);
-//     free(datas);
-//     return (NULL);
-// }
-
-int ft_strcmp(char *s1, char *s2)
-{
-    while (*s1 && *s2 && *s1 == *s2)
-    {
-        s1++;
-        s2++;
-    }
-    return (*s1 - *s2);
-}
 
 char *extract_key(char *s)
 {
@@ -198,6 +177,8 @@ char **decode_table(t_env *env)
     size_t res_idx;
     t_env_node *curr;
 
+	size_t depth;
+
     res = (char **)malloc(sizeof(char *) * (env->entry_cnt + 1));
     if (!res)
         return (NULL);
@@ -209,16 +190,17 @@ char **decode_table(t_env *env)
         table_idx++;
         if (curr->is_empty)
             continue;
+		depth = 0;
         while(curr)
         {
             res[res_idx] = _concatnate_key_val(curr->key, curr->val, false);
-            if (!res[res_idx])
+			if (!res[res_idx])
                 return(free_allocated_data(res, res_idx));
             res_idx++;
             curr = curr->next;
-        }
+		}
     }
-    res[env->entry_cnt] = NULL;
+    res[res_idx] = NULL;
     return (res);
 }
 
@@ -290,6 +272,7 @@ t_env_node *_create_env_node(char *key, char *val, t_env *env)
     newnode->key = key;
     newnode->val = val;
     newnode->is_empty = false;
+	newnode->next = NULL;
     env->entry_cnt++;
     return (newnode);
 }
@@ -401,7 +384,7 @@ void free_table(t_env *env)
 //     {
 //         printf("%s\n", envp[i]);
 //         i++;
-//     }    
+//     }
 //     printf("-----------------------------------------------------------------\n");
 //     printf("entry cnt: %d\n", i);
 //     encode_envp(&env, envp);

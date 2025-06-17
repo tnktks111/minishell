@@ -6,7 +6,7 @@
 #    By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/17 19:06:08 by ttanaka           #+#    #+#              #
-#    Updated: 2025/06/17 19:16:40 by ttanaka          ###   ########.fr        #
+#    Updated: 2025/06/17 19:24:45 by ttanaka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,9 +31,10 @@ SRCS = 	builtin.c \
 		lexer.c \
 		pattern_matching.c \
 		tempfile.c
+
 OBJS = $(addprefix $(OBJS_DIR)/, $(SRCS:.c=.o))
 
-LIBFT_A = $(LIBFT_DIR)/libft.addprefix
+LIBFT_A = $(LIBFT_DIR)/libft.a
 INCS = -I. -I$(LIBFT_DIR)/inc
 
 READLINE_LIB = -lreadline
@@ -51,7 +52,7 @@ $(LIBFT_A):
 
 $(OBJS_DIR)/%.o: %.c
 		$(MKDIR) $(OBJS_DIR)
-		$(CC) $(CFLAGS) -c $< -o $@
+		$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
 
 clean:
 		$(RM) -r $(OBJS_DIR)
