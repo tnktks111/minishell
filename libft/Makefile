@@ -6,7 +6,7 @@
 #    By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/17 14:04:56 by ttanaka           #+#    #+#              #
-#    Updated: 2025/06/17 16:01:39 by ttanaka          ###   ########.fr        #
+#    Updated: 2025/06/17 18:59:28 by ttanaka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -57,9 +57,7 @@ SRCS = \
 	str/ft_strnstr.c \
 	str/ft_strrchr.c \
 	str/ft_strtrim.c \
-	str/ft_substr.c
-
-BONUS_SRCS = \
+	str/ft_substr.c \
 	lst/ft_lstadd_back_bonus.c \
 	lst/ft_lstadd_front_bonus.c \
 	lst/ft_lstclear_bonus.c \
@@ -71,7 +69,6 @@ BONUS_SRCS = \
 	lst/ft_lstsize_bonus.c
 
 OBJS = $(addprefix $(OBJS_DIR)/, $(notdir $(SRCS:.c=.o)))
-BONUS_OBJS = $(addprefix $(OBJS_DIR)/, $(notdir $(BONUS_SRCS:.c=.o)))
 
 INC = -I$(INC_DIR)
 
@@ -84,9 +81,6 @@ $(OBJS_DIR)/%.o: %.c
 	@mkdir -p $(OBJS_DIR)
 	$(CC) $(CFLAGS) $(INC) -c $< -o $@
 
-bonus: $(OBJS) $(BONUS_OBJS)
-	$(AR) $(NAME) $^
-
 clean:
 	$(RM) -r $(OBJS_DIR)
 
@@ -95,4 +89,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re
