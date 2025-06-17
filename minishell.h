@@ -142,6 +142,8 @@ typedef struct s_tree_node
 	t_data				data;
 }						t_tree_node;
 
+int	ft_strcmp(char *s1, char *s2);
+
 /*便利関数*/
 char *extract_key(char *s);
 char *extract_val(char *s);

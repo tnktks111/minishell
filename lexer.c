@@ -62,7 +62,7 @@ t_tree_node		*create_operator_node(t_token *op, t_tree_node *left,
 t_tree_node		*create_pipeline_node(t_tree_node *pipe_root);
 t_tree_node		*create_pipeline_tree(t_token *head, t_token *tail);
 // redirect cmd
-size_t			ft_strlen(char *str);
+
 char			*ft_strchr(const char *s, int c);
 int				ft_atoi(const char *nptr);
 char			**extract_args(t_token *head, t_token *tail);
@@ -90,16 +90,6 @@ void			free_token(t_token *head, t_token *tail);
 t_tree_node		*parser(t_token *head, t_env *env);
 
 /* parser */
-
-size_t	ft_strlen(char *str)
-{
-	size_t	i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}
 
 t_tree_node	*add_tree_root(t_tree_node *root)
 {
