@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/16 18:33:15 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/16 18:50:32 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/17 14:00:35 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ void build_wildcard_flag(int *is_wildcard, char *pattern, size_t len)
     while (i < len)
     {
         if (pattern[i] == '\'')
-            in_single_quote != in_single_quote;
+            in_single_quote = !in_single_quote;
         if (pattern[i] == '\"')
-            in_double_quote != in_double_quote;
+            in_double_quote = !in_double_quote;
         if (pattern[i] == '*' && !in_double_quote && !in_single_quote)
             is_wildcard[i] = true;
         else
