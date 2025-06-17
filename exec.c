@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/15 21:40:54 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/17 13:47:58 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 unsigned char exec_ast(t_tree_node *root, t_env *env);
 unsigned char exec_and_or(t_tree_node *root, t_env *env);
 unsigned char exec_pipeline(t_tree_node *root, t_env *env);
-unsigned char exec_cmd_lst(t_tree_node **lst, int size, t_env *env);
 /*redirection & here_doc*/
 int here_doc_handler(char *limiter);
 void exec_redirection(t_redirect *redirect);
@@ -180,19 +179,6 @@ unsigned char exec_solo_cmd(t_tree_node *curr, t_env *env)
     }
 }
 
-int here_doc_expander(char *s)
-{
-    size_t i;
-    size_t base_len;
-
-    i = 0;
-    base_len = ft_strlen(s);
-    while(s[i])
-    {
-        if (s[i] == '$')
-    }
-}
-
 int here_doc_handler(char *limiter)
 {
     int fd;
@@ -310,13 +296,18 @@ unsigned char exec_command_helper(t_tree_node *node, t_env *env)
     else
         cmd_node = node;
     exec_redirection(cmd_node->data.command.redirects);
-    if (!ft_strchr(cmd_node->data.command.args[0], '/'))
+    if (node->kind == NODE_SIMPLE_COMMAND)
     {
-        find_builtin(cmd_node, env);
-        find_path(cmd_node, env);
+        if (!ft_strchr(cmd_node->data.command.args[0], '/'))
+        {
+            find_builtin(cmd_node, env);
+            find_path(cmd_node, env);
+        }
+        execve(cmd_node->data.command.args[0], cmd_node->data.command.args, env->envp);
+        exit(EXIT_FAILURE);
     }
-    execve(cmd_node->data.command.args[0], cmd_node->data.command.args, env->envp);
-    exit(EXIT_FAILURE);
+    else
+        exec_ast(node, env);
 }
 
 bool is_builtin(char *s)
