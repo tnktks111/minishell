@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/17 14:41:12 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/17 16:31:12 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ unsigned char	exec_ast(t_tree_node *root, t_env *env)
 
 unsigned char	exec_and_or(t_tree_node *root, t_env *env)
 {
+	// env->envp = decode_table(env);
 	root->data.pipeline.exit_status = exec_pipeline(root->left, env);
 	if (root->data.pipeline.have_bang == true)
 		return (!root->data.pipeline.exit_status);
@@ -269,6 +270,7 @@ void	find_builtin(t_tree_node *cmd_node, t_env *env)
 void	find_path(t_tree_node *cmd_node, t_env *env)
 {
 	char	**prefix_table;
+	char	*tmp;
 	char	*tmp_path;
 	int		i;
 
@@ -276,13 +278,15 @@ void	find_path(t_tree_node *cmd_node, t_env *env)
 	i = -1;
 	while (prefix_table[++i])
 	{
-		tmp_path = ft_strjoin(prefix_table[i], cmd_node->data.command.args[0]);
+		tmp = ft_strjoin(prefix_table[i], "/");
+		tmp_path = ft_strjoin(tmp, cmd_node->data.command.args[0]);
+		free(tmp);
 		if (!tmp_path)
 		{
 			perror("malloc :");
 			return ;
 		}
-		execve(tmp_path, cmd_node->data.command.args, env->envp);
+		execve(tmp_path, cmd_node->data.command.args, NULL);
 		free(tmp_path);
 	}
 	free_splited_data(prefix_table);
@@ -307,8 +311,7 @@ unsigned char	exec_command_helper(t_tree_node *node, t_env *env)
 			find_builtin(cmd_node, env);
 			find_path(cmd_node, env);
 		}
-		execve(cmd_node->data.command.args[0], cmd_node->data.command.args,
-			env->envp);
+		execve(cmd_node->data.command.args[0], cmd_node->data.command.args, NULL);
 		exit(EXIT_FAILURE);
 	}
 	else
