@@ -14,6 +14,23 @@
 #include <readline/history.h>
 #include <readline/readline.h>
 
+unsigned char	exec_ast(t_tree_node *root, t_env *env);
+unsigned char	exec_and_or(t_tree_node *root, t_env *env);
+unsigned char	exec_pipeline(t_tree_node *root, t_env *env);
+/*redirection & here_doc*/
+int				here_doc_handler(char *limiter);
+void			exec_redirection(t_redirect *redirect);
+void			backup_stdin_out(int *stdin_out);
+void			restore_stdin_out(int *stdin_out);
+/*utils*/
+char			**get_path_prefix(t_env *env);
+bool			is_builtin(char *s);
+/*個々のコマンドの実行*/
+void			find_builtin(t_tree_node *cmd_node, t_env *env);
+void			find_path(t_tree_node *cmd_node, t_env *env);
+unsigned char	exec_command_helper(t_tree_node *cmd_node, t_env *env);
+unsigned char	exec_builtin(t_tree_node *node, t_env *env);
+
 /* lexer prototype */
 // utils
 bool			is_d_quote(char c);
@@ -35,7 +52,7 @@ size_t			append_splitable(t_token **head, char *str);
 size_t			append_two_word_splitable(t_token **head, char *str);
 t_token			*tokenize_str(char *str);
 // void		print_tokens(t_token *head);
-t_token			*lexer(char *str);
+t_token			*lexer(char *str, char **envp);
 
 /* parser prototype */
 // && ||
@@ -70,7 +87,7 @@ t_token			*find_logical_operator(t_token *head, t_token *tail);
 t_token			*get_tail(t_token *head);
 t_tree_node		*add_tree_root(t_tree_node *root);
 void			free_token(t_token *head, t_token *tail);
-t_tree_node		*parser(t_token *head);
+t_tree_node		*parser(t_token *head, char **envp);
 
 /* parser */
 
@@ -628,7 +645,7 @@ void	print_tree(t_tree_node *node)
 	level--;
 }
 
-t_tree_node	*parser(t_token *head)
+t_tree_node	*parser(t_token *head, char **envp)
 {
 	t_tree_node	*root;
 	t_token		*tail;
@@ -638,6 +655,7 @@ t_tree_node	*parser(t_token *head)
 	root = add_tree_root(root);
 	print_tree(root);
 	free_token(head, tail);
+	exec_ast(root, envp);
 	return (root);
 }
 
@@ -922,7 +940,7 @@ void	print_tokens(t_token *head)
 	}
 }
 
-t_token	*lexer(char *str)
+t_token	*lexer(char *str, char **envp)
 {
 	t_token	*head;
 
@@ -936,7 +954,7 @@ t_token	*lexer(char *str)
 
 // /////////////////////// \(^o^)/ ////////////////////////////////
 
-int	main(void)
+int	main(int ac, char **av, char **envp)
 {
 	char	*input;
 
@@ -958,7 +976,7 @@ int	main(void)
 			printf("See you next time…\n");
 			break ;
 		}
-		lexer(input);
+		lexer(input, envp);
 		free(input);
 	}
 	return (0);
