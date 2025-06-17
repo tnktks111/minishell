@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 12:49:45 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/17 19:27:04 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/17 23:12:23 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,13 +201,13 @@ t_redirect_kind	get_redirect_kind(t_token *redirect_token)
 	char	*redirect_str;
 
 	redirect_str = redirect_token->str;
-	if (ft_strncmp(redirect_str, ">>", 2) == 0)
+	if (ft_strcmp(redirect_str, ">>") == 0)
 		return (REDIR_APPEND);
-	else if (ft_strncmp(redirect_str, "<<", 2) == 0)
+	else if (ft_strcmp(redirect_str, "<<") == 0)
 		return (REDIR_HEREDOC);
-	else if (ft_strncmp(redirect_str, "<", 2) == 0)
+	else if (ft_strcmp(redirect_str, "<") == 0)
 		return (REDIR_IN);
-	else if (ft_strncmp(redirect_str, ">", 2) == 0)
+	else if (ft_strcmp(redirect_str, ">") == 0)
 		return (REDIR_OUT);
 	else
 		return (REDIR_IN);
@@ -259,6 +259,7 @@ int	get_io_number(t_redirect_kind kind, t_token *redirect_token)
 char	*get_output_name(t_token *redirect_token)
 {
 	t_token	*cur;
+	char	*file_name;
 
 	cur = redirect_token->next;
 	while (cur && cur->status == SPLITABLE)
@@ -269,7 +270,8 @@ char	*get_output_name(t_token *redirect_token)
 		return (NULL);
 	}
 	cur->status = USED;
-	return (cur->str);
+	file_name = ft_strdup(cur->str);
+	return (file_name);
 }
 
 char	*ft_strchr(const char *s, int c)
@@ -305,9 +307,9 @@ bool	check_if_expandable(char *filename)
 void	append_redirects(t_redirect **head, t_token *redirect_token)
 {
 	t_redirect	*new;
-//	t_token		*output_name;
 	t_redirect	*cur;
 
+	//	t_token		*output_name;
 	if (!redirect_token || !redirect_token->next)
 		return ;
 	new = malloc(sizeof(t_redirect));
@@ -340,7 +342,9 @@ t_redirect	*extract_redirects(t_token *head, t_token *tail)
 	while (cur && cur != tail->next && cur->status != PIPE)
 	{
 		if (cur->status == REDIRECT)
+		{
 			append_redirects(&redirect_head, cur);
+		}
 		cur = cur->next;
 	}
 	return (redirect_head);
@@ -359,6 +363,8 @@ t_tree_node	*create_simple_cmd_node(t_token *head, t_token *tail)
 	cmd_node->right = NULL;
 	cmd_node->data.command.redirects = extract_redirects(head, tail);
 	cmd_node->data.command.args = extract_args(head, tail);
+	printf("%s\n", cmd_node->data.command.args[0]);
+	printf("%s\n", cmd_node->data.command.redirects->filename);
 	return (cmd_node);
 }
 
@@ -526,96 +532,96 @@ void	free_token(t_token *head, t_token *tail)
 	}
 }
 
-// void	print_indent(int level)
-// {
-// 	for (int i = 0; i < level; i++)
-// 		printf("  ");
-// }
+void	print_indent(int level)
+{
+	for (int i = 0; i < level; i++)
+		printf("  ");
+}
 
-// void	print_node_kind(t_node_kind kind)
-// {
-// 	if (kind == NODE_SIMPLE_COMMAND)
-// 		printf("NODE_SIMPLE_COMMAND\n");
-// 	else if (kind == NODE_SUBSHELL)
-// 		printf("NODE_SUBSHELL\n");
-// 	else if (kind == NODE_PIPE_LINE)
-// 		printf("NODE_PIPE_LINE\n");
-// 	else if (kind == NODE_PIPE)
-// 		printf("NODE_PIPE '|'\n");
-// 	else if (kind == NODE_AND)
-// 		printf("NODE_AND '&&'\n");
-// 	else if (kind == NODE_OR)
-// 		printf("NODE_OR '||'\n");
-// 	else if (kind == NODE_ROOT)
-// 		printf("NODE_ROOT\n");
-// 	else
-// 		printf("UNKNOWN_NODE\n");
-// }
+void	print_node_kind(t_node_kind kind)
+{
+	if (kind == NODE_SIMPLE_COMMAND)
+		printf("NODE_SIMPLE_COMMAND\n");
+	else if (kind == NODE_SUBSHELL)
+		printf("NODE_SUBSHELL\n");
+	else if (kind == NODE_PIPE_LINE)
+		printf("NODE_PIPE_LINE\n");
+	else if (kind == NODE_PIPE)
+		printf("NODE_PIPE '|'\n");
+	else if (kind == NODE_AND)
+		printf("NODE_AND '&&'\n");
+	else if (kind == NODE_OR)
+		printf("NODE_OR '||'\n");
+	else if (kind == NODE_ROOT)
+		printf("NODE_ROOT\n");
+	else
+		printf("UNKNOWN_NODE\n");
+}
 
-// void	print_redirect_info(t_redirect *redirects, int indent)
-// {
-// 	t_redirect	*cur;
+void	print_redirect_info(t_redirect *redirects, int indent)
+{
+	t_redirect	*cur;
 
-// 	cur = redirects;
-// 	while (cur)
-// 	{
-// 		print_indent(indent);
-// 		printf("Redirect: ");
-// 		printf("io[%d] ", cur->io_number);
-// 		if (cur->kind == REDIR_IN)
-// 			printf("< ");
-// 		else if (cur->kind == REDIR_OUT)
-// 			printf("> ");
-// 		else if (cur->kind == REDIR_APPEND)
-// 			printf(">> ");
-// 		else if (cur->kind == REDIR_HEREDOC)
-// 			printf("<< ");
-// 		if (cur->is_expandable)
-// 			printf("filename(expandable): %s\n", cur->filename);
-// 		else
-// 			printf("filename: %s\n", cur->filename);
-// 		cur = cur->next;
-// 	}
-// }
+	cur = redirects;
+	while (cur)
+	{
+		print_indent(indent);
+		printf("Redirect: ");
+		printf("io[%d] ", cur->io_number);
+		if (cur->kind == REDIR_IN)
+			printf("< ");
+		else if (cur->kind == REDIR_OUT)
+			printf("> ");
+		else if (cur->kind == REDIR_APPEND)
+			printf(">> ");
+		else if (cur->kind == REDIR_HEREDOC)
+			printf("<< ");
+		if (cur->is_expandable)
+			printf("filename(expandable): %s\n", cur->filename);
+		else
+			printf("filename: %s\n", cur->filename);
+		cur = cur->next;
+	}
+}
 
-// void	print_args(char **args, int level)
-// {
-// 	if (!args)
-// 		return ;
-// 	for (int i = 0; args[i]; i++)
-// 	{
-// 		print_indent(level);
-// 		printf("arg[%d]: %s\n", i, args[i]);
-// 	}
-// }
+void	print_args(char **args, int level)
+{
+	if (!args)
+		return ;
+	for (int i = 0; args[i]; i++)
+	{
+		print_indent(level);
+		printf("arg[%d]: %s\n", i, args[i]);
+	}
+}
 
-// void	print_tree(t_tree_node *node)
-// {
-// 	static int	level = 0;
+void	print_tree(t_tree_node *node)
+{
+	static int	level = 0;
 
-// 	if (!node)
-// 		return ;
-// 	print_indent(level);
-// 	print_node_kind(node->kind);
-// 	if (node->kind == NODE_SIMPLE_COMMAND)
-// 	{
-// 		print_args(node->data.command.args, level + 1);
-// 		if (node->data.command.redirects)
-// 			print_redirect_info(node->data.command.redirects, level + 1);
-// 	}
-// 	level++;
-// 	// PIPE_LINEノードは left しか持たない♥️
-// 	if (node->kind == NODE_PIPE_LINE)
-// 	{
-// 		print_tree(node->left);
-// 	}
-// 	else
-// 	{
-// 		print_tree(node->left);
-// 		print_tree(node->right);
-// 	}
-// 	level--;
-// }
+	if (!node)
+		return ;
+	print_indent(level);
+	print_node_kind(node->kind);
+	if (node->kind == NODE_SIMPLE_COMMAND)
+	{
+		print_args(node->data.command.args, level + 1);
+		if (node->data.command.redirects)
+			print_redirect_info(node->data.command.redirects, level + 1);
+	}
+	level++;
+	// PIPE_LINEノードは left しか持たない♥️
+	if (node->kind == NODE_PIPE_LINE)
+	{
+		print_tree(node->left);
+	}
+	else
+	{
+		print_tree(node->left);
+		print_tree(node->right);
+	}
+	level--;
+}
 
 t_tree_node	*parser(t_token *head, t_env *env)
 {
@@ -625,7 +631,6 @@ t_tree_node	*parser(t_token *head, t_env *env)
 	tail = get_tail(head);
 	root = create_tree(head, tail);
 	root = add_tree_root(root);
-	// print_tree(root);
 	free_token(head, tail);
 	exec_ast(root, env);
 	return (root);
@@ -842,11 +847,11 @@ size_t	append_splitable(t_token **head, char *str)
 	new = new_token(str, len);
 	if (!new)
 		return (0);
-	if (ft_strncmp(new->str, "|", 2) == 0)
+	if (ft_strcmp(new->str, "|") == 0)
 		new->status = PIPE;
-	else if (ft_strncmp(new->str, "<", 2) == 0)
+	else if (ft_strcmp(new->str, "<") == 0)
 		new->status = REDIRECT;
-	else if (ft_strncmp(new->str, ">", 2) == 0)
+	else if (ft_strcmp(new->str, ">") == 0)
 		new->status = REDIRECT;
 	else
 		new->status = SPLITABLE;
@@ -951,7 +956,7 @@ int	main(int ac, char **av, char **envp)
 {
 	char	*input;
 	t_env	env;
-	
+
 	(void)ac;
 	(void)av;
 	encode_envp(&env, envp);

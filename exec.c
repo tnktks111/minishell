@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/17 19:19:00 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/17 23:07:34 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ unsigned char	exec_ast(t_tree_node *root, t_env *env)
 
 unsigned char	exec_and_or(t_tree_node *root, t_env *env)
 {
-	// env->envp = decode_table(env);
+	env->envp = decode_table(env);
 	root->data.pipeline.exit_status = exec_pipeline(root->left, env);
 	if (root->data.pipeline.have_bang == true)
 	{
@@ -137,11 +137,11 @@ unsigned char	exec_pipeline(t_tree_node *root, t_env *env)
 	{
 		return ((unsigned char)WEXITSTATUS(status));
 	}
-	else
+	else if (WIFSIGNALED(status))
 	{
-		/*ここにシグナルの扱い*/
-		return ((unsigned char)WEXITSTATUS(status));
+		return (128 + WTERMSIG(status));
 	}
+	return (EXIT_FAILURE);
 }
 
 void	backup_stdin_out(int *stdin_out)
@@ -198,12 +198,11 @@ unsigned char	exec_solo_cmd(t_tree_node *curr, t_env *env)
 		{
 			return ((unsigned char)WEXITSTATUS(wait_status));
 		}
-		else
+		else if (WIFSIGNALED(wait_status))
 		{
-			/*ここにシグナルの扱い*/
-			return ((unsigned char)WEXITSTATUS(wait_status));
-			
+			return (128 + WTERMSIG(wait_status));
 		}
+		return (EXIT_FAILURE);
 	}
 }
 
@@ -224,7 +223,7 @@ int	here_doc_handler(char *limiter)
 			free(s);
 			break ;
 		}
-		here_doc_handler(s);
+		// here_doc_expander(s);
 		ft_putendl_fd(s, fd);
 		free(s);
 		s = readline("> ");
@@ -299,6 +298,7 @@ void	find_path(t_tree_node *cmd_node, t_env *env)
 
 	prefix_table = get_path_prefix(env);
 	i = -1;
+	// printf("%s_\n", env->envp[0]);
 	while (prefix_table[++i])
 	{
 		tmp = ft_strjoin(prefix_table[i], "/");
@@ -309,7 +309,7 @@ void	find_path(t_tree_node *cmd_node, t_env *env)
 			perror("malloc :");
 			return ;
 		}
-		execve(tmp_path, cmd_node->data.command.args, NULL);
+		execve(tmp_path, cmd_node->data.command.args, env->envp);
 		free(tmp_path);
 	}
 	free_splited_data(prefix_table);
@@ -333,7 +333,7 @@ unsigned char	exec_command_helper(t_tree_node *node, t_env *env)
 			find_builtin(cmd_node, env);
 			find_path(cmd_node, env);
 		}
-		execve(cmd_node->data.command.args[0], cmd_node->data.command.args, NULL);
+		execve(cmd_node->data.command.args[0], cmd_node->data.command.args, env->envp);
 		exit(EXIT_FAILURE);
 	}
 	else

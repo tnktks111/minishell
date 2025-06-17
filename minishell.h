@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/17 19:18:46 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/17 23:04:34 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,5 +210,7 @@ int sh_mktmpfd(char **file_path_ptr);
 
 void	free_splited_data(char **data);
 char **free_allocated_data(char **datas, size_t allocated);
+
+void	print_tree(t_tree_node *node);
 
 #endif
