@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/17 13:47:58 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/17 14:41:12 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void			find_builtin(t_tree_node *cmd_node, t_env *env);
 void			find_path(t_tree_node *cmd_node, t_env *env);
 unsigned char	exec_command_helper(t_tree_node *cmd_node, t_env *env);
 unsigned char	exec_builtin(t_tree_node *node, t_env *env);
+unsigned char	exec_solo_cmd(t_tree_node *curr, t_env *env);
 
 unsigned char	exec_ast(t_tree_node *root, t_env *env)
 {
@@ -50,8 +51,7 @@ unsigned char	exec_ast(t_tree_node *root, t_env *env)
 		prev_exit_status = exec_and_or(curr->right, env);
 		curr = curr->parent;
 	}
-	if (curr->kind == NODE_ROOT)
-		return (prev_exit_status);
+	return (prev_exit_status);
 }
 
 unsigned char	exec_and_or(t_tree_node *root, t_env *env)
@@ -151,7 +151,8 @@ void	restore_stdin_out(int *stdin_out)
 unsigned char	exec_solo_cmd(t_tree_node *curr, t_env *env)
 {
 	pid_t	pid;
-	int		status;
+	unsigned char	status;
+    int     wait_status;
 	int		stdin_out[2];
 
 	if (is_builtin(curr->data.command.args[0]))
@@ -177,8 +178,8 @@ unsigned char	exec_solo_cmd(t_tree_node *curr, t_env *env)
 			exit(EXIT_FAILURE);
 		}
 		else
-			wait(&status);
-		return (status);
+			wait(&wait_status);
+		return ((unsigned char)wait_status);
 	}
 }
 
@@ -337,8 +338,8 @@ unsigned char	exec_builtin(t_tree_node *node, t_env *env)
 {
 	if (ft_strcmp(node->data.command.args[0], "echo") == 0)
 		return (builtin_echo(node, env));
-	if (ft_strcmp(node->data.command.args[0], "cd") == 0)
-		return (builtin_cd(node, env));
+	// if (ft_strcmp(node->data.command.args[0], "cd") == 0)
+	// 	return (builtin_cd(node, env));
 	if (ft_strcmp(node->data.command.args[0], "pwd") == 0)
 		return (builtin_pwd(node, env));
 	if (ft_strcmp(node->data.command.args[0], "export") == 0)

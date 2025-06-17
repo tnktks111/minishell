@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sguruge <sguruge@student.42tokyo.jp>       #+#  +:+       +#+        */
+/*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-06-11 12:49:45 by sguruge           #+#    #+#             */
-/*   Updated: 2025-06-11 12:49:45 by sguruge          ###   ########.fr       */
+/*   Created: 2025/06/11 12:49:45 by sguruge           #+#    #+#             */
+/*   Updated: 2025/06/17 14:38:32 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ size_t			append_splitable(t_token **head, char *str);
 size_t			append_two_word_splitable(t_token **head, char *str);
 t_token			*tokenize_str(char *str);
 // void		print_tokens(t_token *head);
-t_token			*lexer(char *str, char **envp);
+t_token			*lexer(char *str, t_env *env);
 
 /* parser prototype */
 // && ||
@@ -87,7 +87,7 @@ t_token			*find_logical_operator(t_token *head, t_token *tail);
 t_token			*get_tail(t_token *head);
 t_tree_node		*add_tree_root(t_tree_node *root);
 void			free_token(t_token *head, t_token *tail);
-t_tree_node		*parser(t_token *head, char **envp);
+t_tree_node		*parser(t_token *head, t_env *env);
 
 /* parser */
 
@@ -645,7 +645,7 @@ void	print_tree(t_tree_node *node)
 	level--;
 }
 
-t_tree_node	*parser(t_token *head, char **envp)
+t_tree_node	*parser(t_token *head, t_env *env)
 {
 	t_tree_node	*root;
 	t_token		*tail;
@@ -655,7 +655,7 @@ t_tree_node	*parser(t_token *head, char **envp)
 	root = add_tree_root(root);
 	print_tree(root);
 	free_token(head, tail);
-	exec_ast(root, envp);
+	exec_ast(root, env);
 	return (root);
 }
 
@@ -940,13 +940,13 @@ void	print_tokens(t_token *head)
 	}
 }
 
-t_token	*lexer(char *str, char **envp)
+t_token	*lexer(char *str, t_env *env)
 {
 	t_token	*head;
 
 	head = tokenize_str(str);
 	// print_tokens(head);
-	parser(head, envp);
+	parser(head, env);
 	return (head);
 }
 
@@ -957,7 +957,9 @@ t_token	*lexer(char *str, char **envp)
 int	main(int ac, char **av, char **envp)
 {
 	char	*input;
+	t_env	env;
 
+	encode_envp(&env, envp);
 	while (1)
 	{
 		input = readline(">>minishell ");
@@ -976,7 +978,7 @@ int	main(int ac, char **av, char **envp)
 			printf("See you next time…\n");
 			break ;
 		}
-		lexer(input, envp);
+		lexer(input, &env);
 		free(input);
 	}
 	return (0);

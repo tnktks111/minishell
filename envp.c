@@ -6,25 +6,19 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 23:26:08 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/15 21:50:58 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/17 14:25:52 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/*単テスト用*/
-#include <stdio.h>
-void                ft_putendl_fd(char *s, int fd);
-void                ft_putstr_fd(char *s, int fd);
-int                 ft_strcmp(char *s1, char *s2);
-char				*ft_strdup(char *s1);
-char				*ft_strjoin(char *s1, char *s2);
-char				*ft_strchr(char *s, int c);
-
 /*便利関数*/
 char *extract_key(char *s);
 char *extract_val(char *s);
+char *extract_key_when_additional(char *s);
+char *extract_val_when_additional(char *s, char *key, t_env *env);
 char *_concatnate_key_val(char *key, char *val, bool have_quote);
+void display_env(t_env *env, bool print_declare);
 /*ハッシュテーブル初期化・生成・文字配列化*/
 void _init_table(t_env *env);
 int encode_envp(t_env *env, char *envp[]);
@@ -395,38 +389,38 @@ void free_table(t_env *env)
     }
 }
 
-int main(int ac, char *av[], char *envp[])
-{
-    t_env env;
-    char **res;
-    (void)ac;
-    (void)av;
-    int i = 0;
-    printf("original envp are as follows\n");
-    while(envp[i])
-    {
-        printf("%s\n", envp[i]);
-        i++;
-    }    
-    printf("-----------------------------------------------------------------\n");
-    printf("entry cnt: %d\n", i);
-    encode_envp(&env, envp);
-    printf("encode success\n");
-    printf("ft_search:\n");
-    printf("%s\n", ft_search("LOGNAME", &env));
-    printf("ft_remove_key:\n");
-    ft_remove_key("LOGNAME", &env);
-    printf("%s\n", ft_search("LOGNAME", &env));
-    printf("ft_add_key_val_pair:\n");
-    ft_add_key_val_pair(ft_strdup("LOGNAME"), ft_strdup("4242422"), &env);
-    printf("%s\n", ft_search("LOGNAME", &env));
-    printf("-----------------------------------------------------------------\n");
-    printf("----------------------decode_test----------------------\n");
-    res = decode_table(&env);
-    i = 0;
-    while(res[i])
-    {
-        printf("%s\n", res[i]);
-        i++;
-    }
-}
+// int main(int ac, char *av[], char *envp[])
+// {
+//     t_env env;
+//     char **res;
+//     (void)ac;
+//     (void)av;
+//     int i = 0;
+//     printf("original envp are as follows\n");
+//     while(envp[i])
+//     {
+//         printf("%s\n", envp[i]);
+//         i++;
+//     }    
+//     printf("-----------------------------------------------------------------\n");
+//     printf("entry cnt: %d\n", i);
+//     encode_envp(&env, envp);
+//     printf("encode success\n");
+//     printf("ft_search:\n");
+//     printf("%s\n", ft_search("LOGNAME", &env));
+//     printf("ft_remove_key:\n");
+//     ft_remove_key("LOGNAME", &env);
+//     printf("%s\n", ft_search("LOGNAME", &env));
+//     printf("ft_add_key_val_pair:\n");
+//     ft_add_key_val_pair(ft_strdup("LOGNAME"), ft_strdup("4242422"), &env);
+//     printf("%s\n", ft_search("LOGNAME", &env));
+//     printf("-----------------------------------------------------------------\n");
+//     printf("----------------------decode_test----------------------\n");
+//     res = decode_table(&env);
+//     i = 0;
+//     while(res[i])
+//     {
+//         printf("%s\n", res[i]);
+//         i++;
+//     }
+// }

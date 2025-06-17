@@ -6,14 +6,13 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 21:06:08 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/15 20:37:22 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/17 14:27:18 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 unsigned char builtin_echo(t_tree_node *node, t_env *env);
-unsigned char builtin_cd(t_tree_node *node, t_env *env);
 unsigned char builtin_pwd(t_tree_node *node, t_env *env);
 unsigned char builtin_export(t_tree_node *node, t_env *env);
 unsigned char builtin_unset(t_tree_node *node, t_env *env);
@@ -43,6 +42,7 @@ unsigned char builtin_echo(t_tree_node *node, t_env *env)
     bool designate_n_option;
     bool first_arg;
     
+    (void)env;
     i = 0;
     designate_n_option = false;
     first_arg = true;
@@ -60,10 +60,10 @@ unsigned char builtin_echo(t_tree_node *node, t_env *env)
     return (EXIT_SUCCESS);
 }
 
-unsigned char builtin_cd(t_tree_node *node, t_env *env)
-{
+// unsigned char builtin_cd(t_tree_node *node, t_env *env)
+// {
     
-}
+// }
 
 unsigned char builtin_pwd(t_tree_node *node, t_env *env)
 {
@@ -75,7 +75,7 @@ unsigned char builtin_pwd(t_tree_node *node, t_env *env)
             error_invalid_option(node->data.command.args[0], node->data.command.args[1]);
             return (EXIT_FAILURE);
     }
-    pwd = ft_search("PWD");
+    pwd = ft_search("PWD", env);
     ft_putendl_fd(pwd, STDOUT_FILENO);
     return (EXIT_FAILURE);
 }
@@ -142,7 +142,7 @@ int is_valid_unset_key(char *s)
 {
     while (*s)
     {
-        if (!(is_alnum(*s) || *s == '_'))
+        if (!(ft_isalnum(*s) || *s == '_'))
             return 0;
         s++;
     }
@@ -187,7 +187,7 @@ int ft_isnumeric(char *s)
 {
     while(*s)
     {
-        if (!is_digit(*s))
+        if (!ft_isdigit(*s))
             return (0);
         s++;
     }
@@ -200,7 +200,7 @@ long long ft_strtol(char *s, bool *error)
 
     sign = 1;
     num = 0;
-	if (strcmp(s, "-9223372036854775808") == 0)
+	if (ft_strcmp(s, "-9223372036854775808") == 0)
 		return (LLONG_MIN);
     if (*s == '+' || *s == '-')
     {
