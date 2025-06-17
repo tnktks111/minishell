@@ -946,7 +946,7 @@ t_token	*lexer(char *str, char **envp)
 
 	head = tokenize_str(str);
 	// print_tokens(head);
-	parser(head);
+	parser(head, envp);
 	return (head);
 }
 
