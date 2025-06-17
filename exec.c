@@ -312,7 +312,7 @@ unsigned char	exec_command_helper(t_tree_node *node, t_env *env)
 		exit(EXIT_FAILURE);
 	}
 	else
-		exec_ast(node, env);
+		exit(exec_ast(node, env));
 }
 
 bool	is_builtin(char *s)
@@ -350,4 +350,6 @@ unsigned char	exec_builtin(t_tree_node *node, t_env *env)
 		return (builtin_env(node, env));
 	if (ft_strcmp(node->data.command.args[0], "exit") == 0)
 		return (builtin_exit(node, env));
+	else
+		return (EXIT_FAILURE);
 }

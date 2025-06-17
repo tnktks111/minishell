@@ -25,10 +25,11 @@
 #include <dirent.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 
 #define DEFAULT_TMPDIR "."
 #ifndef PATH_MAX
-	#define PATH_MAX 1024
+#define PATH_MAX 1024
 #endif
 #define RANDOM_SIZE 512
 #define HASH_SIZE 1024

@@ -39,16 +39,16 @@ void ft_remove_key(char *key, t_env *env);
 /* ハッシュテーブルのリソース解放 */
 void free_table(t_env *env);
 
-char **free_allocated_data(char **datas, size_t allocated)
-{
-    size_t i;
+// char **free_allocated_data(char **datas, size_t allocated)
+// {
+//     size_t i;
 
-    i = 0;
-    while (i < allocated)
-        free(datas[i++]);
-    free(datas);
-    return (NULL);
-}
+//     i = 0;
+//     while (i < allocated)
+//         free(datas[i++]);
+//     free(datas);
+//     return (NULL);
+// }
 
 int ft_strcmp(char *s1, char *s2)
 {
