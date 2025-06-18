@@ -14,7 +14,6 @@
 # define GURUGE_MINISHELL_H
 
 # include "libft/inc/libft.h"
-# include "minishell.h"
 # include <dirent.h>
 # include <fcntl.h>
 # include <limits.h>

@@ -123,7 +123,7 @@ unsigned char	exec_pipeline(t_tree_node *root, t_env *env)
 	curr = root;
 	cnt = 0;
 	fd.read_fd = STDIN_FILENO;
-	// fd.head = NULL;
+	// fd.head = NULL; なんだこれは
 	if (curr->kind == NODE_SIMPLE_COMMAND)
 		return (exec_solo_cmd(curr, env));
 	while (curr->kind == NODE_PIPE)
