@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/18 16:18:47 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/18 20:18:35 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,18 +99,6 @@ void	setup_pipefd(t_pipefd *fd, t_tree_node *node, bool is_start)
 	}
 }
 
-// t_tmpfile_node *create_tmpfile_node(char *filename)
-// {
-// 	t_tmpfile_node *newnode;
-
-// 	newnode = (t_tmpfile_node*)malloc(sizeof(t_tmpfile_node));
-// 	if (!newnode)
-// 		return (NULL);
-// 	newnode->filename = filename;
-// 	newnode->next = NULL;
-// 	return (newnode);
-// }
-
 /*fork, pipeのエラーハンドリングあとで*/
 unsigned char	exec_pipeline(t_tree_node *root, t_env *env)
 {
@@ -123,7 +111,6 @@ unsigned char	exec_pipeline(t_tree_node *root, t_env *env)
 	curr = root;
 	cnt = 0;
 	fd.read_fd = STDIN_FILENO;
-	// fd.head = NULL; なんだこれは
 	if (curr->kind == NODE_SIMPLE_COMMAND)
 		return (exec_solo_cmd(curr, env));
 	while (curr->kind == NODE_PIPE)

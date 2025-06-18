@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 21:06:08 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/17 19:22:01 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/18 20:16:59 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,15 +46,18 @@ unsigned char	builtin_echo(t_tree_node *node, t_env *env)
 	i = 0;
 	designate_n_option = false;
 	first_arg = true;
-	while (is_valid_echo_option(node->data.command.args[++i]))
-		designate_n_option = true;
-	while (node->data.command.args[i])
+	if (node->data.command.args[1])
 	{
-		if (!first_arg)
-			ft_putstr_fd(" ", STDOUT_FILENO);
-		first_arg = false;
-		ft_putstr_fd(node->data.command.args[i], STDOUT_FILENO);
-		i++;
+		while (is_valid_echo_option(node->data.command.args[++i]))
+			designate_n_option = true;
+		while (node->data.command.args[i])
+		{
+			if (!first_arg)
+				ft_putstr_fd(" ", STDOUT_FILENO);
+			first_arg = false;
+			ft_putstr_fd(node->data.command.args[i], STDOUT_FILENO);
+			i++;
+		}
 	}
 	if (!designate_n_option)
 		ft_putstr_fd("\n", STDOUT_FILENO);
