@@ -21,8 +21,8 @@ unsigned char	exec_ast(t_tree_node *root, t_env *env);
 unsigned char	exec_and_or(t_tree_node *root, t_env *env);
 unsigned char	exec_pipeline(t_tree_node *root, t_env *env);
 /*redirection & here_doc*/
-int prepare_here_doc(t_tree_node *node);
-char*			here_doc_handler(char *limiter);
+int				prepare_here_doc(t_tree_node *node);
+char			*here_doc_handler(char *limiter);
 void			exec_redirection(t_redirect *redirect);
 void			backup_stdin_out(int *stdin_out);
 void			restore_stdin_out(int *stdin_out);
@@ -99,17 +99,17 @@ void	setup_pipefd(t_pipefd *fd, t_tree_node *node, bool is_start)
 	}
 }
 
-t_tmpfile_node *create_tmpfile_node(char *filename)
-{
-	t_tmpfile_node *newnode;
-	
-	newnode = (t_tmpfile_node*)malloc(sizeof(t_tmpfile_node));
-	if (!newnode)
-		return (NULL);
-	newnode->filename = filename;
-	newnode->next = NULL;
-	return (newnode);
-}
+// t_tmpfile_node *create_tmpfile_node(char *filename)
+// {
+// 	t_tmpfile_node *newnode;
+
+// 	newnode = (t_tmpfile_node*)malloc(sizeof(t_tmpfile_node));
+// 	if (!newnode)
+// 		return (NULL);
+// 	newnode->filename = filename;
+// 	newnode->next = NULL;
+// 	return (newnode);
+// }
 
 /*fork, pipeのエラーハンドリングあとで*/
 unsigned char	exec_pipeline(t_tree_node *root, t_env *env)
@@ -123,7 +123,7 @@ unsigned char	exec_pipeline(t_tree_node *root, t_env *env)
 	curr = root;
 	cnt = 0;
 	fd.read_fd = STDIN_FILENO;
-	fd.head = NULL;
+	// fd.head = NULL;
 	if (curr->kind == NODE_SIMPLE_COMMAND)
 		return (exec_solo_cmd(curr, env));
 	while (curr->kind == NODE_PIPE)
@@ -176,10 +176,10 @@ void	restore_stdin_out(int *stdin_out)
 
 unsigned char	exec_solo_cmd(t_tree_node *curr, t_env *env)
 {
-	pid_t	pid;
+	pid_t			pid;
 	unsigned char	status;
-    int     wait_status;
-	int		stdin_out[2];
+	int				wait_status;
+	int				stdin_out[2];
 
 	prepare_here_doc(curr);
 	if (is_builtin(curr->data.command.args[0]))
@@ -217,7 +217,7 @@ unsigned char	exec_solo_cmd(t_tree_node *curr, t_env *env)
 	}
 }
 
-char *here_doc_handler(char *limiter)
+char	*here_doc_handler(char *limiter)
 {
 	int		fd;
 	char	*tmpfile;
@@ -243,11 +243,11 @@ char *here_doc_handler(char *limiter)
 	return (tmpfile);
 }
 
-int prepare_here_doc(t_tree_node *node)
+int	prepare_here_doc(t_tree_node *node)
 {
-	t_redirect *curr;
-	char *tmpfile;
-	
+	t_redirect	*curr;
+	char		*tmpfile;
+
 	if (node->right)
 		curr = node->right->data.command.redirects;
 	else
@@ -258,7 +258,7 @@ int prepare_here_doc(t_tree_node *node)
 		{
 			tmpfile = here_doc_handler(curr->filename);
 			if (!tmpfile)
-			 	return (EXIT_FAILURE);
+				return (EXIT_FAILURE);
 			free(curr->filename);
 			curr->filename = tmpfile;
 		}
@@ -359,7 +359,8 @@ unsigned char	exec_command_helper(t_tree_node *node, t_env *env)
 			find_builtin(cmd_node, env);
 			find_path(cmd_node, env);
 		}
-		execve(cmd_node->data.command.args[0], cmd_node->data.command.args, env->envp);
+		execve(cmd_node->data.command.args[0], cmd_node->data.command.args,
+			env->envp);
 		exit(EXIT_FAILURE);
 	}
 	else

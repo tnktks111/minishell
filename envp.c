@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 23:26:08 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/18 13:14:12 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/17 20:19:24 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,8 @@ char **decode_table(t_env *env)
     size_t res_idx;
     t_env_node *curr;
 
+	size_t depth;
+
     res = (char **)malloc(sizeof(char *) * (env->entry_cnt + 1));
     if (!res)
         return (NULL);
@@ -188,6 +190,7 @@ char **decode_table(t_env *env)
         table_idx++;
         if (curr->is_empty)
             continue;
+		depth = 0;
         while(curr)
         {
             res[res_idx] = _concatnate_key_val(curr->key, curr->val, false);
