@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 12:49:45 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/17 23:12:23 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/18 13:47:11 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -363,8 +363,6 @@ t_tree_node	*create_simple_cmd_node(t_token *head, t_token *tail)
 	cmd_node->right = NULL;
 	cmd_node->data.command.redirects = extract_redirects(head, tail);
 	cmd_node->data.command.args = extract_args(head, tail);
-	printf("%s\n", cmd_node->data.command.args[0]);
-	printf("%s\n", cmd_node->data.command.redirects->filename);
 	return (cmd_node);
 }
 
@@ -392,7 +390,9 @@ t_tree_node	*create_pipeline_tree(t_token *head, t_token *tail)
 
 	op = find_third_lowest_precedence_operator(head, tail);
 	if (!op)
+	{
 		return (create_simple_cmd_node(head, tail));
+	}
 	left = create_pipeline_tree(head, op->prev);
 	right = create_pipeline_tree(op->next, tail);
 	return (create_operator_node(op, left, right));
@@ -972,14 +972,16 @@ int	main(int ac, char **av, char **envp)
 		{
 			add_history(input);
 		}
-		if (strcmp(input, "exit") == 0)
+		if (ft_strcmp(input, "exit") == 0)
 		{
 			free(input);
 			printf("See you next time…\n");
 			break ;
 		}
 		if (is_valid_input(input))
+		{
 			lexer(input, &env);
+		}
 		free(input);
 	}
 	return (0);
