@@ -366,6 +366,12 @@ t_tree_node	*create_simple_cmd_node(t_token *head, t_token *tail)
 	return (cmd_node);
 }
 
+bool	find_bang(t_tree_node *cur_root)
+{
+	(void)cur_root;
+	return (false);
+}
+
 t_tree_node	*create_pipeline_node(t_tree_node *cur_root)
 {
 	t_tree_node	*node;
@@ -375,6 +381,7 @@ t_tree_node	*create_pipeline_node(t_tree_node *cur_root)
 		return (NULL);
 	node->kind = NODE_PIPE_LINE;
 	node->parent = NULL;
+	node->data.pipeline.have_bang = find_bang(cur_root);
 	node->left = cur_root;
 	node->right = NULL;
 	if (cur_root)
@@ -632,6 +639,7 @@ t_tree_node	*parser(t_token *head, t_env *env)
 	root = create_tree(head, tail);
 	root = add_tree_root(root);
 	free_token(head, tail);
+	// print_tree(root);
 	exec_ast(root, env);
 	return (root);
 }
