@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/17 23:07:34 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/18 16:18:47 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ unsigned char	exec_ast(t_tree_node *root, t_env *env);
 unsigned char	exec_and_or(t_tree_node *root, t_env *env);
 unsigned char	exec_pipeline(t_tree_node *root, t_env *env);
 /*redirection & here_doc*/
-int				here_doc_handler(char *limiter);
+int prepare_here_doc(t_tree_node *node);
+char*			here_doc_handler(char *limiter);
 void			exec_redirection(t_redirect *redirect);
 void			backup_stdin_out(int *stdin_out);
 void			restore_stdin_out(int *stdin_out);
@@ -98,6 +99,18 @@ void	setup_pipefd(t_pipefd *fd, t_tree_node *node, bool is_start)
 	}
 }
 
+t_tmpfile_node *create_tmpfile_node(char *filename)
+{
+	t_tmpfile_node *newnode;
+	
+	newnode = (t_tmpfile_node*)malloc(sizeof(t_tmpfile_node));
+	if (!newnode)
+		return (NULL);
+	newnode->filename = filename;
+	newnode->next = NULL;
+	return (newnode);
+}
+
 /*fork, pipeのエラーハンドリングあとで*/
 unsigned char	exec_pipeline(t_tree_node *root, t_env *env)
 {
@@ -110,6 +123,7 @@ unsigned char	exec_pipeline(t_tree_node *root, t_env *env)
 	curr = root;
 	cnt = 0;
 	fd.read_fd = STDIN_FILENO;
+	fd.head = NULL;
 	if (curr->kind == NODE_SIMPLE_COMMAND)
 		return (exec_solo_cmd(curr, env));
 	while (curr->kind == NODE_PIPE)
@@ -119,6 +133,7 @@ unsigned char	exec_pipeline(t_tree_node *root, t_env *env)
 		if (curr->parent->kind == NODE_PIPE && pipe(fd.pipefd) == -1)
 			return (perror_string("pipe: "));
 		cnt++;
+		prepare_here_doc(curr);
 		pid = fork();
 		if (pid == -1)
 			return (perror_string("fork: "));
@@ -134,13 +149,9 @@ unsigned char	exec_pipeline(t_tree_node *root, t_env *env)
 	while (--cnt > 0)
 		wait(NULL);
 	if (WIFEXITED(status))
-	{
 		return ((unsigned char)WEXITSTATUS(status));
-	}
 	else if (WIFSIGNALED(status))
-	{
 		return (128 + WTERMSIG(status));
-	}
 	return (EXIT_FAILURE);
 }
 
@@ -170,6 +181,7 @@ unsigned char	exec_solo_cmd(t_tree_node *curr, t_env *env)
     int     wait_status;
 	int		stdin_out[2];
 
+	prepare_here_doc(curr);
 	if (is_builtin(curr->data.command.args[0]))
 	{
 		backup_stdin_out(stdin_out);
@@ -192,8 +204,7 @@ unsigned char	exec_solo_cmd(t_tree_node *curr, t_env *env)
 				env->envp);
 			exit(EXIT_FAILURE);
 		}
-		else
-			wait(&wait_status);
+		wait(&wait_status);
 		if (WIFEXITED(wait_status))
 		{
 			return ((unsigned char)WEXITSTATUS(wait_status));
@@ -206,7 +217,7 @@ unsigned char	exec_solo_cmd(t_tree_node *curr, t_env *env)
 	}
 }
 
-int	here_doc_handler(char *limiter)
+char *here_doc_handler(char *limiter)
 {
 	int		fd;
 	char	*tmpfile;
@@ -214,7 +225,7 @@ int	here_doc_handler(char *limiter)
 
 	fd = sh_mktmpfd(&tmpfile);
 	if (fd == -1)
-		return (EXIT_FAILURE);
+		return (NULL);
 	s = readline("> ");
 	while (s)
 	{
@@ -228,10 +239,31 @@ int	here_doc_handler(char *limiter)
 		free(s);
 		s = readline("> ");
 	}
-	dup2(fd, STDIN_FILENO);
 	close(fd);
-	unlink(tmpfile);
-	free(tmpfile);
+	return (tmpfile);
+}
+
+int prepare_here_doc(t_tree_node *node)
+{
+	t_redirect *curr;
+	char *tmpfile;
+	
+	if (node->right)
+		curr = node->right->data.command.redirects;
+	else
+		curr = node->data.command.redirects;
+	while (curr)
+	{
+		if (curr->kind == REDIR_HEREDOC)
+		{
+			tmpfile = here_doc_handler(curr->filename);
+			if (!tmpfile)
+			 	return (EXIT_FAILURE);
+			free(curr->filename);
+			curr->filename = tmpfile;
+		}
+		curr = curr->next;
+	}
 	return (EXIT_SUCCESS);
 }
 
@@ -244,25 +276,19 @@ void	exec_redirection(t_redirect *redirect)
 	curr = redirect;
 	while (curr)
 	{
-		if (curr->kind == REDIR_HEREDOC)
-		{
-			if (here_doc_handler(curr->filename) == EXIT_FAILURE)
-				return ;
-		}
+		if (curr->kind == REDIR_IN)
+			open_flags = O_RDONLY;
+		else if (curr->kind == REDIR_APPEND)
+			open_flags = O_WRONLY | O_CREAT | O_APPEND;
+		else if (curr->kind == REDIR_HEREDOC)
+			open_flags = O_RDONLY;
 		else
-		{
-			if (curr->kind == REDIR_IN)
-				open_flags = O_RDONLY;
-			else if (curr->kind == REDIR_APPEND)
-				open_flags = O_WRONLY | O_CREAT | O_APPEND;
-			else
-				open_flags = O_WRONLY | O_CREAT | O_TRUNC;
-			fd = open(curr->filename, open_flags, 0644);
-			if (fd == -1)
-				return (perror("open :"));
-			dup2(fd, curr->io_number);
-			close(fd);
-		}
+			open_flags = O_WRONLY | O_CREAT | O_TRUNC;
+		fd = open(curr->filename, open_flags, 0644);
+		if (fd == -1)
+			return (perror("open :"));
+		dup2(fd, curr->io_number);
+		close(fd);
 		curr = curr->next;
 	}
 }
