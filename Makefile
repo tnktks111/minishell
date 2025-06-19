@@ -33,6 +33,7 @@ SRCS = 	builtin.c \
 		pattern_matching.c \
 		signal.c \
 		tempfile.c \
+		parser.c
 
 OBJS = $(addprefix $(OBJS_DIR)/, $(SRCS:.c=.o))
 
