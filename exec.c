@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/18 20:18:35 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/19 13:48:35 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -358,6 +358,8 @@ unsigned char	exec_command_helper(t_tree_node *node, t_env *env)
 
 bool	is_builtin(char *s)
 {
+	if (!s)
+		return (false);
 	if (ft_strcmp(s, "echo") == 0)
 		return (true);
 	if (ft_strcmp(s, "cd") == 0)
