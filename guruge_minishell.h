@@ -28,13 +28,6 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-# define DEFAULT_TMPDIR "."
-# ifndef PATH_MAX
-#  define PATH_MAX 1024
-# endif
-# define RANDOM_SIZE 512
-# define HASH_SIZE 1024
-
 /* lexer prototype */
 // utils
 bool			is_d_quote(char c);
