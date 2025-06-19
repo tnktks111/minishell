@@ -152,7 +152,7 @@ int	exec_pipeline(t_tree_node *root, t_env *env)
 		return ((unsigned char)WEXITSTATUS(status));
 	else if (WIFSIGNALED(status))
 	{
-		if (WIFSIGNALED(status) == SIGINT)
+		if (WTERMSIG(status) == SIGINT)
 		{
 			ft_putchar_fd('\n', STDERR_FILENO);
 			return (-1);
@@ -229,8 +229,8 @@ int	exec_solo_cmd(t_tree_node *curr, t_env *env)
 			if (WTERMSIG(wait_status) == SIGQUIT)
 			{
 				ft_putstr_fd("Quit", STDERR_FILENO);
-				if (WCOREDUMP(status))
-					ft_putstr_fd(" (core dumped)", STDERR_FILENO);
+				// if (WCOREDUMP(wait_status))
+				// 	ft_putstr_fd(" (core dumped)", STDERR_FILENO);
 			}
 			return (128 + WTERMSIG(wait_status));
 		}

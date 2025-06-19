@@ -50,6 +50,7 @@ size_t			append_two_word_splitable(t_token **head, char *str);
 t_token			*tokenize_str(char *str);
 // void		print_tokens(t_token *head);
 t_token			*lexer(char *str, t_env *env);
+bool			is_valid_input(char *input);
 
 /* parser prototype */
 // && ||
