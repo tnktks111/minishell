@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 12:49:45 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/18 13:47:11 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/19 16:41:04 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -960,39 +960,6 @@ t_token	*lexer(char *str, t_env *env)
 
 // /////////////////////// \(^o^)/ ////////////////////////////////
 
-int	main(int ac, char **av, char **envp)
-{
-	char	*input;
-	t_env	env;
 
-	(void)ac;
-	(void)av;
-	encode_envp(&env, envp);
-	while (1)
-	{
-		input = readline("minishell$ ");
-		if (input == NULL)
-		{
-			printf("\nBye...\n");
-			break ;
-		}
-		if (*input)
-		{
-			add_history(input);
-		}
-		if (ft_strcmp(input, "exit") == 0)
-		{
-			free(input);
-			printf("See you next time…\n");
-			break ;
-		}
-		if (is_valid_input(input))
-		{
-			lexer(input, &env);
-		}
-		free(input);
-	}
-	return (0);
-}
 
 // /* */

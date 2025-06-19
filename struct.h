@@ -20,7 +20,7 @@
 # ifndef PATH_MAX
 #  define PATH_MAX 1024
 # endif
-# define RANDOM_SIZE 512
+# define RANDOM_SIZE 10
 # define HASH_SIZE 1024
 
 typedef enum e_status
@@ -77,7 +77,7 @@ typedef struct s_env
 {
 	t_env_node			table[HASH_SIZE];
 	char				**envp;
-	unsigned char prev_exit_status; /* preserve $? */
+	int prev_exit_status; /* preserve $? */
 	bool				is_malloced;
 	size_t				entry_cnt;
 }						t_env;

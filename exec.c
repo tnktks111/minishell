@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/19 13:48:35 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/19 16:40:47 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 
 /*astの探査*/
 unsigned char	exec_ast(t_tree_node *root, t_env *env);
-unsigned char	exec_and_or(t_tree_node *root, t_env *env);
-unsigned char	exec_pipeline(t_tree_node *root, t_env *env);
+int				exec_and_or(t_tree_node *root, t_env *env);
+int				exec_pipeline(t_tree_node *root, t_env *env);
 /*redirection & here_doc*/
 int				prepare_here_doc(t_tree_node *node);
 char			*here_doc_handler(char *limiter);
@@ -34,28 +34,38 @@ void			find_builtin(t_tree_node *cmd_node, t_env *env);
 void			find_path(t_tree_node *cmd_node, t_env *env);
 unsigned char	exec_command_helper(t_tree_node *cmd_node, t_env *env);
 unsigned char	exec_builtin(t_tree_node *node, t_env *env);
-unsigned char	exec_solo_cmd(t_tree_node *curr, t_env *env);
+int				exec_solo_cmd(t_tree_node *curr, t_env *env);
 
 unsigned char	exec_ast(t_tree_node *root, t_env *env)
 {
-	t_tree_node		*curr;
-	unsigned char	prev_exit_status;
+	t_tree_node	*curr;
+	int			prev_exit_status;
 
 	curr = root->left;
 	while (curr->kind == NODE_AND || curr->kind == NODE_OR)
 		curr = curr->left;
 	prev_exit_status = exec_and_or(curr, env);
+	if (prev_exit_status == -1)
+	{
+		env->prev_exit_status = 130;
+		return (130);
+	}
 	curr = curr->parent;
 	while ((!prev_exit_status && curr->kind == NODE_AND) || (prev_exit_status
 			&& curr->kind == NODE_OR))
 	{
 		prev_exit_status = exec_and_or(curr->right, env);
+		if (prev_exit_status == -1)
+		{
+			env->prev_exit_status = 130;
+			return (130);
+		}
 		curr = curr->parent;
 	}
 	return (prev_exit_status);
 }
 
-unsigned char	exec_and_or(t_tree_node *root, t_env *env)
+int	exec_and_or(t_tree_node *root, t_env *env)
 {
 	env->envp = decode_table(env);
 	root->data.pipeline.exit_status = exec_pipeline(root->left, env);
@@ -100,7 +110,7 @@ void	setup_pipefd(t_pipefd *fd, t_tree_node *node, bool is_start)
 }
 
 /*fork, pipeのエラーハンドリングあとで*/
-unsigned char	exec_pipeline(t_tree_node *root, t_env *env)
+int	exec_pipeline(t_tree_node *root, t_env *env)
 {
 	t_tree_node	*curr;
 	pid_t		pid;
@@ -126,19 +136,29 @@ unsigned char	exec_pipeline(t_tree_node *root, t_env *env)
 			return (perror_string("fork: "));
 		if (pid == 0)
 		{
+			setup_child_signal_handlers();
 			setup_pipefd(&fd, curr, true);
 			exec_command_helper(curr, env);
 		}
 		setup_pipefd(&fd, curr, false);
 		curr = curr->parent;
 	}
+	setup_parent_wait_signal_handlers();
 	waitpid(pid, &status, 0);
 	while (--cnt > 0)
 		wait(NULL);
+	setup_interactive_signal_handlers();
 	if (WIFEXITED(status))
 		return ((unsigned char)WEXITSTATUS(status));
 	else if (WIFSIGNALED(status))
+	{
+		if (WIFSIGNALED(status) == SIGINT)
+		{
+			ft_putchar_fd('\n', STDERR_FILENO);
+			return (-1);
+		}
 		return (128 + WTERMSIG(status));
+	}
 	return (EXIT_FAILURE);
 }
 
@@ -161,7 +181,7 @@ void	restore_stdin_out(int *stdin_out)
 	dup2(stdin_out[1], STDOUT_FILENO);
 }
 
-unsigned char	exec_solo_cmd(t_tree_node *curr, t_env *env)
+int	exec_solo_cmd(t_tree_node *curr, t_env *env)
 {
 	pid_t			pid;
 	unsigned char	status;
@@ -184,6 +204,7 @@ unsigned char	exec_solo_cmd(t_tree_node *curr, t_env *env)
 			return (perror_string("fork: "));
 		if (pid == 0)
 		{
+			setup_child_signal_handlers();
 			exec_redirection(curr->data.command.redirects);
 			if (!ft_strchr(curr->data.command.args[0], '/'))
 				find_path(curr, env);
@@ -191,13 +212,26 @@ unsigned char	exec_solo_cmd(t_tree_node *curr, t_env *env)
 				env->envp);
 			exit(EXIT_FAILURE);
 		}
+		setup_parent_wait_signal_handlers();
 		wait(&wait_status);
+		setup_interactive_signal_handlers();
 		if (WIFEXITED(wait_status))
 		{
 			return ((unsigned char)WEXITSTATUS(wait_status));
 		}
 		else if (WIFSIGNALED(wait_status))
 		{
+			if (WTERMSIG(wait_status) == SIGINT)
+			{
+				ft_putchar_fd('\n', STDERR_FILENO);
+				return (-1);
+			}
+			if (WTERMSIG(wait_status) == SIGQUIT)
+			{
+				ft_putstr_fd("Quit", STDERR_FILENO);
+				if (WCOREDUMP(status))
+					ft_putstr_fd(" (core dumped)", STDERR_FILENO);
+			}
 			return (128 + WTERMSIG(wait_status));
 		}
 		return (EXIT_FAILURE);

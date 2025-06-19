@@ -72,7 +72,7 @@ static char	*get_tmpdir(void)
 	char	*tmpdir;
 
 	tmpdir = getenv("TMPDIR");
-	if (tmpdir && (file_iswdir(tmpdir) == 0 || ft_strlen(tmpdir) > PATH_MAX
+	if (!tmpdir || (file_iswdir(tmpdir) == 0 || ft_strlen(tmpdir) > PATH_MAX
 			- RANDOM_SIZE))
 		tmpdir = get_sys_tmpdir();
 	return (tmpdir);
@@ -129,6 +129,5 @@ int	sh_mktmpfd(char **file_path_ptr)
 		return (-1);
 	}
 	*file_path_ptr = file_path;
-	printf("%s\n", file_path);
 	return (fd);
 }
