@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 16:50:38 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/20 16:51:06 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/20 23:18:24 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*ft_strndup(const char *s1, size_t n)
 		return (NULL);
 	i = 0;
 	len = ft_strlen(s1);
-	if (len > n)
+    if (len > n)
 		len = n;
 	dst = malloc(len + 1);
 	if (!dst)

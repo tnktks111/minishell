@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 23:26:08 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/19 13:29:26 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/20 23:26:37 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,6 +245,8 @@ char *ft_search(char *key, t_env *env)
     unsigned int hash;
     t_env_node *curr;
 
+    if(ft_strcmp(key, "?") == 0)
+        return (ft_itoa(env->prev_exit_status));
     hash = _hash_fnv1a(key) % HASH_SIZE;
     curr = &env->table[hash];
     if (curr->is_empty == true)
