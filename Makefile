@@ -6,7 +6,7 @@
 #    By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/17 19:06:08 by ttanaka           #+#    #+#              #
-#    Updated: 2025/06/19 16:42:36 by ttanaka          ###   ########.fr        #
+#    Updated: 2025/06/20 18:32:22 by ttanaka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ SRCS = 	builtin.c \
 		expander.c \
 		file_expander.c \
 		free.c \
+		here_doc.c \
 		lexer.c \
 		main.c \
 		pattern_matching.c \

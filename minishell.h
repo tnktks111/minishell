@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/19 15:47:03 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/20 18:30:01 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,8 @@ unsigned char	exec_ast(t_tree_node *root, t_env *env);
 int				exec_and_or(t_tree_node *root, t_env *env);
 int				exec_pipeline(t_tree_node *root, t_env *env);
 /*redirection & here_doc*/
-// int						here_doc_handler(char *limiter);
+int				prepare_here_doc(t_tree_node *node, t_env *env);
+char*			here_doc_handler(char *limiter, t_env *env);
 void			exec_redirection(t_redirect *redirect);
 void			backup_stdin_out(int *stdin_out);
 void			restore_stdin_out(int *stdin_out);

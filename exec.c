@@ -6,13 +6,9 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/19 16:40:47 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/20 19:20:38 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-/*
-環境変数をどのタイミングで構造体にいれるか
-*/
 
 #include "minishell.h"
 
@@ -21,8 +17,8 @@ unsigned char	exec_ast(t_tree_node *root, t_env *env);
 int				exec_and_or(t_tree_node *root, t_env *env);
 int				exec_pipeline(t_tree_node *root, t_env *env);
 /*redirection & here_doc*/
-int				prepare_here_doc(t_tree_node *node);
-char			*here_doc_handler(char *limiter);
+int				prepare_here_doc(t_tree_node *node, t_env *env);
+char			*here_doc_handler(char *limiter, t_env *env);
 void			exec_redirection(t_redirect *redirect);
 void			backup_stdin_out(int *stdin_out);
 void			restore_stdin_out(int *stdin_out);
@@ -130,7 +126,7 @@ int	exec_pipeline(t_tree_node *root, t_env *env)
 		if (curr->parent->kind == NODE_PIPE && pipe(fd.pipefd) == -1)
 			return (perror_string("pipe: "));
 		cnt++;
-		prepare_here_doc(curr);
+		prepare_here_doc(curr, env);
 		pid = fork();
 		if (pid == -1)
 			return (perror_string("fork: "));
@@ -188,7 +184,7 @@ int	exec_solo_cmd(t_tree_node *curr, t_env *env)
 	int				wait_status;
 	int				stdin_out[2];
 
-	prepare_here_doc(curr);
+	prepare_here_doc(curr, env);
 	if (is_builtin(curr->data.command.args[0]))
 	{
 		backup_stdin_out(stdin_out);
@@ -206,6 +202,8 @@ int	exec_solo_cmd(t_tree_node *curr, t_env *env)
 		{
 			setup_child_signal_handlers();
 			exec_redirection(curr->data.command.redirects);
+			if (!curr->data.command.args[0])
+				exit(0);
 			if (!ft_strchr(curr->data.command.args[0], '/'))
 				find_path(curr, env);
 			execve(curr->data.command.args[0], curr->data.command.args,
@@ -238,12 +236,19 @@ int	exec_solo_cmd(t_tree_node *curr, t_env *env)
 	}
 }
 
-char	*here_doc_handler(char *limiter)
+char	*here_doc_handler(char *limiter, t_env *env)
 {
 	int		fd;
 	char	*tmpfile;
 	char	*s;
+	bool	is_expandable;
 
+	is_expandable = true;
+	if (have_quotes(limiter) == true)
+	{
+		is_expandable = false;
+		remove_quotes(&limiter);
+	}
 	fd = sh_mktmpfd(&tmpfile);
 	if (fd == -1)
 		return (NULL);
@@ -255,7 +260,8 @@ char	*here_doc_handler(char *limiter)
 			free(s);
 			break ;
 		}
-		// here_doc_expander(s);
+		if (is_expandable)
+			here_doc_expander(&s, env);
 		ft_putendl_fd(s, fd);
 		free(s);
 		s = readline("> ");
@@ -264,7 +270,7 @@ char	*here_doc_handler(char *limiter)
 	return (tmpfile);
 }
 
-int	prepare_here_doc(t_tree_node *node)
+int	prepare_here_doc(t_tree_node *node, t_env *env)
 {
 	t_redirect	*curr;
 	char		*tmpfile;
@@ -277,7 +283,7 @@ int	prepare_here_doc(t_tree_node *node)
 	{
 		if (curr->kind == REDIR_HEREDOC)
 		{
-			tmpfile = here_doc_handler(curr->filename);
+			tmpfile = here_doc_handler(curr->filename, env);
 			if (!tmpfile)
 				return (EXIT_FAILURE);
 			free(curr->filename);
