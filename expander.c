@@ -61,3 +61,88 @@
 // {
 
 // }
+
+bool	check_variable_expand(char *str)
+{
+	bool	in_squote;
+	bool	in_dquote;
+	size_t	i;
+
+	in_squote = false;
+	in_dquote = false;
+	i = 0;
+	while (str[i])
+	{
+		if (!in_dquote && is_s_quote(str[i]))
+			in_squote = !in_squote;
+		if (!in_squote && is_d_quote(str[i]))
+			in_dquote = !in_dquote;
+		if (!in_squote && str[i] == '$')
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+bool	check_wildcard_expand(char *str)
+{
+	bool	in_squote;
+	bool	in_dquote;
+	size_t	i;
+
+	in_squote = false;
+	in_dquote = false;
+	i = 0;
+	while (str[i])
+	{
+		if (!in_dquote && is_s_quote(str[i]))
+			in_squote = !in_squote;
+		if (!in_squote && is_d_quote(str[i]))
+			in_dquote = !in_dquote;
+		if (!in_squote && !in_dquote && str[i] == '*')
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+void	variable_expand_str(char *str, t_env *env)
+{
+	char	*temp;
+	char	*to_expand;
+}
+
+void	wildcard_expand_str(char *str, t_env *env)
+{
+}
+
+void	expander(t_tree_node *pipeline_node, t_env *env)
+{
+	t_tree_node	*simple_cmd_node;
+	char		**cmd_args;
+	char		redir_filename;
+	bool		is_filename_expandable;
+	size_t		i;
+
+	simple_cmd_node = pipeline_node->left;
+	cmd_args = simple_cmd_node->data.command.args;
+	redir_filename = simple_cmd_node->data.command.redirects->filename;
+	is_filename_expandable = simple_cmd_node->data.command.redirects->is_expandable;
+	i = 0;
+	while (cmd_args[i])
+	{
+		if (check_variable_expand(cmd_args[i]))
+			variable_expand_str(cmd_args[i], env);
+		i++;
+	}
+	if (is_filename_expandable)
+		variable_expand_str(redir_filename, env);
+	while (cmd_args[i])
+	{
+		if (check_wildcard_expand(cmd_args[i]))
+			wildcard_expand_str(cmd_args[i], env);
+		i++;
+	}
+	// if (check_wildcard_expand(redir_filename))
+	// 	syntax_error();
+}
