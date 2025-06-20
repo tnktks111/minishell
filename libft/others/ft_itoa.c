@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 13:23:42 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/04/27 15:03:27 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/19 19:46:55 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 // count digits of positive num
 static int	count_digit(unsigned int n)
 {
-	if (0 <= n && n <= 9)
+	if (n <= 9)
 		return (1);
 	return (1 + count_digit(n / 10));
 }

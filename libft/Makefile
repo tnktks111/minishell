@@ -6,7 +6,7 @@
 #    By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/17 14:04:56 by ttanaka           #+#    #+#              #
-#    Updated: 2025/06/17 18:59:28 by ttanaka          ###   ########.fr        #
+#    Updated: 2025/06/20 18:04:56 by ttanaka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,8 +44,10 @@ SRCS = \
 	put/ft_putendl_fd.c \
 	put/ft_putnbr_fd.c \
 	put/ft_putstr_fd.c \
+	str/ft_concatnate_strarr.c \
 	str/ft_strchr.c \
 	str/ft_strcmp.c \
+	str/ft_strcpy.c \
 	str/ft_strdup.c \
 	str/ft_striteri.c \
 	str/ft_strjoin.c \
@@ -54,6 +56,7 @@ SRCS = \
 	str/ft_strlen.c \
 	str/ft_strmapi.c \
 	str/ft_strncmp.c \
+	str/ft_strndup.c \
 	str/ft_strnstr.c \
 	str/ft_strrchr.c \
 	str/ft_strtrim.c \
