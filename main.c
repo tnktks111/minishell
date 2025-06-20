@@ -12,6 +12,9 @@
 
 #include "minishell.h"
 
+#define RED "\033[31m"
+#define RESET "\033[0m"
+
 int	main(int ac, char **av, char **envp)
 {
 	char *input;
@@ -28,7 +31,8 @@ int	main(int ac, char **av, char **envp)
 		input = readline("minishell$ ");
 		if (input == NULL)
 		{
-			ft_putendl_fd("死神クイズに回答者はいらない♤\n", STDERR_FILENO);
+			fprintf(stderr, RED "死神クイズに回答者はいらない♤\n" RESET);
+			// ft_putendl_fd("Bye\n", STDERR_FILENO);
 			break ;
 		}
 		if (*input)
@@ -39,6 +43,14 @@ int	main(int ac, char **av, char **envp)
 		{
 			free(input);
 			ft_putendl_fd("コムギ...まだ居るか...\n", STDERR_FILENO);
+			break ;
+		}
+		if (ft_strcmp(input, "お死枚") == 0)
+		{
+			free(input);
+
+			fprintf(stderr, RED "死神クイズに回答者はいらない♤\n" RESET);
+			// ft_putendl_fd("死神クイズに回答者はいらない♤\n", STDERR_FILENO);
 			break ;
 		}
 		if (is_valid_input(input))
