@@ -14,8 +14,8 @@
 
 int	main(int ac, char **av, char **envp)
 {
-	char	*input;
-	t_env	env;
+	char *input;
+	t_env env;
 
 	(void)ac;
 	(void)av;
@@ -28,7 +28,7 @@ int	main(int ac, char **av, char **envp)
 		input = readline("minishell$ ");
 		if (input == NULL)
 		{
-			ft_putendl_fd("exit\n", STDERR_FILENO);
+			ft_putendl_fd("死神クイズに回答者はいらない♤\n", STDERR_FILENO);
 			break ;
 		}
 		if (*input)
@@ -38,7 +38,7 @@ int	main(int ac, char **av, char **envp)
 		if (ft_strcmp(input, "exit") == 0)
 		{
 			free(input);
-			ft_putendl_fd("See you next time…\n", STDERR_FILENO);
+			ft_putendl_fd("コムギ...まだ居るか...\n", STDERR_FILENO);
 			break ;
 		}
 		if (is_valid_input(input))

@@ -106,43 +106,154 @@ bool	check_wildcard_expand(char *str)
 	return (false);
 }
 
-void	variable_expand_str(char *str, t_env *env)
+char	*get_variable_str(char *src)
 {
-	char	*temp;
-	char	*to_expand;
+	size_t	i;
+	size_t	start;
+	size_t	len;
+
+	len = 0;
+	i = 0;
+	while (src[i] != '$')
+		i++;
+	i++;
+	start = i;
+	if (src[i] == '?' || ft_isdigit(src[i]))
+		return (ft_substr(src, start, 1));
+	while (src[i] && (ft_isalnum(src[i]) || src[i] == '_'))
+		i++;
+	while (src[i] && (ft_isalnum(src[i]) || src[i] == '_'))
+		i++;
+	len = i - start;
+	return (ft_substr(src, start, len));
 }
 
-void	wildcard_expand_str(char *str, t_env *env)
+char	*expand_individual_variable(char *str, t_env *env)
 {
+	char	*temp;
+	char	*expanded_str;
+	char	*variable;
+	size_t	i;
+	char	*before;
+	char	*val;
+	char	*after;
+
+	i = 0;
+	while (str[i] != '$')
+		i++;
+	variable = get_variable_str(&str[i]);
+	val = ft_search(variable, env);
+	if (!val)
+		val = "";
+	i = 0;
+	while (str[i] != '$')
+		i++;
+	before = ft_substr(str, 0, i);
+	after = ft_substr(&str[i + ft_strlen(variable) + 1], 0, ft_strlen(str));
+	temp = ft_strjoin(before, val);
+	expanded_str = ft_strjoin(temp, after);
+	free(before);
+	free(after);
+	free(variable);
+	free(str);
+	free(temp);
+	return (expanded_str);
+}
+
+char	*expand_every_variable(char *str, t_env *env)
+{
+	while (check_variable_expand(str))
+	{
+		str = expand_individual_variable(str, env);
+	}
+	return (str);
+}
+
+// void	wildcard_expand_str(char *str, t_env *env)
+// {
+// }
+
+void	takeoff_quotes(char *str)
+{
+	size_t	read_index;
+	size_t	write_index;
+	bool	in_squote;
+	bool	in_dquote;
+
+	read_index = 0;
+	write_index = 0;
+	in_squote = false;
+	in_dquote = false;
+	if (!str)
+		return ;
+	while (str[read_index])
+	{
+		if (!in_dquote && is_s_quote(str[read_index]))
+		{
+			in_squote = !in_squote;
+			read_index++;
+		}
+		else if (!in_squote && is_d_quote(str[read_index]))
+		{
+			in_dquote = !in_dquote;
+			read_index++;
+		}
+		else
+			str[write_index++] = str[read_index++];
+	}
+	str[write_index] = '\0';
 }
 
 void	expander(t_tree_node *pipeline_node, t_env *env)
 {
 	t_tree_node	*simple_cmd_node;
 	char		**cmd_args;
-	char		redir_filename;
+	char		*redir_filename;
 	bool		is_filename_expandable;
 	size_t		i;
 
 	simple_cmd_node = pipeline_node->left;
-	cmd_args = simple_cmd_node->data.command.args;
-	redir_filename = simple_cmd_node->data.command.redirects->filename;
-	is_filename_expandable = simple_cmd_node->data.command.redirects->is_expandable;
-	i = 0;
-	while (cmd_args[i])
+	if (simple_cmd_node->data.command.redirects)
 	{
-		if (check_variable_expand(cmd_args[i]))
-			variable_expand_str(cmd_args[i], env);
-		i++;
+		redir_filename = simple_cmd_node->data.command.redirects->filename;
+		is_filename_expandable = simple_cmd_node->data.command.redirects->is_expandable;
+		if (is_filename_expandable && redir_filename)
+		{
+			simple_cmd_node->data.command.redirects->filename = expand_every_variable(redir_filename,
+					env);
+		}
+		takeoff_quotes(redir_filename);
 	}
-	if (is_filename_expandable)
-		variable_expand_str(redir_filename, env);
-	while (cmd_args[i])
+	if (simple_cmd_node->data.command.args)
 	{
-		if (check_wildcard_expand(cmd_args[i]))
-			wildcard_expand_str(cmd_args[i], env);
-		i++;
+		cmd_args = simple_cmd_node->data.command.args;
+		i = 0;
+		while (cmd_args[i])
+		{
+			if (check_variable_expand(cmd_args[i]))
+				cmd_args[i] = expand_every_variable(cmd_args[i], env);
+			takeoff_quotes(cmd_args[i]);
+			i++;
+		}
 	}
+	// if (is_filename_expandable)
+	// 	redir_filename = expand_every_variable(redir_filename, env);
+	// while (cmd_args[i])
+	// {
+	// 	if (check_wildcard_expand(cmd_args[i]))
+	// 		wildcard_expand_str(cmd_args[i], env);
+	// 	i++;
+	// }
 	// if (check_wildcard_expand(redir_filename))
 	// 	syntax_error();
+}
+
+void	expand_ast(t_tree_node *node, t_env *env)
+{
+	if (!node)
+		return ;
+	if (node->kind == NODE_PIPE_LINE)
+		expander(node, env);
+	expand_ast(node->left, env);
+	expand_ast(node->right, env);
 }
