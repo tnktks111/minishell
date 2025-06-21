@@ -498,8 +498,8 @@ t_tree_node	*parser(t_token *head, t_env *env)
 	root = create_tree(head, tail);
 	root = add_tree_root(root);
 	free_token(head, tail);
-	print_tree(root);
+	// print_tree(root);
 	exec_ast(root, env);
-	print_tree(root);
+	// print_tree(root);
 	return (root);
 }

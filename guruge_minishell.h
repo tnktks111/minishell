@@ -100,6 +100,9 @@ int				ft_ismatch(char *str, char *pattern, int *is_wildcard,
 void			init_dp_table(int *dp, int *is_wildcard, size_t size);
 void			ft_init_int_array(int *arr, size_t size);
 
-unsigned char	builtin_cd(t_tree_node *node, t_env *env);
+void			get_cmd_line_list(t_command_line **head, char **cmd_args);
+void			expand_and_append_command_line(t_command_line **head, char *str,
+					char **files);
+void			append_command_line(t_command_line **head, char *str);
 
 #endif
