@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 21:06:08 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/21 16:40:19 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/21 16:55:59 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,7 +179,7 @@ unsigned char	builtin_unset(t_tree_node *node, t_env *env)
 
 unsigned char	builtin_env(t_tree_node *node, t_env *env)
 {
-	if (!node->data.command.args[0])
+	if (!node->data.command.args[1])
 	{
 		display_env(env, false);
 		return (EXIT_SUCCESS);
