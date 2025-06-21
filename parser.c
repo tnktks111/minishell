@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 09:35:10 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/21 16:16:17 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/21 19:25:17 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -489,8 +489,6 @@ void	free_token(t_token *head, t_token *tail)
 	}
 }
 
-void			expand_ast(t_tree_node *node, t_env *env);
-
 t_tree_node	*parser(t_token *head, t_env *env)
 {
 	t_tree_node	*root;
@@ -501,8 +499,6 @@ t_tree_node	*parser(t_token *head, t_env *env)
 	root = add_tree_root(root);
 	free_token(head, tail);
 	print_tree(root);
-	/*expandのタイミングを後で修正する*/
-	expand_ast(root, env);
 	exec_ast(root, env);
 	return (root);
 }

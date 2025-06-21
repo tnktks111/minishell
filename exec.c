@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/21 16:32:42 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/21 19:26:19 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ int	exec_pipeline(t_tree_node *node_pipeline, t_env *env)
 	t_pipefd	fd;
 	int			status;
 
+	expand_ast(node_pipeline, env);
 	curr = node_pipeline->left;
 	cnt = 0;
 	fd.read_fd = STDIN_FILENO;

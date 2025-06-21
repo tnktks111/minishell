@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/20 18:30:01 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/21 19:25:54 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,5 +104,6 @@ void			free_splited_data(char **data);
 char			**free_allocated_data(char **datas, size_t allocated);
 
 void			print_tree(t_tree_node *node);
+void			expand_ast(t_tree_node *node, t_env *env);
 
 #endif
