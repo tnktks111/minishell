@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/20 19:20:38 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/21 16:32:42 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ unsigned char	exec_ast(t_tree_node *root, t_env *env)
 int	exec_and_or(t_tree_node *root, t_env *env)
 {
 	env->envp = decode_table(env);
-	root->data.pipeline.exit_status = exec_pipeline(root->left, env);
+	root->data.pipeline.exit_status = exec_pipeline(root, env);
 	if (root->data.pipeline.have_bang == true)
 	{
 		env->prev_exit_status = !root->data.pipeline.exit_status;
@@ -106,7 +106,7 @@ void	setup_pipefd(t_pipefd *fd, t_tree_node *node, bool is_start)
 }
 
 /*fork, pipeのエラーハンドリングあとで*/
-int	exec_pipeline(t_tree_node *root, t_env *env)
+int	exec_pipeline(t_tree_node *node_pipeline, t_env *env)
 {
 	t_tree_node	*curr;
 	pid_t		pid;
@@ -114,7 +114,7 @@ int	exec_pipeline(t_tree_node *root, t_env *env)
 	t_pipefd	fd;
 	int			status;
 
-	curr = root;
+	curr = node_pipeline->left;
 	cnt = 0;
 	fd.read_fd = STDIN_FILENO;
 	if (curr->kind == NODE_SIMPLE_COMMAND)
@@ -144,6 +144,7 @@ int	exec_pipeline(t_tree_node *root, t_env *env)
 	while (--cnt > 0)
 		wait(NULL);
 	setup_interactive_signal_handlers();
+	unlink_all_tmpfiles(node_pipeline);
 	if (WIFEXITED(status))
 		return ((unsigned char)WEXITSTATUS(status));
 	else if (WIFSIGNALED(status))
@@ -157,6 +158,8 @@ int	exec_pipeline(t_tree_node *root, t_env *env)
 	}
 	return (EXIT_FAILURE);
 }
+
+
 
 void	backup_stdin_out(int *stdin_out)
 {
@@ -191,6 +194,7 @@ int	exec_solo_cmd(t_tree_node *curr, t_env *env)
 		exec_redirection(curr->data.command.redirects);
 		status = exec_builtin(curr, env);
 		restore_stdin_out(stdin_out);
+		unlink_tmpfile(curr);
 		return (status);
 	}
 	else
@@ -213,6 +217,7 @@ int	exec_solo_cmd(t_tree_node *curr, t_env *env)
 		setup_parent_wait_signal_handlers();
 		wait(&wait_status);
 		setup_interactive_signal_handlers();
+		unlink_tmpfile(curr);
 		if (WIFEXITED(wait_status))
 		{
 			return ((unsigned char)WEXITSTATUS(wait_status));
