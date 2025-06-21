@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 21:06:08 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/18 20:16:59 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/21 16:40:19 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,8 +164,10 @@ unsigned char	builtin_unset(t_tree_node *node, t_env *env)
 	exit_status = EXIT_SUCCESS;
 	while (node->data.command.args[++i])
 	{
-		if (is_valid_unset_key(node->data.command.args[++i]))
+		if (is_valid_unset_key(node->data.command.args[i]))
+		{
 			ft_remove_key(node->data.command.args[i], env);
+		}
 		else
 		{
 			error_not_a_valid_identifier("unset", node->data.command.args[i]);

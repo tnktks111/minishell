@@ -128,6 +128,7 @@ int	sh_mktmpfd(char **file_path_ptr)
 		free(file_path);
 		return (-1);
 	}
+	printf("%s\n", file_path);
 	*file_path_ptr = file_path;
 	return (fd);
 }
