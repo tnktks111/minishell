@@ -84,28 +84,6 @@ bool	check_variable_expand(char *str)
 	return (false);
 }
 
-bool	check_wildcard_expand(char *str)
-{
-	bool	in_squote;
-	bool	in_dquote;
-	size_t	i;
-
-	in_squote = false;
-	in_dquote = false;
-	i = 0;
-	while (str[i])
-	{
-		if (!in_dquote && is_s_quote(str[i]))
-			in_squote = !in_squote;
-		if (!in_squote && is_d_quote(str[i]))
-			in_dquote = !in_dquote;
-		if (!in_squote && !in_dquote && str[i] == '*')
-			return (true);
-		i++;
-	}
-	return (false);
-}
-
 char	*get_variable_str(char *src)
 {
 	size_t	i;
@@ -169,9 +147,192 @@ char	*expand_every_variable(char *str, t_env *env)
 	return (str);
 }
 
-// void	wildcard_expand_str(char *str, t_env *env)
-// {
-// }
+typedef struct s_command_line
+{
+	char					*arg;
+	struct s_command_line	*next;
+}							t_command_line;
+
+bool	check_wildcard_expand(char *str)
+{
+	bool	in_squote;
+	bool	in_dquote;
+	size_t	i;
+
+	in_squote = false;
+	in_dquote = false;
+	i = 0;
+	while (str[i])
+	{
+		if (!in_dquote && is_s_quote(str[i]))
+			in_squote = !in_squote;
+		if (!in_squote && is_d_quote(str[i]))
+			in_dquote = !in_dquote;
+		if (!in_squote && !in_dquote && str[i] == '*')
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+void	get_cmd_line_list(t_command_line **head, char **cmd_args)
+{
+	size_t			i;
+	t_command_line	*new_token;
+	t_command_line	*tail;
+
+	*head = NULL;
+	tail = NULL;
+	i = 0;
+	while (cmd_args[i])
+	{
+		new_token = malloc(sizeof(t_command_line));
+		// if (!new_token)
+		// system_error();
+		new_token->arg = ft_strdup(cmd_args[i]);
+		new_token->next = NULL;
+		if (!*head)
+			*head = new_token;
+		else
+			tail->next = new_token;
+		tail = new_token;
+		i++;
+	}
+}
+
+void						append_command_line(t_command_line **head,
+								char *str);
+
+void	expand_and_append_command_line(t_command_line **head, char *str,
+		char **files)
+{
+	int				is_wildcard[PATH_MAX];
+	size_t			i;
+	bool			no_match;
+	t_command_line	*tail;
+
+	no_match = true;
+	i = 0;
+	tail = *head;
+	while (tail && tail->next)
+		tail = tail->next;
+	while (i < ft_strlen(str))
+	{
+		if (str[i] == '*')
+			is_wildcard[i] = 1;
+		else
+			is_wildcard[i] = 0;
+		i++;
+	}
+	i = 0;
+	while (files[i])
+	{
+		if (ft_ismatch(files[i], str, is_wildcard, ft_strlen(str)))
+		{
+			append_command_line(head, files[i]);
+			// new_node = malloc(sizeof(t_command_line));
+			// // if (!new_node)
+			// // 	system_error();
+			// new_node->arg = ft_strdup(files[i]);
+			// new_node->next = NULL;
+			// if (!*head)
+			// 	*head = new_node;
+			// else
+			// 	tail->next = new_node;
+			// tail = new_node;
+			no_match = false;
+		}
+		i++;
+	}
+	if (no_match)
+		append_command_line(head, str);
+}
+
+void	append_command_line(t_command_line **head, char *str)
+{
+	t_command_line	*new_node;
+	t_command_line	*tail;
+
+	new_node = malloc(sizeof(t_command_line));
+	// if (!new_node)
+	// 	system_error() ;
+	new_node->arg = ft_strdup(str);
+	new_node->next = NULL;
+	if (!*head)
+		*head = new_node;
+	else
+	{
+		tail = *head;
+		while (tail->next)
+			tail = tail->next;
+		tail->next = new_node;
+	}
+}
+
+char	**list_to_args(t_command_line *head)
+{
+	size_t			count;
+	t_command_line	*cur;
+	char			**result;
+	size_t			i;
+
+	count = 0;
+	cur = head;
+	i = 0;
+	while (cur)
+	{
+		count++;
+		cur = cur->next;
+	}
+	result = malloc(sizeof(char *) * (count + 1));
+	// if (!result)
+	// 	system_error();
+	cur = head;
+	while (i < count)
+	{
+		result[i++] = ft_strdup(cur->arg);
+		cur = cur->next;
+	}
+	result[i] = NULL;
+	return (result);
+}
+
+char	**expand_cmd_line(t_command_line *cmdline)
+{
+	char			**all_files;
+	char			**result;
+	t_command_line	*head;
+	t_command_line	*cur;
+
+	head = NULL;
+	all_files = gen_tmp_dir_file_array();
+	cur = cmdline;
+	append_command_line(&head, cur->arg);
+	cur = cur->next;
+	while (cur)
+	{
+		if (check_wildcard_expand(cur->arg))
+			expand_and_append_command_line(&head, cur->arg, all_files);
+		else
+			append_command_line(&head, cur->arg);
+		cur = cur->next;
+	}
+	result = list_to_args(head);
+	// free_cmd_line(head);
+	return (result);
+}
+
+char	**expand_every_wildcard(char **cmd_args)
+{
+	t_command_line	*cmd_line;
+	char			**result;
+
+	get_cmd_line_list(&cmd_line, cmd_args);
+	result = expand_cmd_line(cmd_line);
+	// free_args(cmd_args);
+	// free_cmd_line(cmd_line);
+	return (result);
+}
 
 void	takeoff_quotes(char *str)
 {
@@ -211,7 +372,10 @@ void	expander(t_tree_node *pipeline_node, t_env *env)
 	char		*redir_filename;
 	bool		is_filename_expandable;
 	size_t		i;
+	char		**expanded;
+	char		*expanded_filename;
 
+	cmd_args = NULL;
 	simple_cmd_node = pipeline_node->left;
 	if (simple_cmd_node->data.command.redirects)
 	{
@@ -219,10 +383,15 @@ void	expander(t_tree_node *pipeline_node, t_env *env)
 		is_filename_expandable = simple_cmd_node->data.command.redirects->is_expandable;
 		if (is_filename_expandable && redir_filename)
 		{
-			simple_cmd_node->data.command.redirects->filename = expand_every_variable(redir_filename,
-					env);
+			expanded_filename = expand_every_variable(redir_filename, env);
+			free(redir_filename);
+			// if (check_wildcard_expand(redir_filename))
+			// {
+			// syntax_error();
+			// }
+			takeoff_quotes(expanded_filename);
+			simple_cmd_node->data.command.redirects->filename = expanded_filename;
 		}
-		takeoff_quotes(redir_filename);
 	}
 	if (simple_cmd_node->data.command.args)
 	{
@@ -232,20 +401,18 @@ void	expander(t_tree_node *pipeline_node, t_env *env)
 		{
 			if (check_variable_expand(cmd_args[i]))
 				cmd_args[i] = expand_every_variable(cmd_args[i], env);
-			takeoff_quotes(cmd_args[i]);
 			i++;
 		}
+		expanded = expand_every_wildcard(cmd_args);
+		// free_args(cmd_args);
+		i = 0;
+		while (expanded[i])
+		{
+			takeoff_quotes(expanded[i]);
+			i++;
+		}
+		simple_cmd_node->data.command.args = expanded;
 	}
-	// if (is_filename_expandable)
-	// 	redir_filename = expand_every_variable(redir_filename, env);
-	// while (cmd_args[i])
-	// {
-	// 	if (check_wildcard_expand(cmd_args[i]))
-	// 		wildcard_expand_str(cmd_args[i], env);
-	// 	i++;
-	// }
-	// if (check_wildcard_expand(redir_filename))
-	// 	syntax_error();
 }
 
 void	expand_ast(t_tree_node *node, t_env *env)

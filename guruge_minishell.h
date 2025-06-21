@@ -92,6 +92,14 @@ t_tree_node		*add_tree_root(t_tree_node *root);
 void			free_token(t_token *head, t_token *tail);
 t_tree_node		*parser(t_token *head, t_env *env);
 
+size_t			_cnt_tmp_dir_file(void);
+char			**gen_tmp_dir_file_array(void);
+
+int				ft_ismatch(char *str, char *pattern, int *is_wildcard,
+					size_t pat_len);
+void			init_dp_table(int *dp, int *is_wildcard, size_t size);
+void			ft_init_int_array(int *arr, size_t size);
+
 unsigned char	builtin_cd(t_tree_node *node, t_env *env);
 
 #endif
