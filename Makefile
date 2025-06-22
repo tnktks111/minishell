@@ -6,7 +6,7 @@
 #    By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/17 19:06:08 by ttanaka           #+#    #+#              #
-#    Updated: 2025/06/20 18:32:22 by ttanaka          ###   ########.fr        #
+#    Updated: 2025/06/22 18:00:37 by ttanaka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ OBJS_DIR = objs
 LIBFT_DIR = libft
 
 SRCS = 	builtin.c \
+		builtin_cd.c \
 		builtin_guruge.c \
 		envp.c \
 		error.c \

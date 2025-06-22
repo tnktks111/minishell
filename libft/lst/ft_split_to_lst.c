@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 15:13:33 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/22 15:30:11 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/22 18:07:22 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,9 @@ static t_list	*word_splitter(char const *s, char c)
 		word[i] = s[i];
 		i++;
 	}
-    new_node = ft_lstnew(word);
-    if (!new_node)
-        return (free(word), NULL);
+	new_node = ft_lstnew(word);
+	if (!new_node)
+		return (free(word), NULL);
 	return (new_node);
 }
 
@@ -82,6 +82,30 @@ t_list	*ft_split_to_lst(char const *s, char c)
             return (ft_lstclear(&head, free), NULL);
         tail->next = new_node;
         tail = tail->next;
+		while (s[i] && s[i] != c)
+			i++;
+	}
+	return (head);
+}
+
+t_list	*ft_split_to_rev_lst(char const *s, char c)
+{
+	size_t	i;
+	size_t	len;
+    t_list *head;
+    t_list *new_node;
+
+	len = ft_count(s, c);
+	head = NULL;
+	i = 0;
+	while (len-- > 0)
+	{
+		while (s[i] && s[i] == c)
+			i++;
+		new_node = word_splitter(s + i, c);
+        if (!new_node)
+            return (ft_lstclear(&head, free), NULL);
+        ft_lstadd_front(&head, new_node);
 		while (s[i] && s[i] != c)
 			i++;
 	}

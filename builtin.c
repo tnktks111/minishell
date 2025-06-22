@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/13 21:06:08 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/21 16:55:59 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/22 18:01:55 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,25 +64,25 @@ unsigned char	builtin_echo(t_tree_node *node, t_env *env)
 	return (EXIT_SUCCESS);
 }
 
-// unsigned char builtin_cd(t_tree_node *node, t_env *env)
-// {
-
-// }
-
 unsigned char	builtin_pwd(t_tree_node *node, t_env *env)
 {
-	char	*pwd;
+	char	pwd[PATH_MAX];
 
+	(void)env;
 	if (node->data.command.args[1])
 	{
 		if (node->data.command.args[1][0] == '-')
 			error_invalid_option(node->data.command.args[0],
 				node->data.command.args[1]);
+		return (2);
+	}
+	if (!getcwd(pwd, PATH_MAX))
+	{
+		perror("getcwd():");
 		return (EXIT_FAILURE);
 	}
-	pwd = ft_search("PWD", env);
 	ft_putendl_fd(pwd, STDOUT_FILENO);
-	return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }
 
 int	is_valid_export_key(char *s)

@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/21 19:25:54 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/22 18:03:37 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ void			error_numeric_arg_required(char *cmd_name, char *arg);
 void			error_not_a_valid_identifier(char *cmd_name, char *arg);
 void			error_illegal_arguments(char *cmd_name, char *arg);
 void			error_invalid_option(char *cmd_name, char *arg);
+void 			builtin_error(char *cmd_name, char *arg, char *errmsg);
 
 unsigned char	builtin_echo(t_tree_node *node, t_env *env);
 unsigned char	builtin_pwd(t_tree_node *node, t_env *env);

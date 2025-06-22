@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 15:22:41 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/17 14:30:09 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/22 18:08:56 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void error_numeric_arg_required(char *cmd_name, char *arg);
 void error_not_a_valid_identifier(char *cmd_name, char *arg);
 void error_illegal_arguments(char *cmd_name, char *arg);
 void error_invalid_option(char *cmd_name, char *arg);
-
+void buildin_error(char *cmd_name, char *arg, char *errmsg);
 
 unsigned char perror_string(char *str)
 {
@@ -77,4 +77,17 @@ void error_invalid_option(char *cmd_name, char *arg)
     ft_putchar_fd(arg[0], STDERR_FILENO);
     ft_putchar_fd(arg[1], STDERR_FILENO);
     ft_putstr_fd(": invalid option\n", STDERR_FILENO);
+}
+
+void builtin_error(char *cmd_name, char *arg, char *errmsg)
+{
+    ft_putstr_fd("minishell: ", STDERR_FILENO);
+    ft_putstr_fd(cmd_name, STDERR_FILENO);
+    if (arg)
+    {
+        ft_putstr_fd(": ", STDERR_FILENO);
+        ft_putstr_fd(arg, STDERR_FILENO);
+    }
+    ft_putstr_fd(": ", STDERR_FILENO);
+    ft_putendl_fd(errmsg, STDERR_FILENO);
 }
