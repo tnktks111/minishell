@@ -92,6 +92,8 @@ t_tree_node		*add_tree_root(t_tree_node *root);
 void			free_token(t_token *head, t_token *tail);
 t_tree_node		*parser(t_token *head, t_env *env);
 
+/* expander */
+
 size_t			_cnt_tmp_dir_file(void);
 char			**gen_tmp_dir_file_array(void);
 
@@ -104,5 +106,7 @@ void			get_cmd_line_list(t_command_line **head, char **cmd_args);
 void			expand_and_append_command_line(t_command_line **head, char *str,
 					char **files);
 void			append_command_line(t_command_line **head, char *str);
+
+void			error_ambiguous_redirect(char *filename);
 
 #endif

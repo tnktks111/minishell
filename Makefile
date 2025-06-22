@@ -43,7 +43,8 @@ SRCS = 	builtin.c \
 		pattern_matching.c \
 		signal.c \
 		tempfile.c \
-		parser.c
+		parser.c \
+		syntax_error.c
 
 OBJS = $(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS))
 

@@ -37,21 +37,11 @@ int	main(int ac, char **av, char **envp)
 			break ;
 		}
 		if (*input)
-		{
 			add_history(input);
-		}
 		if (ft_strcmp(input, "exit") == 0)
 		{
 			free(input);
 			ft_putendl_fd("コムギ...まだ居るか...\n", STDERR_FILENO);
-			break ;
-		}
-		if (ft_strcmp(input, "お死枚") == 0)
-		{
-			free(input);
-
-			fprintf(stderr, RED "死神クイズに回答者はいらない♤\n" RESET);
-			// ft_putendl_fd("死神クイズに回答者はいらない♤\n", STDERR_FILENO);
 			break ;
 		}
 		if (is_valid_input(input))

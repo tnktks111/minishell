@@ -265,6 +265,47 @@ char	**expand_every_wildcard(char **cmd_args)
 	return (result);
 }
 
+char	*expand_filename_wildcard(char *filename)
+{
+	int		is_wildcard[PATH_MAX];
+	size_t	i;
+	int		matches;
+	char	**files;
+	char	*result;
+
+	result = NULL;
+	files = gen_tmp_dir_file_array();
+	matches = 0;
+	i = 0;
+	while (i < ft_strlen(filename))
+	{
+		if (filename[i] == '*')
+			is_wildcard[i] = 1;
+		else
+			is_wildcard[i] = 0;
+		i++;
+	}
+	i = 0;
+	while (files[i])
+	{
+		if (ft_ismatch(files[i], filename, is_wildcard, ft_strlen(filename)))
+		{
+			if (matches == 0)
+				result = ft_strdup(files[i]);
+			matches++;
+		}
+		i++;
+	}
+	if (matches > 1)
+	{
+		error_ambiguous_redirect(filename);
+		return (NULL);
+	}
+	if (matches == 0)
+		return (ft_strdup(filename));
+	return (result);
+}
+
 void	takeoff_quotes(char *str)
 {
 	size_t	read_index;
@@ -296,54 +337,61 @@ void	takeoff_quotes(char *str)
 	str[write_index] = '\0';
 }
 
+void	expand_filename(t_tree_node *simple_cmd_node, t_env *env)
+{
+	char	*redir_filename;
+	char	*expanded_filename;
+	char	*temp;
+
+	redir_filename = simple_cmd_node->data.command.redirects->filename;
+	if (redir_filename)
+	{
+		temp = expand_every_variable(redir_filename, env);
+		if (check_wildcard_expand(temp))
+		{
+			expanded_filename = expand_filename_wildcard(temp);
+			free(temp);
+			temp = expanded_filename;
+		}
+		takeoff_quotes(temp);
+		simple_cmd_node->data.command.redirects->filename = temp;
+	}
+}
+
+void	expand_cmd_args(t_tree_node *simple_cmd_node, t_env *env)
+{
+	char	**cmd_args;
+	size_t	i;
+	char	**expanded;
+
+	cmd_args = simple_cmd_node->data.command.args;
+	i = 0;
+	while (cmd_args[i])
+	{
+		if (check_variable_expand(cmd_args[i]))
+			cmd_args[i] = expand_every_variable(cmd_args[i], env);
+		i++;
+	}
+	expanded = expand_every_wildcard(cmd_args);
+	// free_args(cmd_args);
+	i = 0;
+	while (expanded[i])
+	{
+		takeoff_quotes(expanded[i]);
+		i++;
+	}
+	simple_cmd_node->data.command.args = expanded;
+}
+
 void	expander(t_tree_node *pipeline_node, t_env *env)
 {
 	t_tree_node	*simple_cmd_node;
-	char		**cmd_args;
-	char		*redir_filename;
-	bool		is_filename_expandable;
-	size_t		i;
-	char		**expanded;
-	char		*expanded_filename;
 
-	cmd_args = NULL;
 	simple_cmd_node = pipeline_node->left;
 	if (simple_cmd_node->data.command.redirects)
-	{
-		redir_filename = simple_cmd_node->data.command.redirects->filename;
-		is_filename_expandable = simple_cmd_node->data.command.redirects->is_expandable;
-		if (is_filename_expandable && redir_filename)
-		{
-			expanded_filename = expand_every_variable(redir_filename, env);
-			free(redir_filename);
-			// if (check_wildcard_expand(redir_filename))
-			// {
-			// syntax_error();
-			// }
-			takeoff_quotes(expanded_filename);
-			simple_cmd_node->data.command.redirects->filename = expanded_filename;
-		}
-	}
+		expand_filename(simple_cmd_node, env);
 	if (simple_cmd_node->data.command.args)
-	{
-		cmd_args = simple_cmd_node->data.command.args;
-		i = 0;
-		while (cmd_args[i])
-		{
-			if (check_variable_expand(cmd_args[i]))
-				cmd_args[i] = expand_every_variable(cmd_args[i], env);
-			i++;
-		}
-		expanded = expand_every_wildcard(cmd_args);
-		// free_args(cmd_args);
-		i = 0;
-		while (expanded[i])
-		{
-			takeoff_quotes(expanded[i]);
-			i++;
-		}
-		simple_cmd_node->data.command.args = expanded;
-	}
+		expand_cmd_args(simple_cmd_node, env);
 }
 
 void	expand_ast(t_tree_node *node, t_env *env)
