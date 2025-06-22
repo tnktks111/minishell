@@ -6,7 +6,7 @@
 #    By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/17 14:04:56 by ttanaka           #+#    #+#              #
-#    Updated: 2025/06/20 18:04:56 by ttanaka          ###   ########.fr        #
+#    Updated: 2025/06/22 15:28:33 by ttanaka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -69,7 +69,8 @@ SRCS = \
 	lst/ft_lstlast_bonus.c \
 	lst/ft_lstmap_bonus.c \
 	lst/ft_lstnew_bonus.c \
-	lst/ft_lstsize_bonus.c
+	lst/ft_lstsize_bonus.c \
+	lst/ft_split_to_lst.c
 
 OBJS = $(addprefix $(OBJS_DIR)/, $(notdir $(SRCS:.c=.o)))
 

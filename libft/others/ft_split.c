@@ -6,13 +6,13 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 13:24:15 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/04/27 18:58:29 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/22 15:25:58 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static char	ft_count(char const *s, char c)
+static size_t	ft_count(char const *s, char c)
 {
 	size_t	cnt;
 
