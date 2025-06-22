@@ -6,11 +6,11 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 13:23:55 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/05/01 19:20:10 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/22 15:32:52 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../inc/libft.h"
 
 void	*ft_memmove(void *dst, const void *src, size_t len)
 {

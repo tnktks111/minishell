@@ -6,11 +6,11 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 15:13:33 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/22 15:29:02 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/22 15:30:11 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../inc/libft.h"
 
 static size_t	ft_count(char const *s, char c)
 {

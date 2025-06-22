@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 14:15:02 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/20 18:04:00 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/22 15:30:00 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,4 +78,6 @@ void				ft_lstclear(t_list **lst, void (*del)(void *));
 void				ft_lstiter(t_list *lst, void (*f)(void *));
 t_list				*ft_lstmap(t_list *lst, void *(*f)(void *),
 						void (*del)(void *));
+t_list				*ft_split_to_lst(char const *s, char c);
+
 #endif

@@ -6,11 +6,11 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 13:24:29 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/04/27 17:24:01 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/22 15:32:52 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../inc/libft.h"
 
 size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
 {

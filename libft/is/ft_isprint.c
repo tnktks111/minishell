@@ -6,11 +6,11 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 13:23:40 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/05/03 11:51:31 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/22 15:32:52 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../inc/libft.h"
 
 int	ft_isprint(int c)
 {

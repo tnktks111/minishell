@@ -6,11 +6,11 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 16:19:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/04/27 18:29:16 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/22 15:30:39 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../inc/libft.h"
 
 void	ft_lstiter(t_list *lst, void (*f)(void *))
 {

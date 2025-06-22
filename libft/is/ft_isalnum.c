@@ -6,11 +6,11 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 13:23:29 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/04/27 14:58:55 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/22 15:31:13 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../inc/libft.h"
 
 int	ft_isalnum(int c)
 {

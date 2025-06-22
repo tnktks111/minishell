@@ -6,11 +6,11 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 15:58:11 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/04/27 19:03:08 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/22 15:30:57 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../inc/libft.h"
 
 void	ft_lstadd_back(t_list **lst, t_list *new)
 {
