@@ -6,11 +6,14 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 14:53:17 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/21 16:32:24 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/22 18:00:49 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <signal.h>
+#include <string.h>
+
+unsigned char builtin_cd(t_tree_node *cmd_node, t_env *env);
 
 void setup_interactive_signal_handlers(void);
 void setup_parent_wait_signal_handlers(void);

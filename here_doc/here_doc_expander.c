@@ -1,104 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   here_doc.c                                         :+:      :+:    :+:   */
+/*   here_doc_expander.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 20:35:45 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/21 16:33:04 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/22 19:35:09 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void unlink_tmpfile(t_tree_node *node_simplecmd);
-void unlink_all_tmpfiles(t_tree_node *node_pipeline);
-bool have_quotes(char *limiter);
-void remove_quotes(char **limiter);
 static size_t	ft_env_count(char const *s);
 static char	*env_word_splitter(char const *s);
 static char	**free_and_fail(char **words, size_t allocated_count);
 static char	**ft_env_split(char const *s);
 void here_doc_expander(char **s, t_env *env);
-
-void unlink_tmpfile(t_tree_node *node_simplecmd)
-{
-	t_redirect	*curr;
-
-	curr = node_simplecmd->data.command.redirects;
-	while (curr)
-	{
-		if (curr->kind == REDIR_HEREDOC)
-			unlink(curr->filename);
-		curr = curr->next;
-	}
-}
-
-void unlink_all_tmpfiles(t_tree_node *node_pipeline)
-{
-	t_tree_node	*curr;
-
-	curr = node_pipeline->left;
-	while (curr->kind == NODE_PIPE)
-		curr = curr->left;
-	unlink_tmpfile(curr);
-	curr = curr->parent;
-	while (curr->kind != NODE_PIPE_LINE)
-	{
-		unlink_tmpfile(curr->right);
-		curr = curr->parent;
-	}
-}
-
-bool have_quotes(char *limiter)
-{
-	size_t i;
-
-	i = 0;
-	while (limiter[i])
-	{
-		if (limiter[i] == '\"' || limiter[i] == '\'')
-			return true;
-		i++;
-	}
-	return false;
-}
-
-void remove_quotes(char **limiter)
-{
-	char *newlimiter;
-	size_t i;
-	size_t j;
-	size_t quote_cnt;
-
-	i = 0;
-	quote_cnt = 0;
-	while ((*limiter)[i])
-	{
-		if ((*limiter)[i] == '\"' || (*limiter)[i] == '\'')
-			quote_cnt++;
-		i++;
-	}
-	newlimiter = malloc(sizeof(char) * (i - quote_cnt + 1));
-	if (!newlimiter)
-	{
-		free(*limiter);
-		*limiter = NULL;
-		return ;
-	}
-	i = 0;
-	j = 0;
-	while ((*limiter)[i])
-	{
-		if ((*limiter)[i] != '\'' && (*limiter)[i] != '\"')
-			newlimiter[j++] = (*limiter)[i];
-		i++;
-	}
-	newlimiter[j] = 0;
-	free(*limiter);
-	*limiter = newlimiter;
-}
 
 static size_t	ft_env_count(char const *s)
 {

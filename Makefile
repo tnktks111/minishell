@@ -6,7 +6,7 @@
 #    By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/17 19:06:08 by ttanaka           #+#    #+#              #
-#    Updated: 2025/06/22 18:00:37 by ttanaka          ###   ########.fr        #
+#    Updated: 2025/06/22 20:04:25 by ttanaka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,11 +25,19 @@ SRCS = 	builtin.c \
 		builtin_guruge.c \
 		envp.c \
 		error.c \
-		exec.c \
+		exec/exec.c \
+		exec/exec_utils1.c \
+		exec/exec_utils2.c \
+		exec/exec_builtin.c \
+		exec/exec_solo_command.c \
+		exec/exec_redirection.c \
 		expander.c \
 		file_expander.c \
 		free.c \
-		here_doc.c \
+		here_doc/here_doc.c \
+		here_doc/here_doc_expander.c \
+		here_doc/here_doc_quotes.c \
+		here_doc/here_doc_utils.c \
 		lexer.c \
 		main.c \
 		pattern_matching.c \
@@ -37,7 +45,7 @@ SRCS = 	builtin.c \
 		tempfile.c \
 		parser.c
 
-OBJS = $(addprefix $(OBJS_DIR)/, $(SRCS:.c=.o))
+OBJS = $(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS))
 
 LIBFT_A = $(LIBFT_DIR)/libft.a
 INCS = -I. -I$(LIBFT_DIR)/inc
@@ -56,7 +64,7 @@ $(LIBFT_A):
 		$(MAKE) -C $(LIBFT_DIR)
 
 $(OBJS_DIR)/%.o: %.c
-		$(MKDIR) $(OBJS_DIR)
+		$(MKDIR) $(dir $@)
 		$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
 
 clean:
