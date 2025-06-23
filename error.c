@@ -6,13 +6,13 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 15:22:41 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 14:30:16 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 21:06:33 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-unsigned char perror_string(char *str);
+void perror_string(char *str);
 void ft_puterr_general(char *cmd_name, char *errmsg);
 void error_too_many_args(char *cmd_name);
 void error_numeric_arg_required(char *cmd_name, char *arg);
@@ -22,11 +22,11 @@ void error_invalid_option(char *cmd_name, char *arg);
 void builtin_error(char *cmd_name, char *arg, char *errmsg);
 void warning_shlvl_too_high(int shlvl);
 
-unsigned char perror_string(char *str)
+void perror_string(char *str)
 {
     ft_putstr_fd("minishell: ", STDERR_FILENO);
     perror(str);
-    return (EXIT_FAILURE);
+    ;
 }
 
 void ft_puterr_general(char *cmd_name, char *errmsg)

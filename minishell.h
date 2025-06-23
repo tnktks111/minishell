@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/23 20:12:25 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 21:06:41 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void	remove_quotes(t_redirect *redirect);
 void	unlink_tmpfile(t_tree_node *node_simplecmd);
 void	unlink_all_tmpfiles(t_tree_node *node_pipeline);
 
-unsigned char	perror_string(char *str);
+void			perror_string(char *str);
 void 			ft_puterr_general(char *cmd_name, char *errmsg);
 void			error_too_many_args(char *cmd_name);
 void			error_numeric_arg_required(char *cmd_name, char *arg);

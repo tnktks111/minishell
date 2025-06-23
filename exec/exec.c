@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 18:50:37 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 21:09:58 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,21 +65,21 @@ int	exec_and_or(t_tree_node *root, t_env *env)
 
 int exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env, pid_t *lastpid)
 {
-	size_t cnt;
+	int cnt;
 	pid_t pid;
 
 	cnt = 0;
 	while (node->kind != NODE_PIPE_LINE)
 	{
 		if (node->parent->kind == NODE_PIPE && pipe(fd->pipefd) == -1)
-			return (perror_string("pipe: "));
+			return (perror_string("pipe: "), -1);
 		cnt++;
 		prepare_here_doc(node, env);
 		pid = fork();
 		if (node->parent->kind == NODE_PIPE_LINE)
 			*lastpid = pid;
 		if (pid == -1)
-			return (perror_string("fork: "));
+			return (perror_string("fork: "), -1);
 		if (pid == 0)
 		{
 			setup_child_signal_handlers();
@@ -89,7 +89,7 @@ int exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env, pid_t *lastpid)
 		setup_pipefd(fd, node, false);
 		node = node->parent;
 	}
-	return (EXIT_SUCCESS);
+	return (cnt);
 }
 
 /*fork, pipeのエラーハンドリングあとで*/
@@ -97,7 +97,7 @@ int	exec_pipeline(t_tree_node *node_pipeline, t_env *env)
 {
 	t_tree_node	*curr;
 	pid_t		pid;
-	size_t		cnt;
+	int			cnt;
 	t_pipefd	fd;
 	int			status;
 
@@ -109,7 +109,8 @@ int	exec_pipeline(t_tree_node *node_pipeline, t_env *env)
 		return (exec_solo_cmd(curr, env));
 	while (curr->kind == NODE_PIPE)
 		curr = curr->left;
-	if (exec_loop(curr, &fd, env, &pid) == EXIT_FAILURE)
+	cnt = exec_loop(curr, &fd, env, &pid);
+	if (cnt == -1)
 		return (EXIT_FAILURE);
 	setup_parent_wait_signal_handlers();
 	waitpid(pid, &status, 0);

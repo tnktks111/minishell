@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 17:15:09 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 21:06:50 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int	exec_solo_cmd(t_tree_node *cmd_node, t_env *env)
 	{
 		pid = fork();
 		if (pid == -1)
-			return (perror_string("fork: "));
+			return (perror_string("fork: "), EXIT_FAILURE);
 		if (pid == 0)
 		{
 			if (cmd_node->kind == NODE_SIMPLE_COMMAND)
