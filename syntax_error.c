@@ -29,5 +29,49 @@ void	error_unexpected_token(char *token_str)
 	ft_putstr_fd(" `", STDERR_FILENO);
 	ft_putstr_fd(token_str, STDERR_FILENO);
 	ft_putstr_fd("'\n", STDERR_FILENO);
-	exit(2);
+}
+
+bool	is_status_meta(t_status status)
+{
+	if (status == RIGHT_PAREN || status == REDIRECT || status == AND_OR
+		|| status == PIPE)
+		return (true);
+	else
+		return (false);
+}
+
+void	handle_syntax_error(t_env *env)
+{
+	env->prev_exit_status = 2;
+}
+
+bool	check_syntax_error(t_token *head)
+{
+	bool	prev_is_splitable;
+	t_token	*cur;
+	char	*current_str;
+
+	current_str = NULL;
+	prev_is_splitable = false;
+	cur = head;
+	while (cur)
+	{
+		if (!prev_is_splitable && is_status_meta(cur->status))
+		{
+			prev_is_splitable = true;
+			current_str = cur->str;
+			if (cur->status == RIGHT_PAREN)
+			{
+				error_unexpected_token(current_str);
+				return (true);
+			}
+		}
+		else if (prev_is_splitable && is_status_meta(cur->status))
+		{
+			error_unexpected_token(current_str);
+			return (true);
+		}
+		cur = cur->next;
+	}
+	return (false);
 }

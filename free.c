@@ -13,7 +13,29 @@
 #include "minishell.h"
 
 void	free_splited_data(char **data);
-char **free_allocated_data(char **datas, size_t allocated);
+char	**free_allocated_data(char **datas, size_t allocated);
+
+void	free_token(t_token *head, t_token *tail)
+{
+	t_token	*cur;
+	t_token	*next;
+
+	{
+		if (!head)
+			return ;
+		cur = head;
+		while (cur)
+		{
+			next = cur->next;
+			if (cur->str)
+				free(cur->str);
+			free(cur);
+			if (cur == tail)
+				break ;
+			cur = next;
+		}
+	}
+}
 
 void	free_splited_data(char **data)
 {
@@ -25,13 +47,13 @@ void	free_splited_data(char **data)
 	free(data);
 }
 
-char **free_allocated_data(char **datas, size_t allocated)
+char	**free_allocated_data(char **datas, size_t allocated)
 {
-    size_t i;
+	size_t	i;
 
-    i = 0;
-    while (i < allocated)
-        free(datas[i++]);
-    free(datas);
-    return (NULL);
+	i = 0;
+	while (i < allocated)
+		free(datas[i++]);
+	free(datas);
+	return (NULL);
 }

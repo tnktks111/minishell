@@ -52,11 +52,20 @@ SRCS = 	builtin/builtin_cd.c \
 		here_doc/here_doc_quotes.c \
 		here_doc/here_doc_tmpfile.c \
 		here_doc/here_doc_utils.c \
-		lexer.c \
+		lexer/lexer.c \
+		lexer/lexer_append_token.c \
+		lexer/lexer_token_utils1.c \
+		lexer/lexer_utils1.c \
+		lexer/lexer_utils2.c \
 		main.c \
 		pattern_matching.c \
 		signal.c \
-		parser.c \
+		parser/parser.c \
+		parser/parser_simple_command.c \
+		parser/parser_utils1.c \
+		parser/parser_utils2.c \
+		parser/parser_redirect.c \
+		parser/parser_pipeline.c \
 		syntax_error.c
 
 OBJS = $(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS))

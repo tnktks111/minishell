@@ -33,6 +33,8 @@
 bool			is_d_quote(char c);
 bool			is_s_quote(char c);
 bool			is_splitable(char c);
+bool			is_space(char c);
+bool			is_param(char c);
 bool			is_two_word_splitable(char c1, char c2);
 char			*ft_strdup_len(char *src, size_t len);
 int				ft_strncmp(const char *s1, const char *s2, size_t n);
@@ -43,8 +45,10 @@ size_t			token_strlen(char *str);
 size_t			in_d_quote_token_strlen(char *str);
 size_t			in_s_quote_token_strlen(char *str);
 // token append
+
 size_t			append_token_and_move_index(t_token **head, char *str,
 					bool d_quote, bool s_quote);
+size_t			append_param_token_and_move_index(t_token **head, char *str);
 size_t			append_splitable(t_token **head, char *str);
 size_t			append_two_word_splitable(t_token **head, char *str);
 t_token			*tokenize_str(char *str);
@@ -63,8 +67,7 @@ t_tree_node		*create_pipeline_node(t_tree_node *pipe_root, t_token *head,
 t_tree_node		*create_pipeline_tree(t_token *head, t_token *tail);
 // redirect cmd
 
-char			*ft_strchr(const char *s, int c);
-int				ft_atoi(const char *nptr);
+bool			is_parentheses_group(t_token *head, t_token *tail);
 char			**extract_args(t_token *head, t_token *tail);
 t_redirect_kind	get_redirect_kind(t_token *redirect_token);
 int				get_io_number(t_redirect_kind kind, t_token *redirect_token);
@@ -108,6 +111,8 @@ void			expand_and_append_command_line(t_command_line **head, char *str,
 void			append_command_line(t_command_line **head, char *str);
 
 /*errors*/
+bool			check_syntax_error(t_token *head);
+void			handle_syntax_error(t_env *env);
 void			error_ambiguous_redirect(char *filename);
 void			error_unexpected_token(char *token_str);
 
