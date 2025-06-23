@@ -6,14 +6,14 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 15:22:41 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 10:51:37 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 14:30:16 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 unsigned char perror_string(char *str);
-void error_cmd_not_found(char *cmd_name);
+void ft_puterr_general(char *cmd_name, char *errmsg);
 void error_too_many_args(char *cmd_name);
 void error_numeric_arg_required(char *cmd_name, char *arg);
 void error_not_a_valid_identifier(char *cmd_name, char *arg);
@@ -29,11 +29,12 @@ unsigned char perror_string(char *str)
     return (EXIT_FAILURE);
 }
 
-void error_cmd_not_found(char *cmd_name)
+void ft_puterr_general(char *cmd_name, char *errmsg)
 {
     ft_putstr_fd("minishell: ", STDERR_FILENO);
     ft_putstr_fd(cmd_name, STDERR_FILENO);
-    ft_putstr_fd(": command not found\n", STDERR_FILENO);
+    ft_putstr_fd(": ", STDERR_FILENO);
+    ft_putendl_fd(errmsg, STDERR_FILENO);
 }
 
 void error_too_many_args(char *cmd_name)

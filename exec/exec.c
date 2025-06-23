@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 12:05:15 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 15:11:08 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ int	exec_pipeline(t_tree_node *node_pipeline, t_env *env)
 	curr = node_pipeline->left;
 	cnt = 0;
 	fd.read_fd = STDIN_FILENO;
-	if (curr->kind == NODE_SIMPLE_COMMAND)
+	if (curr->kind == NODE_SIMPLE_COMMAND || curr->kind == NODE_SUBSHELL)
 		return (exec_solo_cmd(curr, env));
 	while (curr->kind == NODE_PIPE)
 		curr = curr->left;
@@ -138,7 +138,26 @@ unsigned char	exec_command_helper(t_tree_node *node, t_env *env)
 		}
 		execve(cmd_node->data.command.args[0], cmd_node->data.command.args,
 			env->envp);
-		exit(EXIT_FAILURE);
+		if (is_directory(cmd_node->data.command.args[0]))
+		{
+			ft_puterr_general(cmd_node->data.command.args[0], "Is a directory");
+			exit(126);
+		}
+		else if (errno == EACCES)
+		{
+			ft_puterr_general(cmd_node->data.command.args[0], "Permission Denied");
+			exit(127);
+		}
+		else if (errno == ENOENT)
+		{
+			ft_puterr_general(cmd_node->data.command.args[0], "No such file or directory");
+			exit(126);
+		}
+		else
+		{
+			ft_puterr_general(cmd_node->data.command.args[0], strerror(errno));
+			exit(127);
+		}
 	}
 	else
 	{

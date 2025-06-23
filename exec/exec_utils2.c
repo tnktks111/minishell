@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:39:36 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/22 19:39:45 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 14:43:00 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ void	find_builtin(t_tree_node *cmd_node, t_env *env);
 void	find_path(t_tree_node *cmd_node, t_env *env);
 /*check whether the cmd is builtin or not*/
 bool	is_builtin(char *s);
+/*check whether the given path is directory or not*/
+bool	is_directory(char *path);
 
 char	**get_path_prefix(t_env *env)
 {
@@ -49,10 +51,11 @@ void	find_path(t_tree_node *cmd_node, t_env *env)
 	char	*tmp;
 	char	*tmp_path;
 	int		i;
+	int		last_errno;
 
 	prefix_table = get_path_prefix(env);
+	last_errno = ENOENT;
 	i = -1;
-	// printf("%s_\n", env->envp[0]);
 	while (prefix_table[++i])
 	{
 		tmp = ft_strjoin(prefix_table[i], "/");
@@ -64,11 +67,21 @@ void	find_path(t_tree_node *cmd_node, t_env *env)
 			return ;
 		}
 		execve(tmp_path, cmd_node->data.command.args, env->envp);
+		if (errno != ENOENT)
+			last_errno = errno;
 		free(tmp_path);
 	}
 	free_splited_data(prefix_table);
-    error_cmd_not_found(cmd_node->data.command.args[0]);
-	exit(127);
+	if (last_errno == ENOENT)
+	{
+    	ft_puterr_general(cmd_node->data.command.args[0], "command not found");
+		exit(127);
+	}
+	else
+	{
+		ft_puterr_general(cmd_node->data.command.args[0], strerror(last_errno));
+		exit(126);
+	}
 }
 
 bool	is_builtin(char *s)
@@ -89,5 +102,16 @@ bool	is_builtin(char *s)
 		return (true);
 	if (ft_strcmp(s, "exit") == 0)
 		return (true);
+	return (false);
+}
+
+bool is_directory(char *path)
+{
+	struct stat sb;
+	if (stat(path, &sb) == 0)
+	{
+		if (S_ISDIR(sb.st_mode))
+			return (true);
+	}
 	return (false);
 }

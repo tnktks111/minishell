@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/22 20:04:51 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 15:15:09 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,26 @@ static void exec_child_process_of_solo_cmd(t_tree_node *cmd_node, t_env *env)
 	if (!ft_strchr(cmd_node->data.command.args[0], '/'))
 		find_path(cmd_node, env);
 	execve(cmd_node->data.command.args[0], cmd_node->data.command.args, env->envp);
-	exit(EXIT_FAILURE);
+	if (is_directory(cmd_node->data.command.args[0]))
+	{
+		ft_puterr_general(cmd_node->data.command.args[0], "Is a directory");
+		exit(126);
+	}
+	else if (errno == EACCES)
+	{
+		ft_puterr_general(cmd_node->data.command.args[0], "Permission Denied");
+		exit(127);
+	}
+	else if (errno == ENOENT)
+	{
+		ft_puterr_general(cmd_node->data.command.args[0], "No such file or directory");
+		exit(126);
+	}
+	else
+	{
+		ft_puterr_general(cmd_node->data.command.args[0], strerror(errno));
+		exit(127);
+	}
 }
 
 int	exec_solo_cmd(t_tree_node *cmd_node, t_env *env)
@@ -66,7 +85,7 @@ int	exec_solo_cmd(t_tree_node *cmd_node, t_env *env)
 	int				wait_status;
 
 	prepare_here_doc(cmd_node, env);
-	if (is_builtin(cmd_node->data.command.args[0]))
+	if (cmd_node->kind == NODE_SIMPLE_COMMAND && is_builtin(cmd_node->data.command.args[0]))
 		return (exec_solo_builtin(cmd_node, env));
 	else
 	{
@@ -74,7 +93,12 @@ int	exec_solo_cmd(t_tree_node *cmd_node, t_env *env)
 		if (pid == -1)
 			return (perror_string("fork: "));
 		if (pid == 0)
-            exec_child_process_of_solo_cmd(cmd_node, env);
+		{
+			if (cmd_node->kind == NODE_SIMPLE_COMMAND)
+            	exec_child_process_of_solo_cmd(cmd_node, env);
+			else
+				exit(exec_ast(cmd_node, env));
+		}
 		setup_parent_wait_signal_handlers();
 		wait(&wait_status);
 		setup_interactive_signal_handlers();

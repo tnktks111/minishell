@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/23 12:03:35 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 14:30:06 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ char			**get_path_prefix(t_env *env);
 void			find_builtin(t_tree_node *cmd_node, t_env *env);
 void			find_path(t_tree_node *cmd_node, t_env *env);
 bool			is_builtin(char *s);
+bool			is_directory(char *path);
 
 /*here_doc*/
 int		prepare_here_doc(t_tree_node *node, t_env *env);
@@ -92,7 +93,7 @@ void	unlink_tmpfile(t_tree_node *node_simplecmd);
 void	unlink_all_tmpfiles(t_tree_node *node_pipeline);
 
 unsigned char	perror_string(char *str);
-void			error_cmd_not_found(char *cmd_name);
+void 			ft_puterr_general(char *cmd_name, char *errmsg);
 void			error_too_many_args(char *cmd_name);
 void			error_numeric_arg_required(char *cmd_name, char *arg);
 void			error_not_a_valid_identifier(char *cmd_name, char *arg);
