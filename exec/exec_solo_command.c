@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 15:15:09 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 17:15:09 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,26 +57,7 @@ static void exec_child_process_of_solo_cmd(t_tree_node *cmd_node, t_env *env)
 	if (!ft_strchr(cmd_node->data.command.args[0], '/'))
 		find_path(cmd_node, env);
 	execve(cmd_node->data.command.args[0], cmd_node->data.command.args, env->envp);
-	if (is_directory(cmd_node->data.command.args[0]))
-	{
-		ft_puterr_general(cmd_node->data.command.args[0], "Is a directory");
-		exit(126);
-	}
-	else if (errno == EACCES)
-	{
-		ft_puterr_general(cmd_node->data.command.args[0], "Permission Denied");
-		exit(127);
-	}
-	else if (errno == ENOENT)
-	{
-		ft_puterr_general(cmd_node->data.command.args[0], "No such file or directory");
-		exit(126);
-	}
-	else
-	{
-		ft_puterr_general(cmd_node->data.command.args[0], strerror(errno));
-		exit(127);
-	}
+	execve_failure_handler(cmd_node->data.command.args[0], errno);
 }
 
 int	exec_solo_cmd(t_tree_node *cmd_node, t_env *env)

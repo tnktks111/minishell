@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 16:41:09 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/21 16:45:52 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 19:17:51 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,14 @@
 #define RED "\033[31m"
 #define BLUE "\033[32m"
 #define RESET "\033[0m"
+
+static bool contain_space_only(char *s)
+{
+	while (*s)
+		if (!(*s++ == ' '))
+			return false;
+	return true;
+}
 
 int	main(int ac, char **av, char **envp)
 {
@@ -36,7 +44,7 @@ int	main(int ac, char **av, char **envp)
 			// ft_putendl_fd("Bye\n", STDERR_FILENO);
 			break ;
 		}
-		if (*input)
+		if (input[0] && !contain_space_only(input))
 			add_history(input);
 		if (ft_strcmp(input, "exit") == 0)
 		{

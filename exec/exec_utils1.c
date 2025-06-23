@@ -6,14 +6,15 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:39:49 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/22 19:54:52 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 17:45:16 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 void	setup_pipefd(t_pipefd *fd, t_tree_node *node, bool is_start);
-int status_handler(int status);
+int 	status_handler(int status);
+void 	execve_failure_handler(char *cmd_name, int errnum);
 
 void	setup_pipefd(t_pipefd *fd, t_tree_node *node, bool is_start)
 {
@@ -63,4 +64,28 @@ int status_handler(int status)
 		return (128 + WTERMSIG(status));
 	}
 	return (EXIT_FAILURE);
+}
+
+void execve_failure_handler(char *cmd_name, int errnum)
+{
+	if (is_directory(cmd_name))
+	{
+		ft_puterr_general(cmd_name, "Is a directory");
+		exit(126);
+	}
+	else if (errnum == EACCES)
+	{
+		ft_puterr_general(cmd_name, "Permission Denied");
+		exit(127);
+	}
+	else if (errnum == ENOENT)
+	{
+		ft_puterr_general(cmd_name, "No such file or directory");
+		exit(126);
+	}
+	else
+	{
+		ft_puterr_general(cmd_name, strerror(errnum));
+		exit(127);
+	}
 }

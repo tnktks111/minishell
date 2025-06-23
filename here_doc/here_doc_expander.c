@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 20:35:45 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/22 19:35:09 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 19:02:21 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,16 +136,13 @@ void here_doc_expander(char **s, t_env *env)
 	while (tokens[i])
 	{
 		if (tokens[i][0] == '$')
-		{
-			
-			
+		{			
 			if (tokens[i][1])
+			{
 				newtoken = ft_strdup(ft_search(&tokens[i][1], env));
-			else
-				newtoken = ft_strdup("");
-			// if (!newtoken)
-			free(tokens[i]);
-			tokens[i] = newtoken;
+				free(tokens[i]);
+				tokens[i] = newtoken;
+			}
 		}
 		i++;
 	}

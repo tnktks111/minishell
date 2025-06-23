@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/23 14:30:06 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 20:12:25 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ unsigned char	exec_ast(t_tree_node *root, t_env *env);
 int				exec_and_or(t_tree_node *root, t_env *env);
 int				exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env, pid_t *lastpid);
 int				exec_pipeline(t_tree_node *root, t_env *env);
-unsigned char	exec_command_helper(t_tree_node *cmd_node, t_env *env);
+void			exec_command_helper(t_tree_node *cmd_node, t_env *env);
 
 int				exec_solo_cmd(t_tree_node *curr, t_env *env);
 
@@ -77,6 +77,7 @@ void			exec_redirection(t_redirect *redirect);
 
 void			setup_pipefd(t_pipefd *fd, t_tree_node *node, bool is_start);
 int				status_handler(int status);
+void 			execve_failure_handler(char *cmd_name, int errnum);
 char			**get_path_prefix(t_env *env);
 void			find_builtin(t_tree_node *cmd_node, t_env *env);
 void			find_path(t_tree_node *cmd_node, t_env *env);
@@ -85,10 +86,10 @@ bool			is_directory(char *path);
 
 /*here_doc*/
 int		prepare_here_doc(t_tree_node *node, t_env *env);
-char	*here_doc_handler(char *limiter, t_env *env);
+char	*here_doc_handler(t_redirect *redirect, t_env *env);
 void	here_doc_expander(char **s, t_env *env);
 bool	have_quotes(char *limiter);
-void	remove_quotes(char **limiter);
+void	remove_quotes(t_redirect *redirect);
 void	unlink_tmpfile(t_tree_node *node_simplecmd);
 void	unlink_all_tmpfiles(t_tree_node *node_pipeline);
 

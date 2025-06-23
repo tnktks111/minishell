@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 15:11:08 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 18:50:37 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ unsigned char	exec_ast(t_tree_node *root, t_env *env);
 int				exec_and_or(t_tree_node *root, t_env *env);
 int				exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env, pid_t *lastpid);
 int				exec_pipeline(t_tree_node *root, t_env *env);
-unsigned char	exec_command_helper(t_tree_node *cmd_node, t_env *env);
+void			exec_command_helper(t_tree_node *cmd_node, t_env *env);
 
 unsigned char	exec_ast(t_tree_node *root, t_env *env)
 {
@@ -120,7 +120,7 @@ int	exec_pipeline(t_tree_node *node_pipeline, t_env *env)
 	return (status_handler(status));
 }
 
-unsigned char	exec_command_helper(t_tree_node *node, t_env *env)
+void exec_command_helper(t_tree_node *node, t_env *env)
 {
 	t_tree_node	*cmd_node;
 
@@ -138,26 +138,7 @@ unsigned char	exec_command_helper(t_tree_node *node, t_env *env)
 		}
 		execve(cmd_node->data.command.args[0], cmd_node->data.command.args,
 			env->envp);
-		if (is_directory(cmd_node->data.command.args[0]))
-		{
-			ft_puterr_general(cmd_node->data.command.args[0], "Is a directory");
-			exit(126);
-		}
-		else if (errno == EACCES)
-		{
-			ft_puterr_general(cmd_node->data.command.args[0], "Permission Denied");
-			exit(127);
-		}
-		else if (errno == ENOENT)
-		{
-			ft_puterr_general(cmd_node->data.command.args[0], "No such file or directory");
-			exit(126);
-		}
-		else
-		{
-			ft_puterr_general(cmd_node->data.command.args[0], strerror(errno));
-			exit(127);
-		}
+		execve_failure_handler(cmd_node->data.command.args[0], errno);
 	}
 	else
 	{

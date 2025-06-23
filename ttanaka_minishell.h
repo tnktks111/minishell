@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 14:53:17 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/22 18:00:49 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 20:11:57 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,5 @@ void setup_child_signal_handlers(void);
 void unlink_tmpfile(t_tree_node *node_simplecmd);
 void unlink_all_tmpfiles(t_tree_node *node_pipeline);
 bool have_quotes(char *limiter);
-void remove_quotes(char **limiter);
+void remove_quotes(t_redirect *redirect);
 void here_doc_expander(char **s, t_env *env);

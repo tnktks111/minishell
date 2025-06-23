@@ -6,14 +6,14 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:35:53 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/22 20:00:39 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 20:10:14 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 int		prepare_here_doc(t_tree_node *node, t_env *env);
-char	*here_doc_handler(char *limiter, t_env *env);
+char	*here_doc_handler(t_redirect *redirect, t_env *env);
 
 int	prepare_here_doc(t_tree_node *node, t_env *env)
 {
@@ -28,7 +28,7 @@ int	prepare_here_doc(t_tree_node *node, t_env *env)
 	{
 		if (curr->kind == REDIR_HEREDOC)
 		{
-			tmpfile = here_doc_handler(curr->filename, env);
+			tmpfile = here_doc_handler(curr, env);
 			if (!tmpfile)
 				return (EXIT_FAILURE);
 			free(curr->filename);
@@ -39,7 +39,7 @@ int	prepare_here_doc(t_tree_node *node, t_env *env)
 	return (EXIT_SUCCESS);
 }
 
-char	*here_doc_handler(char *limiter, t_env *env)
+char	*here_doc_handler(t_redirect *redirect, t_env *env)
 {
 	int		fd;
 	char	*tmpfile;
@@ -47,10 +47,10 @@ char	*here_doc_handler(char *limiter, t_env *env)
 	bool	is_expandable;
 
 	is_expandable = true;
-	if (have_quotes(limiter) == true)
+	if (have_quotes(redirect->filename) == true)
 	{
 		is_expandable = false;
-		remove_quotes(&limiter);
+		remove_quotes(redirect);
 	}
 	fd = sh_mktmpfd(&tmpfile);
 	if (fd == -1)
@@ -58,7 +58,7 @@ char	*here_doc_handler(char *limiter, t_env *env)
 	s = readline("> ");
 	while (s)
 	{
-		if (ft_strcmp(s, limiter) == 0)
+		if (ft_strcmp(s, redirect->filename) == 0)
 		{
 			free(s);
 			break ;
