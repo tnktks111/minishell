@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 14:15:02 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 10:52:08 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 13:16:30 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct s_list
 	struct s_list	*next;
 }					t_list;
 
+int 				ft_abs(int n);
 int					ft_atoi(const char *str);
 int 				ft_atoi_for_shlvl(const char *str);
 void				ft_bzero(void *s, size_t n);
@@ -48,6 +49,7 @@ void				ft_putchar_fd(char c, int fd);
 void				ft_putendl_fd(char *s, int fd);
 void				ft_putnbr_fd(int n, int fd);
 void				ft_putstr_fd(char *s, int fd);
+void 				ft_sort_string_tab(char **tab, int(*cmp)(char *, char *));
 char				**ft_split(char const *s, char c);
 char				*ft_strchr(const char *s, int c);
 int					ft_strcmp(char *s1, char *s2);

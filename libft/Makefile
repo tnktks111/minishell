@@ -6,7 +6,7 @@
 #    By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/17 14:04:56 by ttanaka           #+#    #+#              #
-#    Updated: 2025/06/22 15:28:33 by ttanaka          ###   ########.fr        #
+#    Updated: 2025/06/23 13:43:11 by ttanaka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ RM = rm -f
 INC_DIR = inc
 OBJS_DIR = objs
 
-VPATH = is:lst:mem:others:put:str
+VPATH = is:lst:mem:others:put:sort:str
 
 SRCS = \
 	is/ft_isalnum.c \
@@ -44,6 +44,7 @@ SRCS = \
 	put/ft_putendl_fd.c \
 	put/ft_putnbr_fd.c \
 	put/ft_putstr_fd.c \
+	sort/ft_sort_string_tab.c \
 	str/ft_concatnate_strarr.c \
 	str/ft_strchr.c \
 	str/ft_strcmp.c \

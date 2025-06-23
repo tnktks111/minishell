@@ -6,42 +6,15 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 20:28:23 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 10:47:20 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 12:04:24 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void display_env(t_env *env, bool print_declare);
 char *ft_search(char *key, t_env *env);
 int encode_envp(t_env *env, char *envp[]);
-char **decode_table(t_env *env);
-
-void display_env(t_env *env, bool print_declare)
-{
-    size_t table_idx;
-    t_env_node *curr;
-    char *print_str;
-
-    table_idx = 0;
-    while (table_idx < HASH_SIZE)
-    {
-        curr = &env->table[table_idx];
-        table_idx++;
-        if (curr->is_empty)
-            continue;
-        while(curr)
-        {
-            if (print_declare)
-                ft_putstr_fd("declare -x ", STDOUT_FILENO);
-            print_str = _concatnate_key_val(curr->key, curr->val, print_declare);
-            if (!print_str)
-                return;
-            ft_putendl_fd(print_str, STDOUT_FILENO);
-            curr = curr->next;
-        }
-    }
-}
+char **decode_table(t_env *env, bool include_quote);
 
 char *ft_search(char *key, t_env *env)
 {
@@ -105,7 +78,7 @@ int encode_envp(t_env *env, char *envp[])
     }
     return (EXIT_SUCCESS);
 }
-char **decode_table(t_env *env)
+char **decode_table(t_env *env, bool include_quote)
 {
     char **res;
     size_t table_idx;
@@ -125,7 +98,7 @@ char **decode_table(t_env *env)
             continue;
         while(curr)
         {
-            res[res_idx] = _concatnate_key_val(curr->key, curr->val, false);
+            res[res_idx] = _concatnate_key_val(curr->key, curr->val, include_quote);
 			if (!res[res_idx])
                 return(free_allocated_data(res, res_idx));
             res_idx++;

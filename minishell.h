@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/23 10:52:39 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 12:03:35 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void			display_env(t_env *env, bool print_declare);
 /*ハッシュテーブル初期化・生成・文字配列化*/
 void			_init_table(t_env *env);
 int				encode_envp(t_env *env, char *envp[]);
-char			**decode_table(t_env *env);
+char			**decode_table(t_env *env, bool include_quote);
 /* ハッシュ値生成*/
 unsigned int	_hash_fnv1a(char *str);
 /* ハッシュテーブル検索*/

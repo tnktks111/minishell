@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 10:42:50 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 10:43:11 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 13:47:03 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ unsigned char	builtin_export(t_tree_node *node, t_env *env)
 
 	res = EXIT_SUCCESS;
 	i = 0;
-	if (!(node->data.command.args[0]))
+	if (!(node->data.command.args[1]))
 		display_env(env, true);
 	while (node->data.command.args[++i])
 	{

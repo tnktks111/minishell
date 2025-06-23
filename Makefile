@@ -6,7 +6,7 @@
 #    By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/17 19:06:08 by ttanaka           #+#    #+#              #
-#    Updated: 2025/06/23 10:53:46 by ttanaka          ###   ########.fr        #
+#    Updated: 2025/06/23 13:38:23 by ttanaka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ SRCS = 	builtin/builtin_cd.c \
 		builtin/builtin_pwd.c \
 		builtin/builtin_unset.c \
 		envp/envp.c \
+		envp/envp_display.c \
 		envp/envp_utils1.c \
 		envp/envp_utils2.c \
 		envp/envp_utils3.c \
