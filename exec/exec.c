@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 23:07:31 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/24 00:19:45 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,11 @@ void exec_command_helper(t_tree_node *node, t_env *env)
 		exit(EXIT_FAILURE);
 	if (cmd_node->kind == NODE_SIMPLE_COMMAND)
 	{
+		if (!cmd_node->data.command.args[0] || ! cmd_node->data.command.args[0][0])
+		{
+			ft_puterr_general(cmd_node->data.command.args[0], "command not found");
+			exit(127);
+		}
 		if (!ft_strchr(cmd_node->data.command.args[0], '/'))
 		{
 			find_builtin(cmd_node, env);

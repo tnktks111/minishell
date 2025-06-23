@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 20:34:11 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/22 20:34:13 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/24 00:06:46 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int _modify_val_of_entry(char *val, t_env_node *node);
 int _set_key_val(char *key, char *val, t_env_node *node, t_env *env);
 int ft_add_key_val_pair(char *key, char *val, t_env *env);
+int ft_set_underscore(t_tree_node *cmd_node, t_env *env);
 void ft_remove_key(char *key, t_env *env);
 
 int _modify_val_of_entry(char *val, t_env_node *node)
@@ -50,6 +51,19 @@ int ft_add_key_val_pair(char *key, char *val, t_env *env)
     curr->next = _create_env_node(key, val, env);
     if (!curr->next)
         return (EXIT_FAILURE);
+    return (EXIT_SUCCESS);
+}
+
+int ft_set_underscore(t_tree_node *cmd_node, t_env *env)
+{
+    char **args;
+    size_t i;
+
+    args = cmd_node->data.command.args;
+    i = 0;
+    while (args[i + 1])
+        i++;
+    ft_add_key_val_pair("_", args[i], env);
     return (EXIT_SUCCESS);
 }
 

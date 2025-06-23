@@ -6,15 +6,15 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 16:41:09 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 19:17:51 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 23:52:13 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-#define RED "\033[31m"
-#define BLUE "\033[32m"
-#define RESET "\033[0m"
+#define RED "\1\033[31m\2"
+#define BLUE "\1\033[32m\2"
+#define RESET "\1\033[0m\2"
 
 static bool contain_space_only(char *s)
 {

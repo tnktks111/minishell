@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/23 23:06:16 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/24 00:07:09 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ int				_set_key_val(char *key, char *val, t_env_node *node,
 					t_env *env);
 /* エントリーの追加・削除*/
 int				ft_add_key_val_pair(char *key, char *val, t_env *env);
+int 			ft_set_underscore(t_tree_node *cmd_node, t_env *env);
 void			ft_remove_key(char *key, t_env *env);
 /* ハッシュテーブルのリソース解放 */
 void			free_table(t_env *env);

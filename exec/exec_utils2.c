@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:39:36 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 14:43:00 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/24 00:09:23 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ void	find_path(t_tree_node *cmd_node, t_env *env)
 			perror("malloc :");
 			return ;
 		}
+		printf("%s", tmp_path);
 		execve(tmp_path, cmd_node->data.command.args, env->envp);
 		if (errno != ENOENT)
 			last_errno = errno;
