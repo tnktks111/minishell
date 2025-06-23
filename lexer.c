@@ -399,51 +399,50 @@ t_token	*tokenize_str(char *str)
 	return (head);
 }
 
-// void	print_tokens(t_token *head)
-// {
-// 	while (head)
-// 	{
-// 		printf("Token: [%s]\n", head->str);
-// 		if (head->status == IN_SINGLE)
-// 			printf("IN_SINGLE \n");
-// 		else if (head->status == IN_DOUBLE)
-// 			printf("IN_DOUBLE \n");
-// 		else if (head->status == LEFT_PAREN)
-// 			printf("LEFT_PAREN \n");
-// 		else if (head->status == RIGHT_PAREN)
-// 			printf("RIGHT_PAREN \n");
-// 		else if (head->status == AND_OR)
-// 			printf("AND_OR \n");
-// 		else if (head->status == REDIRECT)
-// 			printf("REDIRECT \n");
-// 		else if (head->status == SPLITABLE)
-// 			printf("SPLITABLE \n");
-// 		else if (head->status == PIPE)
-// 			printf("PIPE \n");
-// 		else if (head->status == NORMAL)
-// 			printf("NORMAL \n");
-// 		else if (head->status == USED)
-// 			printf("USED \n");
-// 		else
-// 			printf("UNKNOWN (不明な状態: %u)\n", head->status);
-// 		head = head->next;
-// 	}
-// }
+void	print_tokens(t_token *head)
+{
+	while (head)
+	{
+		printf("Token: [%s]\n", head->str);
+		if (head->status == IN_SINGLE)
+			printf("IN_SINGLE \n");
+		else if (head->status == IN_DOUBLE)
+			printf("IN_DOUBLE \n");
+		else if (head->status == LEFT_PAREN)
+			printf("LEFT_PAREN \n");
+		else if (head->status == RIGHT_PAREN)
+			printf("RIGHT_PAREN \n");
+		else if (head->status == AND_OR)
+			printf("AND_OR \n");
+		else if (head->status == REDIRECT)
+			printf("REDIRECT \n");
+		else if (head->status == SPLITABLE)
+			printf("SPLITABLE \n");
+		else if (head->status == PIPE)
+			printf("PIPE \n");
+		else if (head->status == NORMAL)
+			printf("NORMAL \n");
+		else if (head->status == USED)
+			printf("USED \n");
+		else
+			printf("UNKNOWN (不明な状態: %u)\n", head->status);
+		head = head->next;
+	}
+}
 
 t_token	*lexer(char *str, t_env *env)
 {
 	t_token	*head;
 
 	head = tokenize_str(str);
-	// print_tokens(head);
-	parser(head, env);
+	print_tokens(head);
+	// parser(head, env);
+	(void)env;
 	return (head);
 }
 
 /* expander */
 
 // /////////////////////// \(^o^)/ ////////////////////////////////
-
-
 
 // /* */

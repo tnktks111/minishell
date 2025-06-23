@@ -489,6 +489,8 @@ void	free_token(t_token *head, t_token *tail)
 	}
 }
 
+void			print_tokens(t_token *head);
+
 t_tree_node	*parser(t_token *head, t_env *env)
 {
 	t_tree_node	*root;
@@ -497,9 +499,11 @@ t_tree_node	*parser(t_token *head, t_env *env)
 	tail = get_tail(head);
 	root = create_tree(head, tail);
 	root = add_tree_root(root);
+	// print_tokens(head);
 	free_token(head, tail);
 	print_tree(root);
 	exec_ast(root, env);
 	// print_tree(root);
+	(void)env;
 	return (root);
 }
