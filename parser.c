@@ -475,20 +475,25 @@ t_token	*get_tail(t_token *head)
 
 void	free_token(t_token *head, t_token *tail)
 {
-	t_token	*cur;
-	t_token	*next;
+		t_token *cur;
+		t_token *next;
 
-	cur = head;
-	while (cur && cur != tail->next)
 	{
-		next = cur->next;
-		if (cur->str)
-			free(cur->str);
-		free(cur);
-		cur = next;
+		if (!head)
+			return ;
+		cur = head;
+		while (cur)
+		{
+			next = cur->next;
+			if (cur->str)
+				free(cur->str);
+			free(cur);
+			if (cur == tail)
+				break ;
+			cur = next;
+		}
 	}
 }
-
 void			print_tokens(t_token *head);
 
 t_tree_node	*parser(t_token *head, t_env *env)

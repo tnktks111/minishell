@@ -389,7 +389,7 @@ t_token	*tokenize_str(char *str)
 			i += append_token_and_move_index(&head, &str[i], true, false);
 		if (is_s_quote(str[i]))
 			i += append_token_and_move_index(&head, &str[i], false, true);
-		if (str[i + 1] && is_two_word_splitable(str[i], str[i + 1]))
+		if (str[i] && str[i + 1] && is_two_word_splitable(str[i], str[i + 1]))
 			i += append_two_word_splitable(&head, &str[i]);
 		else if (is_splitable(str[i]))
 			i += append_splitable(&head, &str[i]);
@@ -427,6 +427,27 @@ void	print_tokens(t_token *head)
 		else
 			printf("UNKNOWN (不明な状態: %u)\n", head->status);
 		head = head->next;
+	}
+}
+
+void	check_syntax_error(t_token *head)
+{
+	bool	prev_is_splitable;
+	t_token	*cur;
+
+	prev_is_splitable = false;
+	cur = head;
+	while (cur)
+	{
+		if (!prev_is_splitable && (cur->status == RIGHT_PAREN
+				|| cur->status == REDIRECT || cur->status == AND_OR
+				|| cur->status == PIPE))
+			prev_is_splitable = true;
+		if (prev_is_splitable && (cur->status == RIGHT_PAREN
+				|| cur->status == REDIRECT || cur->status == AND_OR
+				|| cur->status == PIPE))
+			error_unexpected_token(cur->str);
+		cur = cur->next;
 	}
 }
 

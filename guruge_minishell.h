@@ -107,6 +107,8 @@ void			expand_and_append_command_line(t_command_line **head, char *str,
 					char **files);
 void			append_command_line(t_command_line **head, char *str);
 
+/*errors*/
 void			error_ambiguous_redirect(char *filename);
+void			error_unexpected_token(char *token_str);
 
 #endif
