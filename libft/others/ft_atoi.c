@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 13:23:09 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/22 15:32:52 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 10:49:06 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,33 @@ int	ft_atoi(const char *str)
 		}
 		num = num * 10 + (*str++ - '0');
 	}
+	return ((int)(sign * num));
+}
+
+int ft_atoi_for_shlvl(const char *str)
+{
+	unsigned long num;
+	int sign;
+
+	if (!str)
+		return (0);
+	num = 0;
+	sign = 1;
+	while (*str && ft_isspace(*str))
+	str++;
+	if (*str && (*str == '+' || *str == '-'))
+	{
+		if (*str++ == '-')
+		sign *= -1;
+	}
+	while (*str && ft_isdigit(*str))
+	{
+		num = num * 10 + (*str++ - '0');
+		if ((sign == 1 && num > INT_MAX) || (sign == -1 && num > 2147483648L))
+			return (INT_MAX);
+	}
+	if (*str)
+		return (0);
 	return ((int)(sign * num));
 }
 

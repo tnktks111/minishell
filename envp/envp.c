@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 20:28:23 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 10:23:43 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 10:47:20 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,6 @@ int encode_envp(t_env *env, char *envp[])
     }
     return (EXIT_SUCCESS);
 }
-
 char **decode_table(t_env *env)
 {
     char **res;

@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 15:22:41 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/22 18:08:56 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 10:51:37 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ void error_numeric_arg_required(char *cmd_name, char *arg);
 void error_not_a_valid_identifier(char *cmd_name, char *arg);
 void error_illegal_arguments(char *cmd_name, char *arg);
 void error_invalid_option(char *cmd_name, char *arg);
-void buildin_error(char *cmd_name, char *arg, char *errmsg);
+void builtin_error(char *cmd_name, char *arg, char *errmsg);
+void warning_shlvl_too_high(int shlvl);
 
 unsigned char perror_string(char *str)
 {
@@ -90,4 +91,11 @@ void builtin_error(char *cmd_name, char *arg, char *errmsg)
     }
     ft_putstr_fd(": ", STDERR_FILENO);
     ft_putendl_fd(errmsg, STDERR_FILENO);
+}
+
+void warning_shlvl_too_high(int shlvl)
+{
+    ft_putstr_fd("minishell: warning: shell level (", STDERR_FILENO);
+    ft_putnbr_fd(shlvl, STDERR_FILENO);
+    ft_putendl_fd(") too high, resetting to 1", STDERR_FILENO);
 }

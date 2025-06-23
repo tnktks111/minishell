@@ -6,7 +6,7 @@
 #    By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/17 19:06:08 by ttanaka           #+#    #+#              #
-#    Updated: 2025/06/22 20:04:25 by ttanaka          ###   ########.fr        #
+#    Updated: 2025/06/23 10:53:46 by ttanaka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,10 +20,18 @@ MKDIR = mkdir -p
 OBJS_DIR = objs
 LIBFT_DIR = libft
 
-SRCS = 	builtin.c \
-		builtin_cd.c \
-		builtin_guruge.c \
-		envp.c \
+SRCS = 	builtin/builtin_cd.c \
+		builtin/builtin_echo.c \
+		builtin/builtin_env.c \
+		builtin/builtin_exit.c \
+		builtin/builtin_export.c \
+		builtin/builtin_pwd.c \
+		builtin/builtin_unset.c \
+		envp/envp.c \
+		envp/envp_utils1.c \
+		envp/envp_utils2.c \
+		envp/envp_utils3.c \
+		envp/handle_shlvl.c \
 		error.c \
 		exec/exec.c \
 		exec/exec_utils1.c \
@@ -37,12 +45,12 @@ SRCS = 	builtin.c \
 		here_doc/here_doc.c \
 		here_doc/here_doc_expander.c \
 		here_doc/here_doc_quotes.c \
+		here_doc/here_doc_tmpfile.c \
 		here_doc/here_doc_utils.c \
 		lexer.c \
 		main.c \
 		pattern_matching.c \
 		signal.c \
-		tempfile.c \
 		parser.c \
 		syntax_error.c
 

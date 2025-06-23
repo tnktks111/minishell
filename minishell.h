@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/22 20:02:00 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 10:52:39 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ void			error_not_a_valid_identifier(char *cmd_name, char *arg);
 void			error_illegal_arguments(char *cmd_name, char *arg);
 void			error_invalid_option(char *cmd_name, char *arg);
 void 			builtin_error(char *cmd_name, char *arg, char *errmsg);
+void 			warning_shlvl_too_high(int shlvl);
 
 unsigned char	builtin_echo(t_tree_node *node, t_env *env);
 unsigned char	builtin_pwd(t_tree_node *node, t_env *env);
@@ -106,7 +107,6 @@ unsigned char	builtin_export(t_tree_node *node, t_env *env);
 unsigned char	builtin_unset(t_tree_node *node, t_env *env);
 unsigned char	builtin_env(t_tree_node *node, t_env *env);
 unsigned char	builtin_exit(t_tree_node *node, t_env *env);
-
 int				sh_mktmpfd(char **file_path_ptr);
 
 void			free_splited_data(char **data);
