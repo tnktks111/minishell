@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 21:09:58 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 23:07:31 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,8 @@ void exec_command_helper(t_tree_node *node, t_env *env)
 		cmd_node = node->right;
 	else
 		cmd_node = node;
-	exec_redirection(cmd_node->data.command.redirects);
+	if (exec_redirection(cmd_node->data.command.redirects) == EXIT_FAILURE)
+		exit(EXIT_FAILURE);
 	if (cmd_node->kind == NODE_SIMPLE_COMMAND)
 	{
 		if (!ft_strchr(cmd_node->data.command.args[0], '/'))

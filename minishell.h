@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/23 21:06:41 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 23:06:16 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void			exec_command_helper(t_tree_node *cmd_node, t_env *env);
 int				exec_solo_cmd(t_tree_node *curr, t_env *env);
 
 unsigned char	exec_builtin(t_tree_node *node, t_env *env);
-void			exec_redirection(t_redirect *redirect);
+int				exec_redirection(t_redirect *redirect);
 
 void			setup_pipefd(t_pipefd *fd, t_tree_node *node, bool is_start);
 int				status_handler(int status);

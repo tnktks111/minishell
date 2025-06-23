@@ -6,13 +6,13 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:14:27 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/22 19:14:34 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 23:37:21 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	exec_redirection(t_redirect *redirect)
+int	exec_redirection(t_redirect *redirect)
 {
 	t_redirect	*curr;
 	int			fd;
@@ -31,9 +31,20 @@ void	exec_redirection(t_redirect *redirect)
 			open_flags = O_WRONLY | O_CREAT | O_TRUNC;
 		fd = open(curr->filename, open_flags, 0644);
 		if (fd == -1)
-			return (perror("open :"));
-		dup2(fd, curr->io_number);
-		close(fd);
+		{
+			printf("minishell: %s: %s\n", curr->filename, strerror(errno));
+			return(EXIT_FAILURE);
+		}
+		printf("fd: %d\n", fd);
+		if (dup2(fd, curr->io_number) == -1)
+		{
+			printf("minishell: %d: %s\n", curr->io_number, strerror(errno));
+			close(fd);
+			return(EXIT_FAILURE);
+		}
+		if (fd != curr->io_number)
+			close(fd);
 		curr = curr->next;
 	}
+	return (EXIT_SUCCESS);
 }

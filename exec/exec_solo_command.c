@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 21:06:50 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/23 23:07:05 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ static unsigned char exec_solo_builtin(t_tree_node *cmd_node, t_env *env)
     unsigned char status;
 
     backup_stdin_out(stdin_out);
-	exec_redirection(cmd_node->data.command.redirects);
+	if (exec_redirection(cmd_node->data.command.redirects) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
 	status = exec_builtin(cmd_node, env);
 	restore_stdin_out(stdin_out);
 	unlink_tmpfile(cmd_node);
@@ -51,7 +52,8 @@ static unsigned char exec_solo_builtin(t_tree_node *cmd_node, t_env *env)
 static void exec_child_process_of_solo_cmd(t_tree_node *cmd_node, t_env *env)
 {
     setup_child_signal_handlers();
-	exec_redirection(cmd_node->data.command.redirects);
+	if (exec_redirection(cmd_node->data.command.redirects) == EXIT_FAILURE)
+		exit(EXIT_FAILURE);
 	if (!cmd_node->data.command.args[0])
 		exit(0);
 	if (!ft_strchr(cmd_node->data.command.args[0], '/'))
