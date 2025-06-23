@@ -32,7 +32,7 @@ int	main(int ac, char **av, char **envp)
 		input = readline(BLUE "minishell$ " RESET);
 		if (input == NULL)
 		{
-			fprintf(stderr, RED "死神クイズに回答者はいらない♤\n" RESET);
+			fprintf(stderr, RED "🂡🂡死神クイズに回答者はいらない♤\n" RESET);
 			// ft_putendl_fd("Bye\n", STDERR_FILENO);
 			break ;
 		}

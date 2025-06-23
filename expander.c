@@ -353,7 +353,8 @@ void	expand_filename(t_tree_node *simple_cmd_node, t_env *env)
 			free(temp);
 			temp = expanded_filename;
 		}
-		takeoff_quotes(temp);
+		if (simple_cmd_node->data.command.redirects->kind != REDIR_HEREDOC)
+			takeoff_quotes(temp);
 		simple_cmd_node->data.command.redirects->filename = temp;
 	}
 }

@@ -435,14 +435,10 @@ t_token	*lexer(char *str, t_env *env)
 	t_token	*head;
 
 	head = tokenize_str(str);
-	print_tokens(head);
-	// parser(head, env);
-	(void)env;
+	// print_tokens(head);
+	// check_syntax_error(head);
+	parser(head, env);
 	return (head);
 }
 
 /* expander */
-
-// /////////////////////// \(^o^)/ ////////////////////////////////
-
-// /* */

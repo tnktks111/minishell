@@ -211,7 +211,7 @@ char	*get_output_name(t_token *redirect_token)
 	cur = redirect_token->next;
 	while (cur && cur->status == SPLITABLE)
 		cur = cur->next;
-	if (!cur || cur->status != NORMAL)
+	if (!cur || cur->status == SPLITABLE)
 	{
 		// syntax_error();
 		return (NULL);
@@ -503,7 +503,6 @@ t_tree_node	*parser(t_token *head, t_env *env)
 	free_token(head, tail);
 	print_tree(root);
 	exec_ast(root, env);
-	// print_tree(root);
-	(void)env;
+	print_tree(root);
 	return (root);
 }
