@@ -14,6 +14,9 @@
 
 void	error_ambiguous_redirect(char *filename);
 void	error_unexpected_token(char *token_str);
+bool	is_status_meta(t_status status);
+void	handle_syntax_error(t_env *env);
+bool	check_syntax_error(t_token *head);
 
 void	error_ambiguous_redirect(char *filename)
 {
@@ -33,8 +36,7 @@ void	error_unexpected_token(char *token_str)
 
 bool	is_status_meta(t_status status)
 {
-	if (status == RIGHT_PAREN || status == REDIRECT || status == AND_OR
-		|| status == PIPE)
+	if (status == REDIRECT || status == AND_OR || status == PIPE)
 		return (true);
 	else
 		return (false);
@@ -60,17 +62,14 @@ bool	check_syntax_error(t_token *head)
 		{
 			prev_is_splitable = true;
 			current_str = cur->str;
-			if (cur->status == RIGHT_PAREN)
-			{
-				error_unexpected_token(current_str);
-				return (true);
-			}
 		}
 		else if (prev_is_splitable && is_status_meta(cur->status))
 		{
 			error_unexpected_token(current_str);
 			return (true);
 		}
+		else if (prev_is_splitable && !is_status_meta(cur->status))
+			prev_is_splitable = !prev_is_splitable;
 		cur = cur->next;
 	}
 	return (false);
