@@ -47,6 +47,12 @@ void	handle_syntax_error(t_env *env)
 	env->prev_exit_status = 2;
 }
 
+bool	check_paren_syntax_error(t_token *head)
+{
+	(void)head;
+	return (false);
+}
+
 bool	check_syntax_error(t_token *head)
 {
 	bool	prev_is_splitable;
@@ -72,5 +78,5 @@ bool	check_syntax_error(t_token *head)
 			prev_is_splitable = !prev_is_splitable;
 		cur = cur->next;
 	}
-	return (false);
+	return (check_paren_syntax_error(head));
 }

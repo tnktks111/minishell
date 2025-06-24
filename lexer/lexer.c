@@ -149,11 +149,12 @@ t_token	*tokenize_str(char *str)
 	{
 		if (is_param(str[i]))
 			i += append_param_token_and_move_index(&head, &str[i]);
-		if (is_d_quote(str[i]))
+		else if (is_d_quote(str[i]))
 			i += append_token_and_move_index(&head, &str[i], true, false);
-		if (is_s_quote(str[i]))
+		else if (is_s_quote(str[i]))
 			i += append_token_and_move_index(&head, &str[i], false, true);
-		if (str[i] && str[i + 1] && is_two_word_splitable(str[i], str[i + 1]))
+		else if (str[i] && str[i + 1] && is_two_word_splitable(str[i], str[i
+				+ 1]))
 			i += append_two_word_splitable(&head, &str[i]);
 		else if (is_splitable(str[i]))
 			i += append_splitable(&head, &str[i]);
@@ -168,7 +169,7 @@ t_token	*lexer(char *str, t_env *env)
 	t_token	*head;
 
 	head = tokenize_str(str);
-	// print_tokens(head);
+	print_tokens(head);
 	parser(head, env);
 	return (head);
 }
