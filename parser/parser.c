@@ -30,7 +30,8 @@ t_tree_node	*add_tree_root(t_tree_node *root)
 	return (new_root);
 }
 
-t_tree_node	*create_subshell_node(t_tree_node *cur_root)
+t_tree_node	*create_subshell_node(t_tree_node *cur_root, t_token *head,
+		t_token *tail)
 {
 	t_tree_node	*node;
 
@@ -38,6 +39,8 @@ t_tree_node	*create_subshell_node(t_tree_node *cur_root)
 	if (!node)
 		return (NULL);
 	node->kind = NODE_SUBSHELL;
+	node->data.command.redirects = extract_redirects(head, tail);
+	node->data.command.args = extract_args(head, tail);
 	node->left = cur_root;
 	node->right = NULL;
 	node->parent = NULL;
@@ -65,6 +68,32 @@ t_tree_node	*create_operator_node(t_token *op, t_tree_node *left,
 	return (node);
 }
 
+void		print_tokens(t_token *head);
+
+t_token	*find_matching_paren(t_token *head)
+{
+	int		level;
+	t_token	*cur;
+
+	level = 0;
+	cur = head;
+	if (!head || head->status != LEFT_PAREN)
+		return (NULL);
+	while (cur)
+	{
+		if (cur->status == LEFT_PAREN)
+			level++;
+		else if (cur->status == RIGHT_PAREN)
+		{
+			level--;
+			if (level == 0)
+				return (cur);
+		}
+		cur = cur->next;
+	}
+	return (NULL);
+}
+
 t_tree_node	*create_tree(t_token *head, t_token *tail)
 {
 	t_token		*op;
@@ -72,16 +101,22 @@ t_tree_node	*create_tree(t_token *head, t_token *tail)
 	t_tree_node	*right;
 	t_tree_node	*pipeline_root;
 	t_tree_node	*paratheneses_root;
+	t_token		*paren_tail;
 
 	if (!head || !tail)
 		return (NULL);
 	head = skip_splitable_forward(head);
 	tail = skip_splitable_backward(tail);
-	if (is_parentheses_group(head, tail))
+	paren_tail = NULL;
+	if (head && head->status == LEFT_PAREN)
 	{
-		pipeline_root = create_tree(head->next, tail->prev);
-		paratheneses_root = create_subshell_node(pipeline_root);
-		return (create_pipeline_node(paratheneses_root, head, tail));
+		paren_tail = find_matching_paren(head);
+		if (paren_tail)
+		{
+			pipeline_root = create_tree(head->next, paren_tail->prev);
+			paratheneses_root = create_subshell_node(pipeline_root, head, tail);
+			return (create_pipeline_node(paratheneses_root, head, tail));
+		}
 	}
 	op = find_logical_operator(head, tail);
 	if (!op)

@@ -97,6 +97,13 @@ void	print_tree(t_tree_node *node)
 		printf("bang status:[%d]\n", node->data.pipeline.have_bang);
 		print_tree(node->left);
 	}
+	else if (node->kind == NODE_SUBSHELL)
+	{
+		print_indent(level);
+		if (node->data.command.redirects)
+			print_redirect_info(node->data.command.redirects, level + 1);
+		print_tree(node->left);
+	}
 	else
 	{
 		print_tree(node->left);

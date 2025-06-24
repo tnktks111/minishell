@@ -71,7 +71,8 @@ int	exec_solo_cmd(t_tree_node *cmd_node, t_env *env)
 	int				wait_status;
 
 	prepare_here_doc(cmd_node, env);
-	ft_set_underscore(cmd_node, env);
+	if (cmd_node->kind == NODE_SIMPLE_COMMAND)
+		ft_set_underscore(cmd_node, env);
 	if (cmd_node->kind == NODE_SIMPLE_COMMAND && is_builtin(cmd_node->data.command.args[0]))
 		return (exec_solo_builtin(cmd_node, env));
 	else
