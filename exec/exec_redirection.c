@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:14:27 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 23:37:21 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/24 16:25:50 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ int	exec_redirection(t_redirect *redirect)
 			printf("minishell: %s: %s\n", curr->filename, strerror(errno));
 			return(EXIT_FAILURE);
 		}
-		printf("fd: %d\n", fd);
 		if (dup2(fd, curr->io_number) == -1)
 		{
 			printf("minishell: %d: %s\n", curr->io_number, strerror(errno));

@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 10:43:19 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 10:43:32 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/24 16:23:58 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ unsigned char	builtin_pwd(t_tree_node *node, t_env *env);
 unsigned char	builtin_pwd(t_tree_node *node, t_env *env)
 {
 	char	pwd[PATH_MAX];
+	char 	*envpwd;
 
 	(void)env;
 	if (node->data.command.args[1])
@@ -28,8 +29,14 @@ unsigned char	builtin_pwd(t_tree_node *node, t_env *env)
 	}
 	if (!getcwd(pwd, PATH_MAX))
 	{
-		perror("getcwd():");
-		return (EXIT_FAILURE);
+		envpwd = ft_search("PWD", env);
+		if (!envpwd || !envpwd[0])
+		{
+			perror("getcwd():");
+			return (EXIT_FAILURE);
+		}
+		ft_putendl_fd(envpwd, STDOUT_FILENO);
+		return (EXIT_SUCCESS);
 	}
 	ft_putendl_fd(pwd, STDOUT_FILENO);
 	return (EXIT_SUCCESS);

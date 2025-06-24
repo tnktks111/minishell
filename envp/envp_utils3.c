@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 20:34:11 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/24 00:06:46 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/24 16:24:53 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void ft_remove_key(char *key, t_env *env)
         {
             tmp = curr->next;
             curr->next = tmp->next;
-            _destroy_env_node(curr->next, env, true);
+            _destroy_env_node(tmp, env, true);
             return ;
         }
         curr = curr->next;

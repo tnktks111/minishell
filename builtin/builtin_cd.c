@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 15:35:15 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/22 18:36:08 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/24 16:24:11 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,7 @@ unsigned char builtin_cd(t_tree_node *cmd_node, t_env *env)
     if (!cmd_node->data.command.args[1])
     {
         dirname = ft_search("HOME", env);
-        if (!dirname)
+        if (!dirname || !dirname[0])
         {
             builtin_error("cd", NULL ,"HOME not set");
             return (2);
@@ -180,7 +180,7 @@ unsigned char builtin_cd(t_tree_node *cmd_node, t_env *env)
     {
         dirname = ft_search("OLDPWD", env);
         printpath = true;
-        if (!dirname)
+        if (!dirname || !dirname[0])
         {
             builtin_error("cd", NULL, "OLDPWD not set");
             return (2);

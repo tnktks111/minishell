@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 16:41:09 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 23:52:13 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/24 16:26:54 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ static bool contain_space_only(char *s)
 
 int	main(int ac, char **av, char **envp)
 {
-	char *input;
-	t_env env;
+	char	*input;
+	t_env	env;
 
 	(void)ac;
 	(void)av;
