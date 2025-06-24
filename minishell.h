@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/24 00:07:09 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/24 19:20:05 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-int				ft_strcmp(char *s1, char *s2);
+extern int		g_is_in_heredoc;
 
 /*便利関数*/
 char			*extract_key(char *s);

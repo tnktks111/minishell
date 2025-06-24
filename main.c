@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 16:41:09 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/24 16:26:54 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/24 18:40:21 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 #define RED "\1\033[31m\2"
 #define BLUE "\1\033[32m\2"
 #define RESET "\1\033[0m\2"
+
+int g_is_in_heredoc;
 
 static bool contain_space_only(char *s)
 {
@@ -32,6 +34,7 @@ int	main(int ac, char **av, char **envp)
 	(void)ac;
 	(void)av;
 
+	g_is_in_heredoc = 0;
 	rl_outstream = stderr;
 	setup_interactive_signal_handlers();
 	encode_envp(&env, envp);

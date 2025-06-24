@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:39:49 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 17:45:16 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/24 17:51:08 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int status_handler(int status)
 		}
 		if (WTERMSIG(status) == SIGQUIT)
 		{
-			ft_putstr_fd("Quit", STDERR_FILENO);
+			ft_putendl_fd("Quit", STDERR_FILENO);
 			// if (WCOREDUMP(wait_status))
 			// 	ft_putstr_fd(" (core dumped)", STDERR_FILENO);
 		}

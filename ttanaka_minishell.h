@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 14:53:17 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 20:11:57 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/24 19:13:50 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 unsigned char builtin_cd(t_tree_node *cmd_node, t_env *env);
 
 void setup_interactive_signal_handlers(void);
+void setup_here_doc_signal_handlers(void);
 void setup_parent_wait_signal_handlers(void);
 void setup_child_signal_handlers(void);
 

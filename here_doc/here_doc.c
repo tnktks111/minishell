@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:35:53 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 20:10:14 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/24 19:23:09 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,14 @@ int	prepare_here_doc(t_tree_node *node, t_env *env)
 char	*here_doc_handler(t_redirect *redirect, t_env *env)
 {
 	int		fd;
+	int		original_stdin;
 	char	*tmpfile;
 	char	*s;
 	bool	is_expandable;
 
+	g_is_in_heredoc = 1;
 	is_expandable = true;
+	original_stdin = dup(STDIN_FILENO);
 	if (have_quotes(redirect->filename) == true)
 	{
 		is_expandable = false;
@@ -69,6 +72,12 @@ char	*here_doc_handler(t_redirect *redirect, t_env *env)
 		free(s);
 		s = readline("> ");
 	}
+	if (g_is_in_heredoc == 0)
+	{
+		dup2(original_stdin, STDIN_FILENO);
+		close(original_stdin);
+	}
+	g_is_in_heredoc = 0;
 	close(fd);
 	return (tmpfile);
 }

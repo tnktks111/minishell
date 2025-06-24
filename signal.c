@@ -6,31 +6,47 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 14:53:46 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/19 16:17:42 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/24 19:22:38 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static void interactive_sigint_handler(int signo);
-void setup_interactive_signal_handler(void);
+// static void here_doc_sigint_handler(int signo);
+void setup_interactive_signal_handlers(void);
+// void setup_here_doc_signal_handlers(void);
 void setup_parent_wait_signal_handlers(void);
 void setup_child_signal_handlers(void);
 
 static void interactive_sigint_handler(int signo)
 {
 	(void)signo;
+	if (g_is_in_heredoc == 1)
+	{
+		g_is_in_heredoc = 0;
+		close(STDIN_FILENO);
+		ft_putchar_fd('\n', STDERR_FILENO);
+	}
 	ft_putchar_fd('\n', STDERR_FILENO);
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
 }
 
+// static void here_doc_sigint_handler(int signo)
+// {
+// 	(void)signo;
+// 	close(STDIN_FILENO);
+// 	ft_putchar_fd('\n', STDERR_FILENO);
+// 	setup_interactive_signal_handlers();
+// }
+
 void setup_interactive_signal_handlers(void)
 {
 	struct sigaction sa_int;
 	struct sigaction sa_quit;
-	
+
 	sigemptyset(&sa_int.sa_mask);
 	sa_int.sa_handler = interactive_sigint_handler;
 	sa_int.sa_flags = 0;
@@ -41,6 +57,22 @@ void setup_interactive_signal_handlers(void)
 	sa_quit.sa_flags = 0;
 	sigaction(SIGQUIT, &sa_quit, NULL);
 }
+
+// void setup_here_doc_signal_handlers(void)
+// {
+// 	struct sigaction sa_int;
+// 	struct sigaction sa_quit;
+
+// 	sigemptyset(&sa_int.sa_mask);
+// 	sa_int.sa_handler = here_doc_sigint_handler;
+// 	sa_int.sa_flags = 0;
+// 	sigaction(SIGINT, &sa_int, NULL);
+
+// 	sigemptyset(&sa_quit.sa_mask);
+// 	sa_quit.sa_handler = SIG_IGN;
+// 	sa_quit.sa_flags = 0;
+// 	sigaction(SIGQUIT, &sa_quit, NULL);
+// }
 
 void setup_parent_wait_signal_handlers(void)
 {
