@@ -94,6 +94,26 @@ t_token	*find_matching_paren(t_token *head)
 	return (NULL);
 }
 
+t_token	*find_logical_operator(t_token *head, t_token *tail)
+{
+	t_token	*cur;
+	int		level;
+
+	cur = head;
+	level = 0;
+	while (cur && cur != tail->next)
+	{
+		if (cur->status == LEFT_PAREN)
+			level++;
+		else if (cur->status == RIGHT_PAREN)
+			level--;
+		else if (level == 0 && (cur->status == AND_OR))
+			return (cur);
+		cur = cur->next;
+	}
+	return (NULL);
+}
+
 t_tree_node	*create_tree(t_token *head, t_token *tail)
 {
 	t_token		*op;
@@ -108,17 +128,18 @@ t_tree_node	*create_tree(t_token *head, t_token *tail)
 	head = skip_splitable_forward(head);
 	tail = skip_splitable_backward(tail);
 	paren_tail = NULL;
-	if (head && head->status == LEFT_PAREN)
+	op = find_logical_operator(head, tail);
+	if (!op && head && head->status == LEFT_PAREN)
 	{
 		paren_tail = find_matching_paren(head);
 		if (paren_tail)
 		{
 			pipeline_root = create_tree(head->next, paren_tail->prev);
-			paratheneses_root = create_subshell_node(pipeline_root, head, tail);
-			return (create_pipeline_node(paratheneses_root, head, tail));
+			paratheneses_root = create_subshell_node(pipeline_root, head,
+					paren_tail);
+			return (create_pipeline_node(paratheneses_root, head, paren_tail));
 		}
 	}
-	op = find_logical_operator(head, tail);
 	if (!op)
 	{
 		pipeline_root = create_pipeline_tree(head, tail);

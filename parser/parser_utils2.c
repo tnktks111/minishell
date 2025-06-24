@@ -66,23 +66,23 @@ t_token	*find_lowest_precedence_operator(t_token *head, t_token *tail)
 	return (find_second_lowest_precedence_operator(head, tail));
 }
 
-t_token	*find_logical_operator(t_token *head, t_token *tail)
-{
-	t_token	*cur;
+// t_token	*find_logical_operator(t_token *head, t_token *tail)
+// {
+// 	t_token	*cur;
 
-	cur = tail;
-	while (cur && cur != head->prev)
-	{
-		if (cur->status == AND_OR && get_node_kind(cur) == NODE_OR)
-			return (cur);
-		cur = cur->prev;
-	}
-	cur = tail;
-	while (cur && cur != head->prev)
-	{
-		if (cur->status == AND_OR && get_node_kind(cur) == NODE_AND)
-			return (cur);
-		cur = cur->prev;
-	}
-	return (NULL);
-}
+// 	cur = tail;
+// 	while (cur && cur != head->prev)
+// 	{
+// 		if (cur->status == AND_OR && get_node_kind(cur) == NODE_OR)
+// 			return (cur);
+// 		cur = cur->prev;
+// 	}
+// 	cur = tail;
+// 	while (cur && cur != head->prev)
+// 	{
+// 		if (cur->status == AND_OR && get_node_kind(cur) == NODE_AND)
+// 			return (cur);
+// 		cur = cur->prev;
+// 	}
+// 	return (NULL);
+// }

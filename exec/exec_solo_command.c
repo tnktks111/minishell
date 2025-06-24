@@ -45,7 +45,7 @@ static unsigned char exec_solo_builtin(t_tree_node *cmd_node, t_env *env)
 		return (EXIT_FAILURE);
 	status = exec_builtin(cmd_node, env);
 	restore_stdin_out(stdin_out);
-	unlink_tmpfile(cmd_node);
+	// unlink_tmpfile(cmd_node);
     return (status);
 }
 
@@ -88,7 +88,7 @@ int	exec_solo_cmd(t_tree_node *cmd_node, t_env *env)
 		setup_parent_wait_signal_handlers();
 		wait(&wait_status);
 		setup_interactive_signal_handlers();
-		unlink_tmpfile(cmd_node);
+		// unlink_tmpfile(cmd_node);
 		return (status_handler(wait_status));
 	}
 }

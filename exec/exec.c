@@ -118,7 +118,7 @@ int	exec_pipeline(t_tree_node *node_pipeline, t_env *env)
 	while (--cnt > 0)
 		wait(NULL);
 	setup_interactive_signal_handlers();
-	unlink_all_tmpfiles(node_pipeline);
+	// unlink_all_tmpfiles(node_pipeline);
 	return (status_handler(status));
 }
 
