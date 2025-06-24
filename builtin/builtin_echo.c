@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-static bool	    is_valid_echo_option(char *s);
+static bool		is_valid_echo_option(char *s);
 unsigned char	builtin_echo(t_tree_node *node, t_env *env);
 
 static bool	is_valid_echo_option(char *s)

@@ -49,34 +49,46 @@ void	handle_syntax_error(t_env *env)
 
 bool	check_paren_syntax_error(t_token *head)
 {
-	(void)head;
+	bool	prev_is_meta;
+	t_token	*cur;
+	char	*current_str;
+
+	current_str = NULL;
+	prev_is_meta = false;
+	cur = head;
+	if (!cur)
+		return (false);
+	if (cur->status == RIGHT_PAREN)
+		return (error_unexpected_token(cur->str), true);
 	return (false);
 }
 
 bool	check_syntax_error(t_token *head)
 {
-	bool	prev_is_splitable;
+	bool	prev_is_meta;
 	t_token	*cur;
 	char	*current_str;
 
 	current_str = NULL;
-	prev_is_splitable = false;
+	prev_is_meta = false;
 	cur = head;
+	if (!cur)
+		return (false);
+	if (is_status_meta(cur->status))
+		return (error_unexpected_token(cur->str), true);
 	while (cur)
 	{
-		if (!prev_is_splitable && is_status_meta(cur->status))
+		if (is_status_meta(cur->status))
 		{
-			prev_is_splitable = true;
-			current_str = cur->str;
+			if (prev_is_meta)
+				return (error_unexpected_token(cur->str), true);
+			prev_is_meta = true;
 		}
-		else if (prev_is_splitable && is_status_meta(cur->status))
-		{
-			error_unexpected_token(current_str);
-			return (true);
-		}
-		else if (prev_is_splitable && !is_status_meta(cur->status))
-			prev_is_splitable = !prev_is_splitable;
+		else
+			prev_is_meta = false;
 		cur = cur->next;
 	}
+	// if (prev_is_meta)
+	// 	return (error_unexpected_token("newline"), true);
 	return (check_paren_syntax_error(head));
 }

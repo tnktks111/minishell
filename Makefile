@@ -44,7 +44,10 @@ SRCS = 	builtin/builtin_cd.c \
 		exec/exec_builtin.c \
 		exec/exec_solo_command.c \
 		exec/exec_redirection.c \
-		expander.c \
+		expander/expander.c \
+		expander/expander_wildcard.c \
+		expander/expander_wildcard_utils1.c \
+		expander/expander_variable.c \
 		file_expander.c \
 		free.c \
 		here_doc/here_doc.c \

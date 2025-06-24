@@ -109,6 +109,24 @@ void			get_cmd_line_list(t_command_line **head, char **cmd_args);
 void			expand_and_append_command_line(t_command_line **head, char *str,
 					char **files);
 void			append_command_line(t_command_line **head, char *str);
+char			**list_to_args(t_command_line *head);
+
+bool			check_variable_expand(char *str);
+char			*get_variable_str(char *src);
+char			*expand_individual_variable(char *str, t_env *env);
+char			*expand_every_variable(char *str, t_env *env);
+
+bool			check_wildcard_expand(char *str);
+char			**expand_cmd_wildcard(char **cmd_args, char **files);
+void			init_wildcard_array(int *src, char *str, size_t str_len);
+char			*expand_filename_wildcard(char *filename, char **files);
+char			**expand_cmd_line(t_command_line *cmdline, char **files);
+
+void			takeoff_quotes(char *str);
+void			expand_filename(t_tree_node *simple_cmd_node, t_env *env);
+void			expand_cmd_args(t_tree_node *simple_cmd_node, t_env *env);
+void			expander(t_tree_node *pipeline_node, t_env *env);
+void			expand_ast(t_tree_node *node, t_env *env);
 
 /*errors*/
 bool			check_syntax_error(t_token *head);

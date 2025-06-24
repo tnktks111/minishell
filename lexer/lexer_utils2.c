@@ -66,7 +66,8 @@ size_t	token_strlen(char *str)
 
 	len = 0;
 	while (str[len] && !is_splitable(str[len]) && !is_param(str[len])
-		&& !(str[len + 1] && is_two_word_splitable(str[len], str[len + 1])))
+		&& !is_d_quote(str[len]) && !is_s_quote(str[len]) && !(str[len + 1]
+			&& is_two_word_splitable(str[len], str[len + 1])))
 		len++;
 	return (len);
 }

@@ -147,15 +147,14 @@ t_token	*tokenize_str(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (is_param(str[i]))
+		if (str[i] && str[i + 1] && is_two_word_splitable(str[i], str[i + 1]))
+			i += append_two_word_splitable(&head, &str[i]);
+		else if (is_param(str[i]))
 			i += append_param_token_and_move_index(&head, &str[i]);
 		else if (is_d_quote(str[i]))
 			i += append_token_and_move_index(&head, &str[i], true, false);
 		else if (is_s_quote(str[i]))
 			i += append_token_and_move_index(&head, &str[i], false, true);
-		else if (str[i] && str[i + 1] && is_two_word_splitable(str[i], str[i
-				+ 1]))
-			i += append_two_word_splitable(&head, &str[i]);
 		else if (is_splitable(str[i]))
 			i += append_splitable(&head, &str[i]);
 		else
