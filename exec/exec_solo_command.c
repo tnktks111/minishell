@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/24 16:27:33 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/24 17:20:03 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ static void exec_child_process_of_solo_cmd(t_tree_node *cmd_node, t_env *env)
     setup_child_signal_handlers();
 	if (exec_redirection(cmd_node->data.command.redirects) == EXIT_FAILURE)
 		exit(EXIT_FAILURE);
+	if (cmd_node->kind == NODE_SUBSHELL)
+		exit(exec_ast(cmd_node, env));
 	if (!cmd_node->data.command.args[0] || ! cmd_node->data.command.args[0][0])
 	{
 		ft_puterr_general(cmd_node->data.command.args[0], "command not found");
@@ -81,12 +83,7 @@ int	exec_solo_cmd(t_tree_node *cmd_node, t_env *env)
 		if (pid == -1)
 			return (perror_string("fork: "), EXIT_FAILURE);
 		if (pid == 0)
-		{
-			if (cmd_node->kind == NODE_SIMPLE_COMMAND)
-            	exec_child_process_of_solo_cmd(cmd_node, env);
-			else
-				exit(exec_ast(cmd_node, env));
-		}
+        	exec_child_process_of_solo_cmd(cmd_node, env);
 		setup_parent_wait_signal_handlers();
 		wait(&wait_status);
 		setup_interactive_signal_handlers();
