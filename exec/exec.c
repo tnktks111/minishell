@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/24 18:33:58 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/25 17:33:52 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,11 @@ int	exec_and_or(t_tree_node *root, t_env *env)
 {
 	env->envp = decode_table(env, false);
 	root->data.pipeline.exit_status = exec_pipeline(root, env);
+	if (root->data.pipeline.exit_status == -1)
+	{
+		env->prev_exit_status = -1;
+		return (-1);
+	}
 	if (root->data.pipeline.have_bang == true)
 	{
 		env->prev_exit_status = !root->data.pipeline.exit_status;
@@ -75,7 +80,7 @@ int exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env, pid_t *lastpid)
 			return (perror_string("pipe: "), -1);
 		cnt++;
 		if (prepare_here_doc(node, env) == EXIT_FAILURE)
-			return (-1);
+			return (env->prev_exit_status);
 		pid = fork();
 		if (node->parent->kind == NODE_PIPE_LINE)
 			*lastpid = pid;

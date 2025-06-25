@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax_error.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sguruge <sguruge@student.42tokyo.jp>       #+#  +:+       +#+        */
+/*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-06-22 07:34:07 by sguruge           #+#    #+#             */
-/*   Updated: 2025-06-22 07:34:07 by sguruge          ###   ########.fr       */
+/*   Created: 2025/06/22 07:34:07 by sguruge           #+#    #+#             */
+/*   Updated: 2025/06/25 17:37:55 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,12 @@ void	handle_syntax_error(t_env *env)
 
 bool	check_paren_syntax_error(t_token *head)
 {
-	bool	prev_is_meta;
+	// bool	prev_is_meta; 使われてない
 	t_token	*cur;
-	char	*current_str;
+	// char	*current_str; 使われてない
 
-	current_str = NULL;
-	prev_is_meta = false;
+	// current_str = NULL; 使われてない
+	// prev_is_meta = false; 使われてない
 	cur = head;
 	if (!cur)
 		return (false);
@@ -67,9 +67,9 @@ bool	check_syntax_error(t_token *head)
 {
 	bool	prev_is_meta;
 	t_token	*cur;
-	char	*current_str;
+	// char	*current_str; 使われてない
 
-	current_str = NULL;
+	// current_str = NULL; 使われてない
 	prev_is_meta = false;
 	cur = head;
 	if (!cur)

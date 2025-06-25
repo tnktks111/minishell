@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 20:45:34 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/22 20:45:51 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/25 17:39:40 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ int	sh_mktmpfd(char **file_path_ptr)
 		free(file_path);
 		return (-1);
 	}
-	printf("%s\n", file_path);
+	// printf("%s\n", file_path);
 	*file_path_ptr = file_path;
 	return (fd);
 }

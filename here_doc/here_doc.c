@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:35:53 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/24 19:23:09 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/25 17:40:39 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,15 @@ int	prepare_here_doc(t_tree_node *node, t_env *env)
 char	*here_doc_handler(t_redirect *redirect, t_env *env)
 {
 	int		fd;
-	int		original_stdin;
 	char	*tmpfile;
 	char	*s;
 	bool	is_expandable;
+	bool	end_by_delimiter;
+	int 	status;
+	pid_t	pid;
 
-	g_is_in_heredoc = 1;
 	is_expandable = true;
-	original_stdin = dup(STDIN_FILENO);
+	end_by_delimiter = false;
 	if (have_quotes(redirect->filename) == true)
 	{
 		is_expandable = false;
@@ -57,27 +58,53 @@ char	*here_doc_handler(t_redirect *redirect, t_env *env)
 	}
 	fd = sh_mktmpfd(&tmpfile);
 	if (fd == -1)
+	{
+		env->prev_exit_status = EXIT_FAILURE;
 		return (NULL);
-	s = readline("> ");
-	while (s)
+	}
+	pid = fork();
+	if (pid == -1)
 	{
-		if (ft_strcmp(s, redirect->filename) == 0)
-		{
-			free(s);
-			break ;
-		}
-		if (is_expandable)
-			here_doc_expander(&s, env);
-		ft_putendl_fd(s, fd);
-		free(s);
+		perror("minishell: fork:");
+		env->prev_exit_status = EXIT_FAILURE;
+		return (NULL);
+	}
+	if (pid == 0)
+	{
+		setup_here_doc_signal_handlers();
 		s = readline("> ");
+		while (s)
+		{
+			if (ft_strcmp(s, redirect->filename) == 0)
+			{
+				free(s);
+				end_by_delimiter = true;
+				break ;
+			}
+			if (is_expandable)
+				here_doc_expander(&s, env);
+			ft_putendl_fd(s, fd);
+			free(s);
+			s = readline("> ");
+		}
+		if (end_by_delimiter == false)
+		{
+			ft_putendl_fd("bash: warning: here-document at line 8 delimited by end-of-file (wanted '", STDERR_FILENO);
+			ft_putstr_fd(redirect->filename, STDERR_FILENO);
+			ft_putendl_fd("`)", STDERR_FILENO);
+		}
+		exit(0);
 	}
-	if (g_is_in_heredoc == 0)
-	{
-		dup2(original_stdin, STDIN_FILENO);
-		close(original_stdin);
-	}
-	g_is_in_heredoc = 0;
+	setup_parent_wait_signal_handlers();
+	waitpid(pid, &status, 0);
+	setup_interactive_signal_handlers();
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+    {
+		ft_putendl_fd("", STDERR_FILENO);
+        close(fd);
+		env->prev_exit_status = -1;
+        return (NULL);
+    }
 	close(fd);
 	return (tmpfile);
 }
