@@ -6,16 +6,16 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/25 17:33:52 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/25 18:16:50 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 unsigned char	exec_ast(t_tree_node *root, t_env *env);
-int				exec_and_or(t_tree_node *root, t_env *env);
 int				exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env, pid_t *lastpid);
-int				exec_pipeline(t_tree_node *root, t_env *env);
+int				exec_pipeline(t_tree_node *node_pipeline, t_env *env);
+int				exec_pipeline_commands(t_tree_node *node_pipeline, t_env *env);
 void			exec_command_helper(t_tree_node *cmd_node, t_env *env);
 
 unsigned char	exec_ast(t_tree_node *root, t_env *env)
@@ -26,17 +26,17 @@ unsigned char	exec_ast(t_tree_node *root, t_env *env)
 	curr = root->left;
 	while (curr->kind == NODE_AND || curr->kind == NODE_OR)
 		curr = curr->left;
-	prev_exit_status = exec_and_or(curr, env);
+	prev_exit_status = exec_pipeline(curr, env);
 	if (prev_exit_status == -1)
 	{
 		env->prev_exit_status = 130;
 		return (130);
 	}
 	curr = curr->parent;
-	while ((!prev_exit_status && curr->kind == NODE_AND) || (prev_exit_status
+	while ((prev_exit_status == 0 && curr->kind == NODE_AND) || (prev_exit_status != 0
 			&& curr->kind == NODE_OR))
 	{
-		prev_exit_status = exec_and_or(curr->right, env);
+		prev_exit_status = exec_pipeline(curr->right, env);
 		if (prev_exit_status == -1)
 		{
 			env->prev_exit_status = 130;
@@ -47,24 +47,24 @@ unsigned char	exec_ast(t_tree_node *root, t_env *env)
 	return (prev_exit_status);
 }
 
-int	exec_and_or(t_tree_node *root, t_env *env)
+int	exec_pipeline(t_tree_node *node_pipeline, t_env *env)
 {
 	env->envp = decode_table(env, false);
-	root->data.pipeline.exit_status = exec_pipeline(root, env);
-	if (root->data.pipeline.exit_status == -1)
+	node_pipeline->data.pipeline.exit_status = exec_pipeline_commands(node_pipeline, env);
+	if (node_pipeline->data.pipeline.exit_status == -1)
 	{
 		env->prev_exit_status = -1;
 		return (-1);
 	}
-	if (root->data.pipeline.have_bang == true)
+	if (node_pipeline->data.pipeline.have_bang == true)
 	{
-		env->prev_exit_status = !root->data.pipeline.exit_status;
-		return (!root->data.pipeline.exit_status);
+		env->prev_exit_status = !node_pipeline->data.pipeline.exit_status;
+		return (!node_pipeline->data.pipeline.exit_status);
 	}
 	else
 	{
-		env->prev_exit_status = root->data.pipeline.exit_status;
-		return (root->data.pipeline.exit_status);
+		env->prev_exit_status = node_pipeline->data.pipeline.exit_status;
+		return (node_pipeline->data.pipeline.exit_status);
 	}
 }
 
@@ -99,7 +99,7 @@ int exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env, pid_t *lastpid)
 }
 
 /*fork, pipeのエラーハンドリングあとで*/
-int	exec_pipeline(t_tree_node *node_pipeline, t_env *env)
+int	exec_pipeline_commands(t_tree_node *node_pipeline, t_env *env)
 {
 	t_tree_node	*curr;
 	pid_t		pid;
