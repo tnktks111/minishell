@@ -99,9 +99,9 @@ t_token	*find_logical_operator(t_token *head, t_token *tail)
 	t_token	*cur;
 	int		level;
 
-	cur = head;
+	cur = tail;
 	level = 0;
-	while (cur && cur != tail->next)
+	while (cur && cur != head->prev)
 	{
 		if (cur->status == LEFT_PAREN)
 			level++;
@@ -109,7 +109,7 @@ t_token	*find_logical_operator(t_token *head, t_token *tail)
 			level--;
 		else if (level == 0 && (cur->status == AND_OR))
 			return (cur);
-		cur = cur->next;
+		cur = cur->prev;
 	}
 	return (NULL);
 }
@@ -129,7 +129,7 @@ t_tree_node	*create_tree(t_token *head, t_token *tail)
 	tail = skip_splitable_backward(tail);
 	paren_tail = NULL;
 	op = find_logical_operator(head, tail);
-	if (!op && head && head->status == LEFT_PAREN)
+	if (head && head->status == LEFT_PAREN)
 	{
 		paren_tail = find_matching_paren(head);
 		if (paren_tail)
@@ -166,7 +166,7 @@ t_tree_node	*parser(t_token *head, t_env *env)
 		root = create_tree(head, tail);
 		root = add_tree_root(root);
 		free_token(head, tail);
-		// print_tree(root);
+		print_tree(root);
 		exec_ast(root, env);
 		// print_tree(root);
 	}
