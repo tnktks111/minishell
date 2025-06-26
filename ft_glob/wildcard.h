@@ -1,6 +1,10 @@
-#include "minishell.h"
-#include "../libft/inc/libft.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include <unistd.h>
+#include <dirent.h>
 #include <linux/limits.h>
+#include "../minishell.h"
 
 typedef enum e_wildcard_type
 {

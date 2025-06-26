@@ -52,11 +52,6 @@ size_t	_cnt_base_dir_file(char *base_dir, bool show_hidden_files)
 	dp = readdir(dir);
 	while (dp != NULL)
 	{
-		if ((dp->d_name[0] == '.' && dp->d_name[1] == 0) || (dp->d_name[0] == '.' && dp->d_name[1] == '.' && dp->d_name[2] == 0 ))
-		{
-			dp = readdir(dir);
-			continue;
-		}
 		if (show_hidden_files)
 		{
 			if (dp->d_name[0] == '.')
@@ -94,11 +89,6 @@ t_wildcard_tree	**_gen_base_dir_file_array(char *base_dir,
 	dp = readdir(dir);
 	while (dp != NULL)
 	{
-		if ((dp->d_name[0] == '.' && dp->d_name[1] == 0) || (dp->d_name[0] == '.' && dp->d_name[1] == '.' && dp->d_name[2] == 0 ))
-		{
-			dp = readdir(dir);
-			continue;
-		}
 		if (show_hidden_files && dp->d_name[0] == '.')
 		{
 			children[cnt] = _create_wildcard_tree_node(base_dir, dp->d_name);

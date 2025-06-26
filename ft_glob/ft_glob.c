@@ -19,6 +19,7 @@ void	_build_wc_tree_recursive(t_wildcard_tree *node, size_t depth,
 	size_t	i;
 	t_list	*newnode;
 	bool	show_hidden_files;
+	char	*content;
 
 	if (!node || !info || info->error_happened)
 		return ;
@@ -29,7 +30,16 @@ void	_build_wc_tree_recursive(t_wildcard_tree *node, size_t depth,
 	}
 	if (depth == info->depth)
 	{
-		newnode = ft_lstnew((char *)(node->path));
+		if (info->is_abs_path)
+			content = ft_strdup(node->path + 1);
+		else
+			content = ft_strdup(node->path + 2);
+		if (!content)
+		{
+			info->error_happened = true;
+			return ;
+		}
+		newnode = ft_lstnew(content);
 		if (!newnode)
 		{
 			info->error_happened = true;
@@ -78,6 +88,11 @@ int	ft_glob(char *pattern, t_list **res_head)
 	t_wildcard_tree	*root;
 
 	_init_matching_info(&info, pattern);
+	int i = 0;
+	while(info.pattern_sections[i])
+	{
+		printf("%s", info.pattern_sections[i++]);
+	}
 	root = _gen_root_node(info.is_abs_path);
 	if (!root)
 		return (-1);
@@ -92,7 +107,7 @@ int main(void)
     t_list  *current;
     int     match_count;
 
-    match_count = ft_glob("*/*", &head);
+    match_count = ft_glob("/*", &head);
 
     printf("Total matches: %d\n", match_count);
     printf("--- Matched Paths ---\n");
