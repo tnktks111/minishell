@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 16:41:09 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/25 17:36:04 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/26 21:50:26 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ int	main(int ac, char **av, char **envp)
 		input = readline(BLUE "minishell$ " RESET);
 		if (input == NULL)
 		{
+			// ft_putendl_fd("exit", STDERR_FILENO);
 			fprintf(stderr, RED "🂡🂡死神クイズに回答者はいらない♤\n" RESET);
 			// ft_putendl_fd("Bye\n", STDERR_FILENO);
 			break ;

@@ -1,5 +1,11 @@
 #include "wildcard.h"
 
+int	_set_child_of_wc_tree_node(t_wildcard_tree *node, bool show_hidden_files);
+void	_build_wc_tree_recursive(t_wildcard_tree *node, size_t depth, t_matching_info *info);
+t_wildcard_tree	*_gen_root_node(bool is_abs_path);
+int	ft_glob(char *pattern, t_list **res_head);
+
+
 int	_set_child_of_wc_tree_node(t_wildcard_tree *node, bool show_hidden_files)
 {
 	size_t	i;
@@ -13,8 +19,7 @@ int	_set_child_of_wc_tree_node(t_wildcard_tree *node, bool show_hidden_files)
 	return (EXIT_SUCCESS);
 }
 
-void	_build_wc_tree_recursive(t_wildcard_tree *node, size_t depth,
-		t_matching_info *info)
+void	_build_wc_tree_recursive(t_wildcard_tree *node, size_t depth, t_matching_info *info)
 {
 	size_t	i;
 	t_list	*newnode;

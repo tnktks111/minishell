@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/25 18:16:50 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/26 20:43:16 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,9 @@ int exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env, pid_t *lastpid)
 	{
 		if (node->parent->kind == NODE_PIPE && pipe(fd->pipefd) == -1)
 			return (perror_string("pipe: "), -1);
-		cnt++;
 		if (prepare_here_doc(node, env) == EXIT_FAILURE)
 			return (env->prev_exit_status);
+		cnt++;
 		pid = fork();
 		if (node->parent->kind == NODE_PIPE_LINE)
 			*lastpid = pid;
@@ -116,14 +116,14 @@ int	exec_pipeline_commands(t_tree_node *node_pipeline, t_env *env)
 	while (curr->kind == NODE_PIPE)
 		curr = curr->left;
 	cnt = exec_loop(curr, &fd, env, &pid);
-	if (cnt == -1)
-		return (EXIT_FAILURE);
+	if (cnt == 1 || cnt == -1)
+		return (cnt);
 	setup_parent_wait_signal_handlers();
 	waitpid(pid, &status, 0);
 	while (--cnt > 0)
 		wait(NULL);
 	setup_interactive_signal_handlers();
-	// unlink_all_tmpfiles(node_pipeline);
+	unlink_all_tmpfiles(node_pipeline);
 	return (status_handler(status));
 }
 
@@ -144,11 +144,8 @@ void exec_command_helper(t_tree_node *node, t_env *env)
 			ft_puterr_general(cmd_node->data.command.args[0], "command not found");
 			exit(127);
 		}
-		if (!ft_strchr(cmd_node->data.command.args[0], '/'))
-		{
-			find_builtin(cmd_node, env);
-			find_path(cmd_node, env);
-		}
+		find_builtin(cmd_node, env);
+		find_path(cmd_node, env);
 		execve(cmd_node->data.command.args[0], cmd_node->data.command.args,
 			env->envp);
 		execve_failure_handler(cmd_node->data.command.args[0], errno);

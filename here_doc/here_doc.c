@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:35:53 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/25 17:40:39 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/26 18:37:52 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ char	*here_doc_handler(t_redirect *redirect, t_env *env)
 		}
 		if (end_by_delimiter == false)
 		{
-			ft_putendl_fd("bash: warning: here-document at line 8 delimited by end-of-file (wanted '", STDERR_FILENO);
+			ft_putendl_fd("bash: warning: here-document delimited by end-of-file (wanted '", STDERR_FILENO);
 			ft_putstr_fd(redirect->filename, STDERR_FILENO);
 			ft_putendl_fd("`)", STDERR_FILENO);
 		}

@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 20:27:04 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/22 20:27:13 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/26 21:06:25 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ char *extract_key(char *s)
     if (!tmp)
         return (NULL);
     sep = ft_strchr(tmp, '=');
+	if (!sep)
+		return (strdup(s));
     *sep = 0;
     res = ft_strdup(tmp);
     free(tmp);
@@ -53,8 +55,12 @@ char *extract_key_when_additional(char *s)
 char *extract_val(char *s)
 {
     char *res;
+	char *start;
 
-    res = ft_strdup(ft_strchr(s, '=') + 1);
+	start = ft_strchr(s, '=');
+	if (!start)
+		return (ft_strdup(""));
+    res = ft_strdup(start + 1);
     return (res);
 }
 

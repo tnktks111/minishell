@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/18 09:35:10 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/24 00:39:52 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/26 21:41:20 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,7 @@ t_tree_node	*parser(t_token *head, t_env *env)
 		root = create_tree(head, tail);
 		root = add_tree_root(root);
 		free_token(head, tail);
-		print_tree(root);
+		// print_tree(root);
 		exec_ast(root, env);
 		// print_tree(root);
 	}

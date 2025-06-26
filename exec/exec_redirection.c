@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:14:27 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/25 16:59:13 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/26 21:47:15 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,12 @@ int	exec_redirection(t_redirect *redirect)
 		fd = open(curr->filename, open_flags, 0644);
 		if (fd == -1)
 		{
-			printf("minishell: %s: %s\n", curr->filename, strerror(errno));
+			ft_puterr_general(curr->filename, strerror(errno));
 			return(EXIT_FAILURE);
 		}
 		if (dup2(fd, curr->io_number) == -1)
 		{
-			printf("minishell: %d: %s\n", curr->io_number, strerror(errno));
+			ft_puterr_general(ft_itoa(curr->io_number), strerror(errno));
 			close(fd);
 			return(EXIT_FAILURE);
 		}

@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:39:36 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/25 16:58:58 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/26 20:52:00 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void	find_builtin(t_tree_node *cmd_node, t_env *env)
 {
 	unsigned char	exit_status;
 
+	if (ft_strchr(cmd_node->data.command.args[0], '/'))
+		return ;
 	if (!is_builtin(cmd_node->data.command.args[0]))
 		return ;
 	exit_status = exec_builtin(cmd_node, env);
@@ -53,6 +55,8 @@ void	find_path(t_tree_node *cmd_node, t_env *env)
 	int		i;
 	int		last_errno;
 
+	if (ft_strchr(cmd_node->data.command.args[0], '/'))
+		return ;
 	prefix_table = get_path_prefix(env);
 	last_errno = ENOENT;
 	i = -1;

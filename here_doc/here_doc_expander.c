@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 20:35:45 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 19:02:21 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/26 19:34:47 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ static size_t	ft_env_count(char const *s)
                 if (*(s+2) && *(s+2) == '$')
                     cnt++;
                 in_var = false;
-
             }
             else
                 in_var = true;

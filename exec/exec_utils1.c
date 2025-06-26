@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:39:49 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/24 17:51:08 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/26 21:30:30 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,13 +75,13 @@ void execve_failure_handler(char *cmd_name, int errnum)
 	}
 	else if (errnum == EACCES)
 	{
-		ft_puterr_general(cmd_name, "Permission Denied");
-		exit(127);
+		ft_puterr_general(cmd_name, "Permission denied");
+		exit(126);
 	}
 	else if (errnum == ENOENT)
 	{
 		ft_puterr_general(cmd_name, "No such file or directory");
-		exit(126);
+		exit(127);
 	}
 	else
 	{

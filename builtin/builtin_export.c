@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 10:42:50 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 13:47:03 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/26 21:04:58 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ static int	is_valid_export_key(char *s)
 {
 	if (ft_isdigit(*s))
 		return (false);
-	while (*s && *s)
+	while (*s)
 	{
 		if (*s == '+')
 		{
-			if (*(s + 1) == '=')
+			if (*(s + 1) && *(s + 1) == '=')
 				return (2);
 			else
 				return (0);
