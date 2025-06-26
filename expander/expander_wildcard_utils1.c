@@ -12,21 +12,21 @@
 
 #include "../minishell.h"
 
-void	get_cmd_line_list(t_command_line **head, char **cmd_args)
+void	get_cmd_line_list(t_list **head, char **cmd_args)
 {
-	size_t			i;
-	t_command_line	*new_token;
-	t_command_line	*tail;
+	size_t	i;
+	t_list	*new_token;
+	t_list	*tail;
 
 	*head = NULL;
 	tail = NULL;
 	i = 0;
 	while (cmd_args[i])
 	{
-		new_token = malloc(sizeof(t_command_line));
+		new_token = malloc(sizeof(t_list));
 		// if (!new_token)
 		// system_error();
-		new_token->arg = ft_strdup(cmd_args[i]);
+		new_token->content = ft_strdup(cmd_args[i]);
 		new_token->next = NULL;
 		if (!*head)
 			*head = new_token;
@@ -37,13 +37,12 @@ void	get_cmd_line_list(t_command_line **head, char **cmd_args)
 	}
 }
 
-void	expand_and_append_command_line(t_command_line **head, char *str,
-		char **files)
+void	expand_and_append_command_line(t_list **head, char *str, char **files)
 {
-	int				is_wildcard[PATH_MAX];
-	size_t			i;
-	bool			no_match;
-	t_command_line	*tail;
+	int		is_wildcard[PATH_MAX];
+	size_t	i;
+	bool	no_match;
+	t_list	*tail;
 
 	no_match = true;
 	tail = *head;
@@ -64,15 +63,15 @@ void	expand_and_append_command_line(t_command_line **head, char *str,
 		append_command_line(head, str);
 }
 
-void	append_command_line(t_command_line **head, char *str)
+void	append_command_line(t_list **head, char *str)
 {
-	t_command_line	*new_node;
-	t_command_line	*tail;
+	t_list	*new_node;
+	t_list	*tail;
 
-	new_node = malloc(sizeof(t_command_line));
+	new_node = malloc(sizeof(t_list));
 	// if (!new_node)
 	// 	system_error() ;
-	new_node->arg = ft_strdup(str);
+	new_node->content = ft_strdup(str);
 	new_node->next = NULL;
 	if (!*head)
 		*head = new_node;
@@ -85,12 +84,12 @@ void	append_command_line(t_command_line **head, char *str)
 	}
 }
 
-char	**list_to_args(t_command_line *head)
+char	**list_to_args(t_list *head)
 {
-	size_t			count;
-	t_command_line	*cur;
-	char			**result;
-	size_t			i;
+	size_t	count;
+	t_list	*cur;
+	char	**result;
+	size_t	i;
 
 	count = 0;
 	cur = head;
@@ -106,7 +105,7 @@ char	**list_to_args(t_command_line *head)
 	cur = head;
 	while (i < count)
 	{
-		result[i++] = ft_strdup(cur->arg);
+		result[i++] = ft_strdup(cur->content);
 		cur = cur->next;
 	}
 	result[i] = NULL;

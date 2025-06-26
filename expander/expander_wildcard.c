@@ -34,38 +34,41 @@ bool	check_wildcard_expand(char *str)
 	return (false);
 }
 
-char	**expand_cmd_line(t_command_line *cmdline, char **files)
-{
-	char			**result;
-	t_command_line	*head;
-	t_command_line	*cur;
+int		ft_glob(char *pattern, t_list **res_head);
 
+char	**expand_cmd_line(t_list *cmdline, char **files)
+{
+	char	**result;
+	t_list	*head;
+	t_list	*cur;
+
+	(void)files;
 	head = NULL;
 	cur = cmdline;
-	append_command_line(&head, cur->arg);
+	append_command_line(&head, cur->content);
 	cur = cur->next;
 	while (cur)
 	{
-		if (check_wildcard_expand(cur->arg))
-			expand_and_append_command_line(&head, cur->arg, files);
+		if (check_wildcard_expand(cur->content))
+		{
+			ft_glob(cur->content, &cur);
+		}
 		else
-			append_command_line(&head, cur->arg);
+			append_command_line(&head, cur->content);
 		cur = cur->next;
 	}
 	result = list_to_args(head);
-	// free_cmd_line(head);
 	return (result);
 }
 
 char	**expand_cmd_wildcard(char **cmd_args, char **files)
 {
-	t_command_line	*cmd_line;
-	char			**result;
+	t_list	*cmd_line;
+	char	**result;
 
 	get_cmd_line_list(&cmd_line, cmd_args);
 	result = expand_cmd_line(cmd_line, files);
-	// free_args(cmd_args);
-	// free_splited_line(cmd_line);
+	// free_list(cmd_line);
 	return (result);
 }
 

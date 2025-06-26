@@ -1,10 +1,11 @@
 #include "wildcard.h"
 
-int	_set_child_of_wc_tree_node(t_wildcard_tree *node, bool show_hidden_files);
-void	_build_wc_tree_recursive(t_wildcard_tree *node, size_t depth, t_matching_info *info);
+int				_set_child_of_wc_tree_node(t_wildcard_tree *node,
+					bool show_hidden_files);
+void			_build_wc_tree_recursive(t_wildcard_tree *node, size_t depth,
+					t_matching_info *info);
 t_wildcard_tree	*_gen_root_node(bool is_abs_path);
-int	ft_glob(char *pattern, t_list **res_head);
-
+int				ft_glob(char *pattern, t_list **res_head);
 
 int	_set_child_of_wc_tree_node(t_wildcard_tree *node, bool show_hidden_files)
 {
@@ -19,7 +20,8 @@ int	_set_child_of_wc_tree_node(t_wildcard_tree *node, bool show_hidden_files)
 	return (EXIT_SUCCESS);
 }
 
-void	_build_wc_tree_recursive(t_wildcard_tree *node, size_t depth, t_matching_info *info)
+void	_build_wc_tree_recursive(t_wildcard_tree *node, size_t depth,
+		t_matching_info *info)
 {
 	size_t	i;
 	t_list	*newnode;
@@ -31,7 +33,7 @@ void	_build_wc_tree_recursive(t_wildcard_tree *node, size_t depth, t_matching_in
 	if (!info->pattern_sections || !info->pattern_sections)
 	{
 		info->error_happened = true;
-		return;
+		return ;
 	}
 	if (depth == info->depth)
 	{
@@ -91,13 +93,14 @@ int	ft_glob(char *pattern, t_list **res_head)
 {
 	t_matching_info	info;
 	t_wildcard_tree	*root;
+	int				i;
 
 	_init_matching_info(&info, pattern);
-	int i = 0;
-	while(info.pattern_sections[i])
-	{
-		printf("%s", info.pattern_sections[i++]);
-	}
+	i = 0;
+	// while (info.pattern_sections[i])
+	// {
+	// 	printf("%s", info.pattern_sections[i++]);
+	// }
 	root = _gen_root_node(info.is_abs_path);
 	if (!root)
 		return (-1);
@@ -106,24 +109,24 @@ int	ft_glob(char *pattern, t_list **res_head)
 	return (info.total_cnt);
 }
 
-int main(void)
-{
-    t_list  *head = NULL;
-    t_list  *current;
-    int     match_count;
+// int main(void)
+// {
+//     t_list  *head = NULL;
+//     t_list  *current;
+//     int     match_count;
 
-    match_count = ft_glob("/*", &head);
+//     match_count = ft_glob("../*", &head);
 
-    printf("Total matches: %d\n", match_count);
-    printf("--- Matched Paths ---\n");
+//     printf("Total matches: %d\n", match_count);
+//     printf("--- Matched Paths ---\n");
 
-    current = head;
-    while (current)
-    {
-        printf("%s\n", (char *)current->content);
-        current = current->next;
-    }
-    printf("---------------------\n");
-    
-    return (0);
-}
+//     current = head;
+//     while (current)
+//     {
+//         printf("%s\n", (char *)current->content);
+//         current = current->next;
+//     }
+//     printf("---------------------\n");
+
+//     return (0);
+// }

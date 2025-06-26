@@ -88,11 +88,6 @@ typedef struct s_pipefd
 	int						read_fd;
 }							t_pipefd;
 
-typedef struct s_command_line
-{
-	char					*arg;
-	struct s_command_line	*next;
-}							t_command_line;
 
 /*
 > file1 2> file2 << END

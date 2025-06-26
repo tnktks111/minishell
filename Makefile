@@ -61,7 +61,6 @@ SRCS = 	builtin/builtin_cd.c \
 		lexer/lexer_utils1.c \
 		lexer/lexer_utils2.c \
 		main.c \
-		pattern_matching.c \
 		signal.c \
 		parser/parser.c \
 		parser/parser_simple_command.c \
@@ -69,7 +68,11 @@ SRCS = 	builtin/builtin_cd.c \
 		parser/parser_utils2.c \
 		parser/parser_redirect.c \
 		parser/parser_pipeline.c \
-		syntax_error.c
+		syntax_error.c \
+		ft_glob/ft_glob.c \
+		ft_glob/init.c \
+		ft_glob/matching.c \
+		ft_glob/utils.c \
 
 OBJS = $(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS))
 

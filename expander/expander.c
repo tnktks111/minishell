@@ -84,7 +84,7 @@ void	expand_cmd_args(t_tree_node *simple_cmd_node, t_env *env)
 		i++;
 	}
 	expanded = expand_cmd_wildcard(cmd_args, files);
-	// free_args(cmd_args);
+	free_splited_data(cmd_args);
 	i = 0;
 	while (expanded[i])
 	{

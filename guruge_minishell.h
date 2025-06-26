@@ -13,6 +13,7 @@
 #ifndef GURUGE_MINISHELL_H
 # define GURUGE_MINISHELL_H
 
+// # include "ft_glob/wildcard.h"
 # include "libft/inc/libft.h"
 # include "struct.h"
 # include <dirent.h>
@@ -67,7 +68,6 @@ t_tree_node		*create_pipeline_node(t_tree_node *pipe_root, t_token *head,
 t_tree_node		*create_pipeline_tree(t_token *head, t_token *tail);
 // redirect cmd
 
-bool			is_parentheses_group(t_token *head, t_token *tail);
 char			**extract_args(t_token *head, t_token *tail);
 t_redirect_kind	get_redirect_kind(t_token *redirect_token);
 int				get_io_number(t_redirect_kind kind, t_token *redirect_token);
@@ -105,11 +105,11 @@ int				ft_ismatch(char *str, char *pattern, int *is_wildcard,
 void			init_dp_table(int *dp, int *is_wildcard, size_t size);
 void			ft_init_int_array(int *arr, size_t size);
 
-void			get_cmd_line_list(t_command_line **head, char **cmd_args);
-void			expand_and_append_command_line(t_command_line **head, char *str,
+void			get_cmd_line_list(t_list **head, char **cmd_args);
+void			expand_and_append_command_line(t_list **head, char *str,
 					char **files);
-void			append_command_line(t_command_line **head, char *str);
-char			**list_to_args(t_command_line *head);
+void			append_command_line(t_list **head, char *str);
+char			**list_to_args(t_list *head);
 
 bool			check_variable_expand(char *str);
 char			*get_variable_str(char *src);
@@ -120,7 +120,7 @@ bool			check_wildcard_expand(char *str);
 char			**expand_cmd_wildcard(char **cmd_args, char **files);
 void			init_wildcard_array(int *src, char *str, size_t str_len);
 char			*expand_filename_wildcard(char *filename, char **files);
-char			**expand_cmd_line(t_command_line *cmdline, char **files);
+char			**expand_cmd_line(t_list *cmdline, char **files);
 
 void			takeoff_quotes(char *str);
 void			expand_filename(t_tree_node *simple_cmd_node, t_env *env);
