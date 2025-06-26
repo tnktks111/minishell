@@ -1,0 +1,52 @@
+#include "minishell.h"
+#include "../libft/inc/libft.h"
+#include <linux/limits.h>
+
+typedef enum e_wildcard_type
+{
+    PLAIN_CHR,
+    EXPANDABLE_ASTERISK,
+    QUOTE,
+    SLASH
+} t_wildcard_type;
+
+typedef struct s_wildcard_tree
+{
+    char *path;
+    char *filename;
+	struct s_wildcard_tree *parent;
+    struct s_wildcard_tree **children;
+} t_wildcard_tree;
+
+typedef struct s_matching_info
+{
+    t_list *res;
+    int **is_wildcard;
+    char **pattern_sections;
+    size_t depth;
+    int total_cnt;
+    bool is_abs_path;
+    bool error_happened;
+} t_matching_info;
+
+//init.c
+size_t	_cnt_depth(char *pattern);
+t_wildcard_type	_judge_chr_type(char c, bool *in_squote, bool *in_dquote);
+t_wildcard_type	*_create_type_arr(char *pattern);
+int	*_is_wildcard_splitter(size_t window_size, size_t len, t_wildcard_type *type_array_start);
+int	_create_is_wildcard(t_wildcard_type *type_array, t_matching_info *info, char *pattern);
+char	*_pattern_section_splitter(char *pattern_start, size_t window_size, size_t len, t_wildcard_type *type_array_start);
+int	_create_pattern_sections(t_wildcard_type *type_array, t_matching_info *info, char *pattern);
+int	_init_matching_info(t_matching_info *info, char *pattern);
+
+//matching.c
+void	ft_int_array_swap(int *a, int *b, size_t size);
+void	ft_init_int_array(int *arr, size_t size);
+void	init_dp_table(int *dp, int *is_wildcard, size_t size);
+int		ft_ismatch(char *str, char *pattern, int *is_wildcard, size_t pat_len);
+
+//utils.c
+char *join_path(char *dir, char *file);
+t_wildcard_tree *_create_wildcard_tree_node(char *parent_path, char *filename);
+size_t	_cnt_base_dir_file(char *base_dir, bool show_hidden_files);
+t_wildcard_tree	**_gen_base_dir_file_array(char *base_dir, bool show_hidden_files);
