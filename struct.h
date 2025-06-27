@@ -78,7 +78,7 @@ typedef struct s_env
 	t_env_node				table[HASH_SIZE];
 	char					**envp;
 	int prev_exit_status; /* preserve $? */
-	bool					is_malloced;
+	bool					envp_is_malloced;
 	size_t					entry_cnt;
 }							t_env;
 
