@@ -106,8 +106,7 @@ void			init_dp_table(int *dp, int *is_wildcard, size_t size);
 void			ft_init_int_array(int *arr, size_t size);
 
 void			get_cmd_line_list(t_list **head, char **cmd_args);
-void			expand_and_append_command_line(t_list **head, char *str,
-					char **files);
+void			expand_and_append_command_line(char *str, t_list **head);
 void			append_command_line(t_list **head, char *str);
 char			**list_to_args(t_list *head);
 
@@ -127,6 +126,9 @@ void			expand_filename(t_tree_node *simple_cmd_node, t_env *env);
 void			expand_cmd_args(t_tree_node *simple_cmd_node, t_env *env);
 void			expander(t_tree_node *pipeline_node, t_env *env);
 void			expand_ast(t_tree_node *node, t_env *env);
+
+int				ft_glob(char *pattern, t_list **res_head);
+void			free_list(t_list *list);
 
 /*errors*/
 bool			check_syntax_error(t_token *head);

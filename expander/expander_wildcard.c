@@ -34,8 +34,6 @@ bool	check_wildcard_expand(char *str)
 	return (false);
 }
 
-int		ft_glob(char *pattern, t_list **res_head);
-
 char	**expand_cmd_line(t_list *cmdline, char **files)
 {
 	char	**result;
@@ -44,20 +42,19 @@ char	**expand_cmd_line(t_list *cmdline, char **files)
 
 	(void)files;
 	head = NULL;
-	cur = cmdline;
-	append_command_line(&head, cur->content);
-	cur = cur->next;
+	append_command_line(&head, cmdline->content);
+	cur = cmdline->next;
 	while (cur)
 	{
 		if (check_wildcard_expand(cur->content))
-		{
-			ft_glob(cur->content, &cur);
-		}
+			expand_and_append_command_line(cur->content, &head);
 		else
 			append_command_line(&head, cur->content);
 		cur = cur->next;
 	}
 	result = list_to_args(head);
+	free_list(head);
+	free_list(cmdline);
 	return (result);
 }
 
@@ -68,7 +65,6 @@ char	**expand_cmd_wildcard(char **cmd_args, char **files)
 
 	get_cmd_line_list(&cmd_line, cmd_args);
 	result = expand_cmd_line(cmd_line, files);
-	// free_list(cmd_line);
 	return (result);
 }
 

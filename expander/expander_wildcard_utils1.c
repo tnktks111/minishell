@@ -37,29 +37,49 @@ void	get_cmd_line_list(t_list **head, char **cmd_args)
 	}
 }
 
-void	expand_and_append_command_line(t_list **head, char *str, char **files)
+// void	expand_and_append_command_line(t_list **head, char *str, char **files)
+// {
+// 	int		is_wildcard[PATH_MAX];
+// 	size_t	i;
+// 	bool	no_match;
+// 	t_list	*tail;
+
+// 	no_match = true;
+// 	tail = *head;
+// 	while (tail && tail->next)
+// 		tail = tail->next;
+// 	init_wildcard_array(is_wildcard, str, ft_strlen(str));
+// 	i = 0;
+// 	while (files[i])
+// 	{
+// 		if (ft_ismatch(files[i], str, is_wildcard, ft_strlen(str)))
+// 		{
+// 			append_command_line(head, files[i]);
+// 			no_match = false;
+// 		}
+// 		i++;
+// 	}
+// 	if (no_match)
+// 		append_command_line(head, str);
+// }
+
+void	expand_and_append_command_line(char *str, t_list **head)
 {
-	int		is_wildcard[PATH_MAX];
-	size_t	i;
-	bool	no_match;
+	t_list	*expanded;
 	t_list	*tail;
 
-	no_match = true;
-	tail = *head;
-	while (tail && tail->next)
-		tail = tail->next;
-	init_wildcard_array(is_wildcard, str, ft_strlen(str));
-	i = 0;
-	while (files[i])
+	expanded = NULL;
+	ft_glob(str, &expanded);
+	if (expanded)
 	{
-		if (ft_ismatch(files[i], str, is_wildcard, ft_strlen(str)))
-		{
-			append_command_line(head, files[i]);
-			no_match = false;
-		}
-		i++;
+		if (!*head)
+			*head = expanded;
+		tail = *head;
+		while (tail->next)
+			tail = tail->next;
+		tail->next = expanded;
 	}
-	if (no_match)
+	else
 		append_command_line(head, str);
 }
 

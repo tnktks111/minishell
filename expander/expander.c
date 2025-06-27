@@ -65,6 +65,7 @@ void	expand_filename(t_tree_node *simple_cmd_node, t_env *env)
 			takeoff_quotes(temp);
 		simple_cmd_node->data.command.redirects->filename = temp;
 	}
+	free_splited_data(files);
 }
 
 void	expand_cmd_args(t_tree_node *simple_cmd_node, t_env *env)
@@ -92,6 +93,7 @@ void	expand_cmd_args(t_tree_node *simple_cmd_node, t_env *env)
 		i++;
 	}
 	simple_cmd_node->data.command.args = expanded;
+	free_splited_data(files);
 }
 
 void	expander(t_tree_node *pipeline_node, t_env *env)
