@@ -6,7 +6,7 @@
 #    By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/17 19:06:08 by ttanaka           #+#    #+#              #
-#    Updated: 2025/06/27 16:56:48 by ttanaka          ###   ########.fr        #
+#    Updated: 2025/06/27 17:25:07 by ttanaka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,7 +49,8 @@ SRCS = 	builtin/builtin_cd.c \
 		expander/expander_wildcard_utils1.c \
 		expander/expander_variable.c \
 		file_expander.c \
-		free.c \
+		free/free.c \
+		free/free_all.c \
 		here_doc/here_doc.c \
 		here_doc/here_doc_expander.c \
 		here_doc/here_doc_quotes.c \

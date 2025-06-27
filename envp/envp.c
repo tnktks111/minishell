@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 20:28:23 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 18:56:06 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/27 17:21:16 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,12 @@ char *ft_search(char *key, t_env *env)
     if (curr->is_empty == true)
         return (ft_strdup(""));
     if (ft_strcmp(curr->key, key) == 0)
-        return (curr->val);
+        return (ft_strdup(curr->val));
     curr = curr->next;
     while (curr)
     {
         if (ft_strcmp(curr->key, key) == 0)
-            return (curr->val);
+            return (ft_strdup(curr->val));
         curr = curr->next;
     }
     return (ft_strdup(""));

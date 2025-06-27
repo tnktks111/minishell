@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/24 19:20:05 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/27 17:24:34 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,8 @@ void			unlink_tmpfile(t_tree_node *node_simplecmd);
 void			unlink_all_tmpfiles(t_tree_node *node_pipeline);
 
 void			perror_string(char *str);
-void			ft_puterr_general(char *cmd_name, char *errmsg);
+void 			ft_puterr_general(char *cmd_name, char *errmsg);
+void			ft_puterr_nbr(int nbr, char *errmsg);
 void			error_too_many_args(char *cmd_name);
 void			error_numeric_arg_required(char *cmd_name, char *arg);
 void			error_not_a_valid_identifier(char *cmd_name, char *arg);

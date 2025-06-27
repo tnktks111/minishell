@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:14:27 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/26 21:47:15 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/27 17:18:13 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	exec_redirection(t_redirect *redirect)
 		}
 		if (dup2(fd, curr->io_number) == -1)
 		{
-			ft_puterr_general(ft_itoa(curr->io_number), strerror(errno));
+			ft_puterr_nbr(curr->io_number, strerror(errno));
 			close(fd);
 			return(EXIT_FAILURE);
 		}

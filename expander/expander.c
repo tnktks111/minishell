@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 20:57:22 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/26 21:20:04 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/27 17:26:23 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,9 @@ void	expand_ast(t_tree_node *node, t_env *env)
 	if (!node)
 		return ;
 	if (node->kind == NODE_PIPE_LINE)
+	{
 		expander(node, env);
+	}
 	expand_ast(node->left, env);
 	expand_ast(node->right, env);
 }
