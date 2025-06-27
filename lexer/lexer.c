@@ -170,12 +170,11 @@ t_token	*tokenize_str(char *str)
 	return (head);
 }
 
-t_token	*lexer(char *str, t_env *env)
+t_token	*lexer(char *str)
 {
 	t_token	*head;
 
 	head = tokenize_str(str);
 	// print_tokens(head);
-	parser(head, env);
 	return (head);
 }

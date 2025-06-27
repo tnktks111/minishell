@@ -54,7 +54,7 @@ size_t			append_splitable(t_token **head, char *str);
 size_t			append_two_word_splitable(t_token **head, char *str);
 t_token			*tokenize_str(char *str);
 // void		print_tokens(t_token *head);
-t_token			*lexer(char *str, t_env *env);
+t_token			*lexer(char *str);
 bool			is_valid_input(char *input);
 
 /* parser prototype */
@@ -93,7 +93,7 @@ t_token			*find_logical_operator(t_token *head, t_token *tail);
 t_token			*get_tail(t_token *head);
 t_tree_node		*add_tree_root(t_tree_node *root);
 void			free_token(t_token *head, t_token *tail);
-void			parser(t_token *head, t_env *env);
+t_tree_node		*parser(t_token *head, t_env *env);
 
 /* expander */
 

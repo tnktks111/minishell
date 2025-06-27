@@ -13,7 +13,8 @@
 #include "minishell.h"
 
 unsigned char	exec_ast(t_tree_node *root, t_env *env);
-int				exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env, pid_t *lastpid);
+int				exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env,
+					pid_t *lastpid);
 int				exec_pipeline(t_tree_node *node_pipeline, t_env *env);
 int				exec_pipeline_commands(t_tree_node *node_pipeline, t_env *env);
 void			exec_command_helper(t_tree_node *cmd_node, t_env *env);
@@ -33,8 +34,8 @@ unsigned char	exec_ast(t_tree_node *root, t_env *env)
 		return (130);
 	}
 	curr = curr->parent;
-	while ((prev_exit_status == 0 && curr->kind == NODE_AND) || (prev_exit_status != 0
-			&& curr->kind == NODE_OR))
+	while ((prev_exit_status == 0 && curr->kind == NODE_AND)
+		|| (prev_exit_status != 0 && curr->kind == NODE_OR))
 	{
 		prev_exit_status = exec_pipeline(curr->right, env);
 		if (prev_exit_status == -1)
@@ -53,7 +54,8 @@ int	exec_pipeline(t_tree_node *node_pipeline, t_env *env)
 		free_splited_data(env->envp);
 	env->envp = decode_table(env, false);
 	env->envp_is_malloced = true;
-	node_pipeline->data.pipeline.exit_status = exec_pipeline_commands(node_pipeline, env);
+	node_pipeline->data.pipeline.exit_status = exec_pipeline_commands(node_pipeline,
+			env);
 	if (node_pipeline->data.pipeline.exit_status == -1)
 	{
 		env->prev_exit_status = -1;
@@ -71,10 +73,10 @@ int	exec_pipeline(t_tree_node *node_pipeline, t_env *env)
 	}
 }
 
-int exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env, pid_t *lastpid)
+int	exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env, pid_t *lastpid)
 {
-	int cnt;
-	pid_t pid;
+	int		cnt;
+	pid_t	pid;
 
 	cnt = 0;
 	while (node->kind != NODE_PIPE_LINE)
@@ -130,7 +132,7 @@ int	exec_pipeline_commands(t_tree_node *node_pipeline, t_env *env)
 	return (status_handler(status));
 }
 
-void exec_command_helper(t_tree_node *node, t_env *env)
+void	exec_command_helper(t_tree_node *node, t_env *env)
 {
 	t_tree_node	*cmd_node;
 
@@ -142,9 +144,11 @@ void exec_command_helper(t_tree_node *node, t_env *env)
 		exit(EXIT_FAILURE);
 	if (cmd_node->kind == NODE_SIMPLE_COMMAND)
 	{
-		if (!cmd_node->data.command.args[0] || ! cmd_node->data.command.args[0][0])
+		if (!cmd_node->data.command.args[0]
+			|| !cmd_node->data.command.args[0][0])
 		{
-			ft_puterr_general(cmd_node->data.command.args[0], "command not found");
+			ft_puterr_general(cmd_node->data.command.args[0],
+				"command not found");
 			exit(127);
 		}
 		find_builtin(cmd_node, env);

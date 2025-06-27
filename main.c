@@ -16,18 +16,20 @@
 #define BLUE "\1\033[32m\2"
 #define RESET "\1\033[0m\2"
 
-static bool contain_space_only(char *s)
+static bool	contain_space_only(char *s)
 {
 	while (*s)
 		if (!(*s++ == ' '))
-			return false;
-	return true;
+			return (false);
+	return (true);
 }
 
 int	main(int ac, char **av, char **envp)
 {
-	char	*input;
-	t_env	env;
+	char *input;
+	t_env env;
+	t_token *head;
+	t_tree_node *root;
 
 	(void)ac;
 	(void)av;
@@ -57,7 +59,9 @@ int	main(int ac, char **av, char **envp)
 		}
 		if (is_valid_input(input))
 		{
-			lexer(input, &env);
+			head = lexer(input);
+			root = parser(head, &env);
+			exec_ast(root, &env);
 		}
 		free(input);
 	}

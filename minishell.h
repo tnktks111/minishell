@@ -52,14 +52,14 @@ char			*ft_search(char *key, t_env *env);
 /* チェーンノード生成・削除*/
 t_env_node		*_create_env_node(char *key, char *val, t_env *env);
 void			_destroy_env_node(t_env_node *node, t_env *env,
-					bool is_malloced);
+					bool envp_is_malloced);
 /*チェーンノード編集*/
 int				_modify_val_of_entry(char *val, t_env_node *node);
 int				_set_key_val(char *key, char *val, t_env_node *node,
 					t_env *env);
 /* エントリーの追加・削除*/
 int				ft_add_key_val_pair(char *key, char *val, t_env *env);
-int 			ft_set_underscore(t_tree_node *cmd_node, t_env *env);
+int				ft_set_underscore(t_tree_node *cmd_node, t_env *env);
 void			ft_remove_key(char *key, t_env *env);
 /* ハッシュテーブルのリソース解放 */
 void			free_table(t_env *env);
@@ -67,7 +67,8 @@ void			free_table(t_env *env);
 /*execution*/
 unsigned char	exec_ast(t_tree_node *root, t_env *env);
 int				exec_and_or(t_tree_node *root, t_env *env);
-int				exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env, pid_t *lastpid);
+int				exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env,
+					pid_t *lastpid);
 int				exec_pipeline(t_tree_node *root, t_env *env);
 void			exec_command_helper(t_tree_node *cmd_node, t_env *env);
 
@@ -78,7 +79,7 @@ int				exec_redirection(t_redirect *redirect);
 
 void			setup_pipefd(t_pipefd *fd, t_tree_node *node, bool is_start);
 int				status_handler(int status);
-void 			execve_failure_handler(char *cmd_name, int errnum);
+void			execve_failure_handler(char *cmd_name, int errnum);
 char			**get_path_prefix(t_env *env);
 void			find_builtin(t_tree_node *cmd_node, t_env *env);
 void			find_path(t_tree_node *cmd_node, t_env *env);
@@ -86,23 +87,23 @@ bool			is_builtin(char *s);
 bool			is_directory(char *path);
 
 /*here_doc*/
-int		prepare_here_doc(t_tree_node *node, t_env *env);
-char	*here_doc_handler(t_redirect *redirect, t_env *env);
-void	here_doc_expander(char **s, t_env *env);
-bool	have_quotes(char *limiter);
-void	remove_quotes(t_redirect *redirect);
-void	unlink_tmpfile(t_tree_node *node_simplecmd);
-void	unlink_all_tmpfiles(t_tree_node *node_pipeline);
+int				prepare_here_doc(t_tree_node *node, t_env *env);
+char			*here_doc_handler(t_redirect *redirect, t_env *env);
+void			here_doc_expander(char **s, t_env *env);
+bool			have_quotes(char *limiter);
+void			remove_quotes(t_redirect *redirect);
+void			unlink_tmpfile(t_tree_node *node_simplecmd);
+void			unlink_all_tmpfiles(t_tree_node *node_pipeline);
 
 void			perror_string(char *str);
-void 			ft_puterr_general(char *cmd_name, char *errmsg);
+void			ft_puterr_general(char *cmd_name, char *errmsg);
 void			error_too_many_args(char *cmd_name);
 void			error_numeric_arg_required(char *cmd_name, char *arg);
 void			error_not_a_valid_identifier(char *cmd_name, char *arg);
 void			error_illegal_arguments(char *cmd_name, char *arg);
 void			error_invalid_option(char *cmd_name, char *arg);
-void 			builtin_error(char *cmd_name, char *arg, char *errmsg);
-void 			warning_shlvl_too_high(int shlvl);
+void			builtin_error(char *cmd_name, char *arg, char *errmsg);
+void			warning_shlvl_too_high(int shlvl);
 
 unsigned char	builtin_echo(t_tree_node *node, t_env *env);
 unsigned char	builtin_pwd(t_tree_node *node, t_env *env);
