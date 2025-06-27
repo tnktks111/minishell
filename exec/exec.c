@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/26 20:43:16 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/27 16:55:51 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,10 @@ unsigned char	exec_ast(t_tree_node *root, t_env *env)
 
 int	exec_pipeline(t_tree_node *node_pipeline, t_env *env)
 {
+	if (env->envp_is_malloced == true)
+		free_splited_data(env->envp);
 	env->envp = decode_table(env, false);
+	env->envp_is_malloced = true;
 	node_pipeline->data.pipeline.exit_status = exec_pipeline_commands(node_pipeline, env);
 	if (node_pipeline->data.pipeline.exit_status == -1)
 	{
