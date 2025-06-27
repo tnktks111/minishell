@@ -12,9 +12,8 @@
 
 #include "minishell.h"
 
-void free_all(t_env *env, t_tree_node *root)
+void	free_all(t_env *env)
 {
 	free_table(env);
-	free_tree_node(root);
-	
+	free_tree_node(env->root);
 }

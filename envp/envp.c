@@ -45,9 +45,11 @@ int encode_envp(t_env *env, char *envp[])
     char *key;
     char *val;
     int shlvl;
+    bool have_underscore;
 
     _init_table(env);
     i = 0;
+    have_underscore = false;
     while (envp[i] != NULL)
     {
         key = extract_key(envp[i]);
@@ -59,6 +61,8 @@ int encode_envp(t_env *env, char *envp[])
             free_table(env);
             return (EXIT_FAILURE);
         }
+        if (ft_strcmp(key, "_") == 0)
+            have_underscore = true;
         if (ft_strcmp(key, "SHLVL") == 0)
         {
             shlvl = ft_atoi_for_shlvl(val);
@@ -76,8 +80,11 @@ int encode_envp(t_env *env, char *envp[])
         ft_add_key_val_pair(key, val, env);
         i++;
     }
+    if (have_underscore == false)
+        ft_add_key_val_pair(ft_strdup("_"), ft_strdup(""), env);
     return (EXIT_SUCCESS);
 }
+
 char **decode_table(t_env *env, bool include_quote)
 {
     char **res;

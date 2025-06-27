@@ -47,6 +47,7 @@ int	main(int ac, char **av, char **envp)
 			// ft_putendl_fd("exit", STDERR_FILENO);
 			fprintf(stderr, RED "🂡🂡死神クイズに回答者はいらない♤\n" RESET);
 			// ft_putendl_fd("Bye\n", STDERR_FILENO);
+			free_all(&env);
 			break ;
 		}
 		if (input[0] && !contain_space_only(input))
@@ -54,6 +55,7 @@ int	main(int ac, char **av, char **envp)
 		if (ft_strcmp(input, "exit") == 0)
 		{
 			free(input);
+			free_all(&env);
 			ft_putendl_fd("コムギ...まだ居るか...\n", STDERR_FILENO);
 			break ;
 		}
@@ -61,6 +63,7 @@ int	main(int ac, char **av, char **envp)
 		{
 			head = lexer(input);
 			root = parser(head, &env);
+			env.root = root;
 			exec_ast(root, &env);
 		}
 		free(input);

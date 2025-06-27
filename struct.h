@@ -73,15 +73,6 @@ typedef struct s_env_node
 	struct s_env_node	*next;
 }						t_env_node;
 
-typedef struct s_env
-{
-	t_env_node			table[HASH_SIZE];
-	char				**envp;
-	int prev_exit_status; /* preserve $? */
-	bool					envp_is_malloced;
-	size_t					entry_cnt;
-}							t_env;
-
 typedef struct s_pipefd
 {
 	int					pipefd[2];
@@ -131,5 +122,15 @@ typedef struct s_tree_node
 	struct s_tree_node	*right;
 	t_data				data;
 }						t_tree_node;
+
+typedef struct s_env
+{
+	t_env_node			table[HASH_SIZE];
+	char				**envp;
+	int prev_exit_status; /* preserve $? */
+	bool				envp_is_malloced;
+	size_t				entry_cnt;
+	t_tree_node			*root;
+}						t_env;
 
 #endif

@@ -131,6 +131,7 @@ int				ft_glob(char *pattern, t_list **res_head);
 void			free_list(t_list *list);
 void			free_env(t_env *env);
 void			free_tree_node(t_tree_node *node);
+void			free_all(t_env *env);
 
 /*errors*/
 bool			check_syntax_error(t_token *head);

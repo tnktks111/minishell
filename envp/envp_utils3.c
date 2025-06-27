@@ -57,13 +57,17 @@ int ft_add_key_val_pair(char *key, char *val, t_env *env)
 int ft_set_underscore(t_tree_node *cmd_node, t_env *env)
 {
     char **args;
+    char *last_arg;
     size_t i;
 
     args = cmd_node->data.command.args;
     i = 0;
     while (args[i + 1])
         i++;
-    ft_add_key_val_pair("_", args[i], env);
+    last_arg = ft_strdup(args[i]);
+    if (!last_arg)
+        return (EXIT_FAILURE);
+    ft_add_key_val_pair("_", last_arg, env);
     return (EXIT_SUCCESS);
 }
 

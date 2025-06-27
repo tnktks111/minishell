@@ -166,10 +166,7 @@ t_tree_node	*parser(t_token *head, t_env *env)
 		tail = get_tail(head);
 		root = create_tree(head, tail);
 		root = add_tree_root(root);
-		// print_tree(root);
-		// print_tree(root);
 	}
-	// free_tree_node(root);
-	// free_env(env);
+	free_token(head, tail);
 	return (root);
 }
