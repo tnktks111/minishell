@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+void	free_tree_node(t_tree_node *node);
+void	free_redirects(t_redirect *redirect);
 void	free_list(t_list *list);
 void	free_splited_data(char **data);
 char	**free_allocated_data(char **datas, size_t allocated);
@@ -77,4 +79,40 @@ char	**free_allocated_data(char **datas, size_t allocated)
 		free(datas[i++]);
 	free(datas);
 	return (NULL);
+}
+
+void	free_redirects(t_redirect *redirect)
+{
+	t_redirect	*tmp;
+
+	while (redirect)
+	{
+		tmp = redirect;
+		redirect = redirect->next;
+		free(tmp->filename);
+		free(tmp);
+	}
+}
+
+void	free_tree_node(t_tree_node *node)
+{
+	if (!node)
+		return ;
+	// 子ノードから解放♠️
+	free_tree_node(node->left);
+	free_tree_node(node->right);
+	// 自分の中身を解放♣️
+	if (node->kind == NODE_SIMPLE_COMMAND)
+	{
+		free_splited_data(node->data.command.args);
+		free_redirects(node->data.command.redirects);
+	}
+	// 最後に自分自身を解放♥️
+	free(node);
+}
+
+void	free_env(t_env *env)
+{
+	free_splited_data(env->envp);
+	free(env);
 }

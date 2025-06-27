@@ -150,7 +150,7 @@ t_tree_node	*create_tree(t_token *head, t_token *tail)
 	return (create_operator_node(op, left, right));
 }
 
-t_tree_node	*parser(t_token *head, t_env *env)
+void	parser(t_token *head, t_env *env)
 {
 	t_tree_node	*root;
 	t_token		*tail;
@@ -168,7 +168,8 @@ t_tree_node	*parser(t_token *head, t_env *env)
 		free_token(head, tail);
 		// print_tree(root);
 		exec_ast(root, env);
-		print_tree(root);
+		// print_tree(root);
 	}
-	return (root);
+	free_tree_node(root);
+	// free_env(env);
 }

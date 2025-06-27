@@ -93,7 +93,7 @@ t_token			*find_logical_operator(t_token *head, t_token *tail);
 t_token			*get_tail(t_token *head);
 t_tree_node		*add_tree_root(t_tree_node *root);
 void			free_token(t_token *head, t_token *tail);
-t_tree_node		*parser(t_token *head, t_env *env);
+void			parser(t_token *head, t_env *env);
 
 /* expander */
 
@@ -129,6 +129,8 @@ void			expand_ast(t_tree_node *node, t_env *env);
 
 int				ft_glob(char *pattern, t_list **res_head);
 void			free_list(t_list *list);
+void			free_env(t_env *env);
+void			free_tree_node(t_tree_node *node);
 
 /*errors*/
 bool			check_syntax_error(t_token *head);
