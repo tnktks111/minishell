@@ -19,10 +19,9 @@ void	execve_failure_handler(char *cmd_name, int errnum);
 /*check whether the given path is directory or not*/
 bool	is_directory(char *path);
 
-
 int	wcoredump(int status)
 {
-	return ((status) & 0x80);
+	return ((status)&0x80);
 }
 
 void	setup_pipefd(t_pipefd *fd, t_tree_node *node, bool is_start)
@@ -77,8 +76,6 @@ int	status_handler(int status)
 	}
 	return (EXIT_FAILURE);
 }
-
-
 
 bool	is_directory(char *path)
 {

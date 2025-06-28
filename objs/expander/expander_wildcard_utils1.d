@@ -1,0 +1,13 @@
+objs/expander/expander_wildcard_utils1.o: \
+  expander/expander_wildcard_utils1.c expander/../minishell.h \
+  guruge_minishell.h libft/inc/libft.h struct.h ttanaka_minishell.h
+
+expander/../minishell.h:
+
+guruge_minishell.h:
+
+libft/inc/libft.h:
+
+struct.h:
+
+ttanaka_minishell.h:

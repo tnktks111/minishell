@@ -48,6 +48,7 @@ SRCS = 	builtin/builtin_cd.c \
 		expander/expander_wildcard.c \
 		expander/expander_wildcard_utils1.c \
 		expander/expander_variable.c \
+		expander/expander_variable_utils1.c \
 		file_expander.c \
 		free/free.c \
 		free/free_all.c \

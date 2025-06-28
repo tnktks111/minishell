@@ -1,0 +1,12 @@
+objs/parser/parser_utils2.o: parser/parser_utils2.c parser/../minishell.h \
+  guruge_minishell.h libft/inc/libft.h struct.h ttanaka_minishell.h
+
+parser/../minishell.h:
+
+guruge_minishell.h:
+
+libft/inc/libft.h:
+
+struct.h:
+
+ttanaka_minishell.h:

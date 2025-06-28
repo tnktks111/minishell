@@ -89,8 +89,6 @@ void	expand_cmd_args(t_tree_node *simple_cmd_node, t_env *env)
 
 void	expander(t_tree_node *simple_cmd_node, t_env *env)
 {
-	// t_tree_node	*simple_cmd_node;
-	// simple_cmd_node = pipeline_node->left;
 	if (simple_cmd_node->data.command.redirects)
 		expand_filename(simple_cmd_node, env);
 	if (simple_cmd_node->data.command.args[0])

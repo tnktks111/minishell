@@ -104,10 +104,7 @@ char	*expand_filename_wildcard(char *filename, char **files)
 		i++;
 	}
 	if (matches > 1)
-	{
-		error_ambiguous_redirect(filename);
-		return (NULL);
-	}
+		return (error_ambiguous_redirect(filename), NULL);
 	if (matches == 0)
 		return (ft_strdup(filename));
 	return (result);
