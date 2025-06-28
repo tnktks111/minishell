@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 10:41:59 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/23 10:42:23 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 14:29:12 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ unsigned char	builtin_unset(t_tree_node *node, t_env *env);
 
 static int	is_valid_unset_key(char *s)
 {
+	if (ft_strcmp(s, "?") == 0)
+		return (1);
 	while (*s)
 	{
 		if (!(ft_isalnum(*s) || *s == '_'))
