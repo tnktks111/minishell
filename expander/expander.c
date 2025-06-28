@@ -23,8 +23,6 @@ void	takeoff_quotes(char *str)
 	write_index = 0;
 	in_squote = false;
 	in_dquote = false;
-	if (!str)
-		return ;
 	while (str[read_index])
 	{
 		if (!in_dquote && is_s_quote(str[read_index]))
@@ -63,7 +61,8 @@ int	expand_filename(t_tree_node *simple_cmd_node, t_env *env)
 			if (!expanded_filename)
 				return (EXIT_FAILURE);
 		}
-		if (simple_cmd_node->data.command.redirects->kind != REDIR_HEREDOC)
+		if (temp
+			&& simple_cmd_node->data.command.redirects->kind != REDIR_HEREDOC)
 			takeoff_quotes(temp);
 		simple_cmd_node->data.command.redirects->filename = temp;
 	}
@@ -84,7 +83,8 @@ void	expand_cmd_args(t_tree_node *simple_cmd_node, t_env *env)
 	i = 0;
 	while (wildcard_expanded[i])
 	{
-		takeoff_quotes(wildcard_expanded[i]);
+		if (wildcard_expanded[i])
+			takeoff_quotes(wildcard_expanded[i]);
 		i++;
 	}
 	simple_cmd_node->data.command.args = wildcard_expanded;
