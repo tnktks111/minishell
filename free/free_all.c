@@ -15,5 +15,6 @@
 void	free_all(t_env *env)
 {
 	free_table(env);
-	free_tree_node(env->root);
+	if (env->root)
+		free_tree_node(env->root);
 }

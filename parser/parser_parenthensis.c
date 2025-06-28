@@ -12,6 +12,30 @@
 
 #include "minishell.h"
 
+t_token	*get_redir_tail(t_token *head)
+{
+	t_token	*cur;
+	t_token	*last;
+	bool	found_redir;
+
+	found_redir = false;
+	cur = head;
+	last = head;
+	while (cur)
+	{
+		if (cur->status == REDIRECT)
+			found_redir = !found_redir;
+		else if (found_redir && (cur->status == NORMAL
+				|| cur->status == IN_DOUBLE || cur->status == IN_SINGLE))
+		{
+			last = cur;
+			return (last);
+		}
+		cur = cur->next;
+	}
+	return (cur);
+}
+
 t_tree_node	*parse_paren(t_create_tree *tree, t_token *head)
 {
 	t_token	*paren_tail;

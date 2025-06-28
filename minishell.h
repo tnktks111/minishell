@@ -120,7 +120,9 @@ int				sh_mktmpfd(char **file_path_ptr);
 void			free_splited_data(char **data);
 char			**free_allocated_data(char **datas, size_t allocated);
 
-void			print_tree(t_tree_node *node);
 void			expand_ast(t_tree_node *node, t_env *env);
+
+void			print_tree(t_tree_node *node);
+void			print_tokens(t_token *head);
 
 #endif

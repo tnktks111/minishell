@@ -34,12 +34,14 @@ t_tree_node	*create_subshell_node(t_tree_node *cur_root, t_token *head,
 		t_token *tail)
 {
 	t_tree_node	*node;
+	t_token		*redir_tail;
 
 	node = malloc(sizeof(t_tree_node));
 	if (!node)
 		return (NULL);
 	node->kind = NODE_SUBSHELL;
-	node->data.command.redirects = extract_redirects(head, tail);
+	redir_tail = get_redir_tail(head);
+	node->data.command.redirects = extract_redirects(head, redir_tail);
 	node->data.command.args = extract_args(head, tail);
 	node->left = cur_root;
 	node->right = NULL;
