@@ -110,10 +110,12 @@ void			expand_and_append_command_line(char *str, t_list **head);
 void			append_command_line(t_list **head, char *str);
 char			**list_to_args(t_list *head);
 
+size_t			count_args(char **args);
 bool			check_variable_expand(char *str);
 char			*get_variable_str(char *src);
 char			*expand_individual_variable(char *str, t_env *env);
 char			*expand_every_variable(char *str, t_env *env);
+char			**expand_cmd_variable(char **cmd_args, t_env *env);
 
 bool			check_wildcard_expand(char *str);
 char			**expand_cmd_wildcard(char **cmd_args);

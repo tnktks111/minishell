@@ -71,35 +71,26 @@ void	expand_filename(t_tree_node *simple_cmd_node, t_env *env)
 void	expand_cmd_args(t_tree_node *simple_cmd_node, t_env *env)
 {
 	char	**cmd_args;
+	char	**variable_expanded;
 	size_t	i;
-	char	**expanded;
+	char	**wildcard_expanded;
 
 	cmd_args = simple_cmd_node->data.command.args;
+	variable_expanded = expand_cmd_variable(cmd_args, env);
+	wildcard_expanded = expand_cmd_wildcard(variable_expanded);
 	i = 0;
-	while (cmd_args[i])
+	while (wildcard_expanded[i])
 	{
-		if (check_variable_expand(cmd_args[i]))
-		{
-			cmd_args[i] = expand_every_variable(cmd_args[i], env);
-		}
+		takeoff_quotes(wildcard_expanded[i]);
 		i++;
 	}
-	expanded = expand_cmd_wildcard(cmd_args);
-	free_splited_data(cmd_args);
-	i = 0;
-	while (expanded[i])
-	{
-		takeoff_quotes(expanded[i]);
-		i++;
-	}
-	simple_cmd_node->data.command.args = expanded;
+	simple_cmd_node->data.command.args = wildcard_expanded;
 }
 
-void	expander(t_tree_node *pipeline_node, t_env *env)
+void	expander(t_tree_node *simple_cmd_node, t_env *env)
 {
-	t_tree_node	*simple_cmd_node;
-
-	simple_cmd_node = pipeline_node->left;
+	// t_tree_node	*simple_cmd_node;
+	// simple_cmd_node = pipeline_node->left;
 	if (simple_cmd_node->data.command.redirects)
 		expand_filename(simple_cmd_node, env);
 	if (simple_cmd_node->data.command.args[0])
@@ -113,7 +104,7 @@ void	expand_ast(t_tree_node *node, t_env *env)
 {
 	if (!node)
 		return ;
-	if (node->kind == NODE_PIPE_LINE)
+	if (node->kind == NODE_SIMPLE_COMMAND)
 	{
 		expander(node, env);
 	}
