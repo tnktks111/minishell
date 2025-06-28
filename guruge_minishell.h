@@ -30,6 +30,11 @@
 # include <unistd.h>
 
 /* lexer prototype */
+
+// token_fix
+bool			is_mergeable(t_status status);
+t_status		get_status(t_status status1, t_status status2);
+void			fix_non_splitted_tokens(t_token **head);
 // utils
 bool			is_d_quote(char c);
 bool			is_s_quote(char c);

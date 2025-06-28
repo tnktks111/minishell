@@ -61,6 +61,7 @@ SRCS = 	builtin/builtin_cd.c \
 		lexer/lexer_token_utils1.c \
 		lexer/lexer_utils1.c \
 		lexer/lexer_utils2.c \
+		lexer/lexer_token_fixing.c \
 		main.c \
 		signal.c \
 		parser/parser.c \
