@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   ft_glob_init1.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:51:28 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 20:19:10 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 21:56:18 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 
 int			*_is_wc_splitter(size_t window_size, size_t len,
 				t_wildcard_type *type_array_start);
-char		*_ptn_splitter(char *pattern_start, size_t window_size,
-				size_t len, t_wildcard_type *type_array_start);
+char		*_ptn_splitter(char *pattern_start, size_t window_size, size_t len,
+				t_wildcard_type *type_array_start);
 int			_init_pattern_and_wc_secs(t_wildcard_type *type_array,
 				t_matching_info *info, char *pattern);
 int			_init_matching_info(t_matching_info *info, char *pattern);
@@ -67,39 +67,41 @@ char	*_ptn_splitter(char *pattern_start, size_t window_size, size_t len,
 	return (section);
 }
 
-static int	exec_init_pt_wc_loop(t_matching_info *info, t_wildcard_type *tp_arr,
-		char *ptn, size_t len)
+static int	_set_split_sections(t_matching_info *info, t_wildcard_type *arr,
+		char *p, t_split_vars *v)
 {
-	size_t	l;
-	size_t	r;
-	size_t	idx;
-	size_t	cnt;
+	info->ptn_secs[v->idx] = _ptn_splitter(p + v->l, v->r - v->l, v->cnt,
+			&arr[v->l]);
+	info->is_wildcard[v->idx] = _is_wc_splitter(v->r - v->l, v->cnt,
+			&arr[v->l]);
+	if (!info->ptn_secs[v->idx] || !info->is_wildcard[v->idx])
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
+}
 
-	l = 0;
-	r = 0;
-	idx = 0;
-	cnt = 0;
-	while (r < len)
+static int	exec_init_pt_wc_loop(t_matching_info *info, t_wildcard_type *arr,
+		char *p, size_t len)
+{
+	t_split_vars	v;
+
+	ft_memset(&v, 0, sizeof(t_split_vars));
+	while (v.r < len)
 	{
-		if (tp_arr[r] == SLASH)
+		if (arr[v.r] == SLASH)
 		{
-			info->ptn_secs[idx] = _ptn_splitter(ptn + l, r - l, cnt, &tp_arr[l]);
-			info->is_wildcard[idx] = _is_wc_splitter(r - l, cnt, &tp_arr[l]);
-			if (!info->ptn_secs[idx] || !info->is_wildcard[idx])
+			if (_set_split_sections(info, arr, p, &v) == EXIT_FAILURE)
 				return (EXIT_FAILURE);
-			while (r < len && tp_arr[r] == SLASH)
-				r++;
-			l = r;
-			cnt = 0;
-			idx++;
+			while (v.r < len && arr[v.r] == SLASH)
+				v.r++;
+			v.l = v.r;
+			v.cnt = 0;
+			v.idx++;
 		}
-		cnt += is_valid_pattern_chr(tp_arr[r++]);
+		v.cnt += is_valid_pattern_chr(arr[v.r++]);
 	}
-	if (l < r)
+	if (v.l < v.r)
 	{
-		info->ptn_secs[idx] = _ptn_splitter(ptn + l, r - l, cnt, &tp_arr[l]);
-		info->is_wildcard[idx] = _is_wc_splitter(r - l, cnt, &tp_arr[l]);
-		if (!info->ptn_secs[idx] || !info->is_wildcard[idx])
+		if (_set_split_sections(info, arr, p, &v) == EXIT_FAILURE)
 			return (EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);
@@ -118,31 +120,4 @@ int	_init_pattern_and_wc_secs(t_wildcard_type *type_array,
 			ft_strlen(pattern)) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
-}
-
-int	_init_matching_info(t_matching_info *info, char *pattern)
-{
-	t_wildcard_type	*type_array;
-
-	info->total_cnt = 0;
-	info->res = NULL;
-	info->error_happened = false;
-	info->head_slash_cnt = cnt_head_slashes(pattern);
-	info->contain_tail_slash = judge_contain_tail_slash(pattern);
-	if (pattern[0] == '/')
-	{
-		info->is_abs_path = true;
-		pattern++;
-	}
-	else
-		info->is_abs_path = false;
-	while (*pattern == '/')
-		pattern++;
-	info->depth = cnt_depth(pattern);
-	type_array = create_type_arr(pattern);
-	if (!type_array)
-		return (EXIT_FAILURE);
-	if (_init_pattern_and_wc_secs(type_array, info, pattern) == EXIT_FAILURE)
-		return (free(type_array), EXIT_FAILURE);
-	return (free(type_array), EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 17:50:55 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 20:18:51 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 21:54:10 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 t_wildcard_type	*create_type_arr(char *pattern);
 bool			is_valid_pattern_chr(t_wildcard_type type);
+char			*adjust_result(char *result, bool is_abs_path,
+					bool contain_tail_slash);
 
 t_wildcard_type	*create_type_arr(char *pattern)
 {
@@ -40,4 +42,25 @@ t_wildcard_type	*create_type_arr(char *pattern)
 bool	is_valid_pattern_chr(t_wildcard_type type)
 {
 	return (type == EXPANDABLE_ASTERISK || type == PLAIN_CHR);
+}
+
+char	*adjust_result(char *result, bool is_abs_path, bool contain_tail_slash)
+{
+	char	*tmp;
+	char	*adjusted_res;
+
+	if (is_abs_path)
+		tmp = ft_strdup(result + 1);
+	else
+		tmp = ft_strdup(result + 2);
+	if (!tmp)
+		return (NULL);
+	if (contain_tail_slash)
+	{
+		adjusted_res = ft_strjoin(tmp, "/");
+		free(tmp);
+	}
+	else
+		adjusted_res = tmp;
+	return (adjusted_res);
 }

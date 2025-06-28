@@ -6,38 +6,18 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:51:25 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 20:18:36 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 21:55:54 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 int			_set_child_of_wc_tree_node(t_wc_tree *node, bool show_hidden_files);
+static int	_build_wc_tree_helper(t_wc_tree *node, t_matching_info *info);
 void		_build_wc_tree_recursive(t_wc_tree *node, size_t depth,
 				t_matching_info *info);
 t_wc_tree	*_gen_root_node(bool is_abs_path, size_t head_slash_cnt);
 int			ft_glob(char *pattern, t_list **res_head);
-
-char	*adjust_result(char *result, bool is_abs_path, bool contain_tail_slash)
-{
-	char	*tmp;
-	char	*adjusted_res;
-
-	if (is_abs_path)
-		tmp = ft_strdup(result + 1);
-	else
-		tmp = ft_strdup(result + 2);
-	if (!tmp)
-		return (NULL);
-	if (contain_tail_slash)
-	{
-		adjusted_res = ft_strjoin(tmp, "/");
-		free(tmp);
-	}
-	else
-		adjusted_res = tmp;
-	return (adjusted_res);
-}
 
 int	_set_child_of_wc_tree_node(t_wc_tree *node, bool show_hidden_files)
 {
@@ -52,13 +32,34 @@ int	_set_child_of_wc_tree_node(t_wc_tree *node, bool show_hidden_files)
 	return (EXIT_SUCCESS);
 }
 
+static int	_build_wc_tree_helper(t_wc_tree *node, t_matching_info *info)
+{
+	char	*content;
+	t_list	*newnode;
+
+	content = adjust_result(node->path, info->is_abs_path,
+			info->contain_tail_slash);
+	if (!content)
+	{
+		info->error_happened = true;
+		return (EXIT_FAILURE);
+	}
+	newnode = ft_lstnew(content);
+	if (!newnode)
+	{
+		info->error_happened = true;
+		return (EXIT_FAILURE);
+	}
+	info->total_cnt++;
+	ft_lstadd_back(&info->res, newnode);
+	return (EXIT_SUCCESS);
+}
+
 void	_build_wc_tree_recursive(t_wc_tree *node, size_t depth,
 		t_matching_info *info)
 {
 	size_t	i;
-	t_list	*newnode;
 	bool	show_hidden_files;
-	char	*content;
 
 	if (!node || !info || info->error_happened)
 		return ;
@@ -69,35 +70,18 @@ void	_build_wc_tree_recursive(t_wc_tree *node, size_t depth,
 	}
 	if (depth == info->depth)
 	{
-		content = adjust_result(node->path, info->is_abs_path,
-				info->contain_tail_slash);
-		if (!content)
-		{
-			info->error_happened = true;
-			return ;
-		}
-		newnode = ft_lstnew(content);
-		if (!newnode)
-		{
-			info->error_happened = true;
-			return ;
-		}
-		info->total_cnt++;
-		ft_lstadd_back(&info->res, newnode);
+		_build_wc_tree_helper(node, info);
 		return ;
 	}
 	show_hidden_files = (info->ptn_secs[depth][0] == '.');
 	_set_child_of_wc_tree_node(node, show_hidden_files);
 	i = 0;
-	if (node->children)
+	while (node->children && node->children[i])
 	{
-		while (node->children[i])
-		{
-			if (ft_ismatch(node->children[i]->filename, info->ptn_secs[depth],
-					info->is_wildcard[depth], ft_strlen(info->ptn_secs[depth])))
-				_build_wc_tree_recursive(node->children[i], depth + 1, info);
-			i++;
-		}
+		if (ft_ismatch(node->children[i]->filename, info->ptn_secs[depth],
+				info->is_wildcard[depth], ft_strlen(info->ptn_secs[depth])))
+			_build_wc_tree_recursive(node->children[i], depth + 1, info);
+		i++;
 	}
 }
 
