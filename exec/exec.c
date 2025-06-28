@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 15:39:43 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 16:47:14 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ unsigned char	exec_ast(t_tree_node *root, t_env *env);
 int				exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env,
 					pid_t *lastpid);
 int				exec_pipeline(t_tree_node *node_pipeline, t_env *env);
-int				exec_pipeline_commands(t_tree_node *node_pipeline, t_env *env);
+int				exec_pl_cmds(t_tree_node *node_pipeline, t_env *env);
 void			exec_command_helper(t_tree_node *cmd_node, t_env *env);
 
 unsigned char	exec_ast(t_tree_node *root, t_env *env)
@@ -54,8 +54,7 @@ int	exec_pipeline(t_tree_node *node_pipeline, t_env *env)
 		free_splited_data(env->envp);
 	env->envp = decode_table(env, false);
 	env->envp_is_malloced = true;
-	node_pipeline->data.pipeline.exit_status = exec_pipeline_commands(node_pipeline,
-			env);
+	node_pipeline->data.pipeline.exit_status = exec_pl_cmds(node_pipeline, env);
 	if (node_pipeline->data.pipeline.exit_status == HEREDOC_SIGINT)
 	{
 		env->prev_exit_status = HEREDOC_SIGINT;
@@ -87,8 +86,6 @@ int	exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env, pid_t *lastpid)
 			return (env->prev_exit_status);
 		cnt++;
 		pid = fork();
-		if (node->parent->kind == NODE_PIPE_LINE)
-			*lastpid = pid;
 		if (pid == -1)
 			return (perror_string("fork: "), EXIT_FAILURE);
 		if (pid == 0)
@@ -97,6 +94,7 @@ int	exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env, pid_t *lastpid)
 			setup_pipefd(fd, node, true);
 			exec_command_helper(node, env);
 		}
+		*lastpid = pid;
 		setup_pipefd(fd, node, false);
 		node = node->parent;
 	}
@@ -104,7 +102,7 @@ int	exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env, pid_t *lastpid)
 }
 
 /*fork, pipeのエラーハンドリングあとで*/
-int	exec_pipeline_commands(t_tree_node *node_pipeline, t_env *env)
+int	exec_pl_cmds(t_tree_node *node_pipeline, t_env *env)
 {
 	t_tree_node	*curr;
 	pid_t		pid;
@@ -117,9 +115,7 @@ int	exec_pipeline_commands(t_tree_node *node_pipeline, t_env *env)
 	cnt = 0;
 	fd.read_fd = STDIN_FILENO;
 	if (curr->kind == NODE_SIMPLE_COMMAND || curr->kind == NODE_SUBSHELL)
-	{
 		return (exec_solo_cmd(curr, env));
-	}
 	while (curr->kind == NODE_PIPE)
 		curr = curr->left;
 	cnt = exec_loop(curr, &fd, env, &pid);
@@ -137,6 +133,7 @@ int	exec_pipeline_commands(t_tree_node *node_pipeline, t_env *env)
 void	exec_command_helper(t_tree_node *node, t_env *env)
 {
 	t_tree_node	*cmd_node;
+	char		**args;
 
 	env->is_child = true;
 	if (node->right)
@@ -147,21 +144,17 @@ void	exec_command_helper(t_tree_node *node, t_env *env)
 		exit(EXIT_FAILURE);
 	if (cmd_node->kind == NODE_SIMPLE_COMMAND)
 	{
-		if (!cmd_node->data.command.args[0]
-			|| !cmd_node->data.command.args[0][0])
+		args = cmd_node->data.command.args;
+		if (!args[0] || !args[0][0])
 		{
-			ft_puterr_general(cmd_node->data.command.args[0],
-				"command not found");
+			ft_puterr_general(args[0], "command not found");
 			exit(127);
 		}
 		find_builtin(cmd_node, env);
 		find_path(cmd_node, env);
-		execve(cmd_node->data.command.args[0], cmd_node->data.command.args,
-			env->envp);
-		execve_failure_handler(cmd_node->data.command.args[0], errno);
+		execve(args[0], args, env->envp);
+		execve_failure_handler(args[0], errno);
 	}
 	else
-	{
 		exit(exec_ast(cmd_node, env));
-	}
 }

@@ -6,11 +6,11 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:51:28 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 12:01:20 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 16:50:32 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "wildcard.h"
+#include "../minishell.h"
 
 //"/Users/Guest" -> 2, "venv/*" -> 2
 

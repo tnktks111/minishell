@@ -6,11 +6,11 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:51:25 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 12:03:32 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 16:50:37 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "wildcard.h"
+#include "../minishell.h"
 
 int				_set_child_of_wc_tree_node(t_wildcard_tree *node,
 					bool show_hidden_files);

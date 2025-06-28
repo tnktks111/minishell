@@ -6,15 +6,24 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:39:49 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/27 18:52:31 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 16:59:49 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+int		wcoredump(int status);
 void	setup_pipefd(t_pipefd *fd, t_tree_node *node, bool is_start);
-int 	status_handler(int status);
-void 	execve_failure_handler(char *cmd_name, int errnum);
+int		status_handler(int status);
+void	execve_failure_handler(char *cmd_name, int errnum);
+/*check whether the given path is directory or not*/
+bool	is_directory(char *path);
+
+
+int	wcoredump(int status)
+{
+	return ((status) & 0x80);
+}
 
 void	setup_pipefd(t_pipefd *fd, t_tree_node *node, bool is_start)
 {
@@ -44,7 +53,7 @@ void	setup_pipefd(t_pipefd *fd, t_tree_node *node, bool is_start)
 	}
 }
 
-int status_handler(int status)
+int	status_handler(int status)
 {
 	if (WIFEXITED(status))
 	{
@@ -59,35 +68,28 @@ int status_handler(int status)
 		}
 		if (WTERMSIG(status) == SIGQUIT)
 		{
-			ft_putendl_fd("Quit", STDERR_FILENO);
-			// if (WCOREDUMP(wait_status))
-			// 	ft_putstr_fd(" (core dumped)", STDERR_FILENO);
+			ft_putstr_fd("Quit", STDERR_FILENO);
+			if (wcoredump(status))
+				ft_putstr_fd(" (core dumped)", STDERR_FILENO);
+			ft_putendl_fd("", STDERR_FILENO);
 		}
 		return (128 + WTERMSIG(status));
 	}
 	return (EXIT_FAILURE);
 }
 
-void execve_failure_handler(char *cmd_name, int errnum)
+
+
+bool	is_directory(char *path)
 {
-	if (is_directory(cmd_name))
+	struct stat	sb;
+
+	if (!path)
+		return (false);
+	if (stat(path, &sb) == 0)
 	{
-		ft_puterr_general(cmd_name, "Is a directory");
-		exit(126);
+		if (S_ISDIR(sb.st_mode))
+			return (true);
 	}
-	else if (errnum == EACCES)
-	{
-		ft_puterr_general(cmd_name, "Permission denied");
-		exit(126);
-	}
-	else if (errnum == ENOENT)
-	{
-		ft_puterr_general(cmd_name, "No such file or directory");
-		exit(127);
-	}
-	else
-	{
-		ft_puterr_general(cmd_name, strerror(errnum));
-		exit(127);
-	}
+	return (false);
 }

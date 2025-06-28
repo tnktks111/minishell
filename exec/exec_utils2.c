@@ -6,22 +6,20 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:39:36 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 15:14:34 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 17:05:38 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 /*search "PATH" in env and return prefix table*/
-char	**get_path_prefix(t_env *env);
+char		**get_path_prefix(t_env *env);
 /*check whether the cmd is builtin and exec*/
-void	find_builtin(t_tree_node *cmd_node, t_env *env);
+void		find_builtin(t_tree_node *cmd_node, t_env *env);
 /*loop prefix table and try execve*/
-void	find_path(t_tree_node *cmd_node, t_env *env);
+void		find_path(t_tree_node *cmd_node, t_env *env);
 /*check whether the cmd is builtin or not*/
-bool	is_builtin(char *s);
-/*check whether the given path is directory or not*/
-bool	is_directory(char *path);
+bool		is_builtin(char *s);
 
 char	**get_path_prefix(t_env *env)
 {
@@ -47,11 +45,26 @@ void	find_builtin(t_tree_node *cmd_node, t_env *env)
 	exit(exit_status);
 }
 
+static void	try_one_prefix(char *prefix, char **args, t_env *env,
+		int *last_errno)
+{
+	char	*tmp_path;
+
+	tmp_path = join_path(prefix, args[0]);
+	if (!tmp_path)
+	{
+		perror("malloc :");
+		return ;
+	}
+	execve(tmp_path, args, env->envp);
+	if (errno != ENOENT)
+		*last_errno = errno;
+	free(tmp_path);
+}
+
 void	find_path(t_tree_node *cmd_node, t_env *env)
 {
 	char	**prefix_table;
-	char	*tmp;
-	char	*tmp_path;
 	int		i;
 	int		last_errno;
 
@@ -68,31 +81,10 @@ void	find_path(t_tree_node *cmd_node, t_env *env)
 	}
 	i = -1;
 	while (prefix_table[++i])
-	{
-		tmp = ft_strjoin(prefix_table[i], "/");
-		tmp_path = ft_strjoin(tmp, cmd_node->data.command.args[0]);
-		free(tmp);
-		if (!tmp_path)
-		{
-			perror("malloc :");
-			return ;
-		}
-		execve(tmp_path, cmd_node->data.command.args, env->envp);
-		if (errno != ENOENT)
-			last_errno = errno;
-		free(tmp_path);
-	}
+		try_one_prefix(prefix_table[i], cmd_node->data.command.args, env,
+			&last_errno);
 	free_splited_data(prefix_table);
-	if (last_errno == ENOENT)
-	{
-    	ft_puterr_general(cmd_node->data.command.args[0], "command not found");
-		exit(127);
-	}
-	else
-	{
-		ft_puterr_general(cmd_node->data.command.args[0], strerror(last_errno));
-		exit(126);
-	}
+	find_path_failure_handler(cmd_node->data.command.args[0], last_errno);
 }
 
 bool	is_builtin(char *s)
@@ -113,16 +105,5 @@ bool	is_builtin(char *s)
 		return (true);
 	if (ft_strcmp(s, "exit") == 0)
 		return (true);
-	return (false);
-}
-
-bool is_directory(char *path)
-{
-	struct stat sb;
-	if (stat(path, &sb) == 0)
-	{
-		if (S_ISDIR(sb.st_mode))
-			return (true);
-	}
 	return (false);
 }

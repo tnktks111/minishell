@@ -6,11 +6,10 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:51:17 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 12:00:23 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 16:50:56 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "wildcard.h"
 #include "../minishell.h"
 
 char	*create_n_slashes(size_t n)

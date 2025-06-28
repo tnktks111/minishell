@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 20:28:23 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 14:56:12 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 16:15:25 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,12 @@ char	*shlvl_handler(char *val)
 	return (val);
 }
 
-int register_entry_to_table(char *entry, bool *have_shlvl, bool *have_underscore, t_env *env)
+int	register_entry_to_table(char *entry, bool *have_shlvl,
+		bool *have_underscore, t_env *env)
 {
-	char *key;
-	char *val;
-	
+	char	*key;
+	char	*val;
+
 	key = extract_key(entry);
 	val = extract_val(entry);
 	if (!key || !val)
@@ -93,12 +94,15 @@ int	encode_envp(t_env *env, char *envp[])
 	have_shlvl = false;
 	while (envp[i] != NULL)
 	{
-		if (register_entry_to_table(envp[i++], &have_shlvl, &have_shlvl, env) == EXIT_FAILURE)
+		if (register_entry_to_table(envp[i++], &have_shlvl, &have_shlvl,
+				env) == EXIT_FAILURE)
 			return (EXIT_FAILURE);
 	}
-	if (have_underscore == false && ft_add_key_val_pair(ft_strdup("_"), ft_strdup(""), env) == EXIT_FAILURE)
+	if (have_underscore == false && ft_add_key_val_pair(ft_strdup("_"),
+			ft_strdup(""), env) == EXIT_FAILURE)
 		return (free_table(env), EXIT_FAILURE);
-	if (have_shlvl == false && ft_add_key_val_pair(ft_strdup("SHLVL"), ft_strdup("1"), env) == EXIT_FAILURE)
+	if (have_shlvl == false && ft_add_key_val_pair(ft_strdup("SHLVL"),
+			ft_strdup("1"), env) == EXIT_FAILURE)
 		return (free_table(env), EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }
@@ -106,31 +110,28 @@ int	encode_envp(t_env *env, char *envp[])
 char	**decode_table(t_env *env, bool include_quote)
 {
 	char		**res;
-	size_t		table_idx;
-	size_t		res_idx;
+	size_t		i;
+	size_t		j;
 	t_env_node	*curr;
 
-	res = (char **)malloc(sizeof(char *) * (env->entry_cnt + 1));
+	res = (char **)calloc(env->entry_cnt + 1, sizeof(char *));
 	if (!res)
 		return (NULL);
-	table_idx = 0;
-	res_idx = 0;
-	while (table_idx < HASH_SIZE)
+	i = 0;
+	j = 0;
+	while (i < HASH_SIZE)
 	{
-		curr = &env->table[table_idx];
-		table_idx++;
+		curr = &env->table[i++];
 		if (curr->is_empty)
 			continue ;
 		while (curr)
 		{
-			res[res_idx] = _concatnate_key_val(curr->key, curr->val,
+			res[j] = _concatnate_key_val(curr->key, curr->val,
 					include_quote);
-			if (!res[res_idx])
-				return (free_allocated_data(res, res_idx));
-			res_idx++;
+			if (!res[j++])
+				return (free_allocated_data(res, j - 1));
 			curr = curr->next;
 		}
 	}
-	res[res_idx] = NULL;
 	return (res);
 }

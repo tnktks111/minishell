@@ -6,14 +6,14 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 20:32:15 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 14:55:10 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 16:38:05 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void			_init_table(t_env *env);
 unsigned int	_hash_fnv1a(char *str);
+void			_init_table(t_env *env);
 t_env_node		*_create_env_node(char *key, char *val, t_env *env);
 void			_destroy_env_node(t_env_node *node, t_env *env,
 					bool envp_is_malloced);
@@ -26,7 +26,7 @@ unsigned int	_hash_fnv1a(char *str)
 	hash = 0x811c9dc5;
 	while (*str)
 	{
-		hash ^= (uint8_t)*str++;
+		hash ^= (uint8_t)(*str++);
 		hash *= 0x01000193;
 	}
 	return (hash);

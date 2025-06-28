@@ -6,11 +6,11 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:51:31 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 11:51:32 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 16:50:46 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "wildcard.h"
+#include "../minishell.h"
 
 void	ft_int_array_swap(int *a, int *b, size_t size);
 void	ft_init_int_array(int *arr, size_t size);

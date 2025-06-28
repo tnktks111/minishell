@@ -6,11 +6,11 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:51:33 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 11:51:34 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 17:07:56 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "wildcard.h"
+#include "../minishell.h"
 
 bool			judge_contain_tail_slash(char *pattern);
 char			*join_path(char *dir, char *file);
