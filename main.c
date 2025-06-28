@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 16:41:09 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 14:45:01 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 22:23:22 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,13 +53,6 @@ int	main(int ac, char **av, char **envp)
 		}
 		if (input[0] && !contain_space_only(input))
 			add_history(input);
-		if (ft_strcmp(input, "exit") == 0)
-		{
-			free(input);
-			free_all(&env);
-			ft_putendl_fd("exit", STDERR_FILENO);
-			break ;
-		}
 		if (is_valid_input(input))
 		{
 			head = lexer(input);

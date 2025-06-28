@@ -6,31 +6,21 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 20:45:34 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/25 17:39:40 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 22:00:07 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	file_iswdir(char *filepath);
 static int	get_random_string(char *buffer);
 static char	*get_sys_tmpdir(void);
 static char	*get_tmpdir(void);
 static char	*sh_mktmpname(void);
 int			sh_mktmpfd(char **file_path_ptr);
 
-int	file_iswdir(char *filepath)
-{
-	struct stat	sb;
-
-	if (stat(filepath, &sb))
-		return (0);
-	return (S_ISDIR(sb.st_mode) && access(filepath, W_OK) == 0);
-}
-
 static int	get_random_string(char *buffer)
 {
-	static const char	charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	static const char	charset[] = TMPFILE_CHR;
 	static const int	charset_size = sizeof(charset) - 1;
 	char				random_bytes[RANDOM_SIZE];
 	int					urandom_fd;
@@ -136,7 +126,6 @@ int	sh_mktmpfd(char **file_path_ptr)
 		free(file_path);
 		return (-1);
 	}
-	// printf("%s\n", file_path);
 	*file_path_ptr = file_path;
 	return (fd);
 }

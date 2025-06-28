@@ -6,14 +6,14 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:35:53 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/26 18:37:52 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 22:19:16 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int		prepare_here_doc(t_tree_node *node, t_env *env);
-char	*here_doc_handler(t_redirect *redirect, t_env *env);
+int			prepare_here_doc(t_tree_node *node, t_env *env);
+char		*here_doc_handler(t_redirect *redirect, t_env *env);
 
 int	prepare_here_doc(t_tree_node *node, t_env *env)
 {
@@ -39,18 +39,66 @@ int	prepare_here_doc(t_tree_node *node, t_env *env)
 	return (EXIT_SUCCESS);
 }
 
+static char	*_here_doc_pipe_error_handler(t_env *env)
+{
+	perror("minishell: fork:");
+	env->prev_exit_status = EXIT_FAILURE;
+	return (NULL);
+}
+
+static void	_exec_here_doc_child_process(t_redirect *redirect, int fd,
+		bool is_expandable, t_env *env)
+{
+	char	*s;
+	bool	end_by_delimiter;
+
+	end_by_delimiter = false;
+	setup_here_doc_signal_handlers();
+	s = readline("> ");
+	while (s)
+	{
+		if (ft_strcmp(s, redirect->filename) == 0)
+		{
+			free(s);
+			end_by_delimiter = true;
+			break ;
+		}
+		if (is_expandable)
+			here_doc_expander(&s, env);
+		ft_putendl_fd(s, fd);
+		free(s);
+		s = readline("> ");
+	}
+	if (end_by_delimiter == false)
+		error_heredoc_delimited_by_eof(redirect->filename);
+	exit(0);
+}
+
+static char	*_exec_here_doc_parent_process(char *tmpfile, int *status, int fd,
+		t_env *env)
+{
+	setup_parent_wait_signal_handlers();
+	wait(status);
+	setup_interactive_signal_handlers();
+	if (WIFSIGNALED(*status) && WTERMSIG(*status) == SIGINT)
+	{
+		ft_putendl_fd("", STDERR_FILENO);
+		close(fd);
+		env->prev_exit_status = -1;
+		return (NULL);
+	}
+	close(fd);
+	return (tmpfile);
+}
+
 char	*here_doc_handler(t_redirect *redirect, t_env *env)
 {
 	int		fd;
 	char	*tmpfile;
-	char	*s;
 	bool	is_expandable;
-	bool	end_by_delimiter;
-	int 	status;
+	int		status;
 	pid_t	pid;
 
-	is_expandable = true;
-	end_by_delimiter = false;
 	if (have_quotes(redirect->filename) == true)
 	{
 		is_expandable = false;
@@ -64,47 +112,8 @@ char	*here_doc_handler(t_redirect *redirect, t_env *env)
 	}
 	pid = fork();
 	if (pid == -1)
-	{
-		perror("minishell: fork:");
-		env->prev_exit_status = EXIT_FAILURE;
-		return (NULL);
-	}
+		return (_here_doc_pipe_error_handler(env));
 	if (pid == 0)
-	{
-		setup_here_doc_signal_handlers();
-		s = readline("> ");
-		while (s)
-		{
-			if (ft_strcmp(s, redirect->filename) == 0)
-			{
-				free(s);
-				end_by_delimiter = true;
-				break ;
-			}
-			if (is_expandable)
-				here_doc_expander(&s, env);
-			ft_putendl_fd(s, fd);
-			free(s);
-			s = readline("> ");
-		}
-		if (end_by_delimiter == false)
-		{
-			ft_putendl_fd("bash: warning: here-document delimited by end-of-file (wanted '", STDERR_FILENO);
-			ft_putstr_fd(redirect->filename, STDERR_FILENO);
-			ft_putendl_fd("`)", STDERR_FILENO);
-		}
-		exit(0);
-	}
-	setup_parent_wait_signal_handlers();
-	waitpid(pid, &status, 0);
-	setup_interactive_signal_handlers();
-	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-    {
-		ft_putendl_fd("", STDERR_FILENO);
-        close(fd);
-		env->prev_exit_status = -1;
-        return (NULL);
-    }
-	close(fd);
-	return (tmpfile);
+		_exec_here_doc_child_process(redirect, fd, is_expandable, env);
+	return (_exec_here_doc_parent_process(tmpfile, &status, fd, env));
 }
