@@ -68,86 +68,26 @@ t_tree_node	*create_operator_node(t_token *op, t_tree_node *left,
 	return (node);
 }
 
-void		print_tokens(t_token *head);
-
-t_token	*find_matching_paren(t_token *head)
-{
-	int		level;
-	t_token	*cur;
-
-	level = 0;
-	cur = head;
-	if (!head || head->status != LEFT_PAREN)
-		return (NULL);
-	while (cur)
-	{
-		if (cur->status == LEFT_PAREN)
-			level++;
-		else if (cur->status == RIGHT_PAREN)
-		{
-			level--;
-			if (level == 0)
-				return (cur);
-		}
-		cur = cur->next;
-	}
-	return (NULL);
-}
-
-t_token	*find_logical_operator(t_token *head, t_token *tail)
-{
-	t_token	*cur;
-	int		level;
-
-	cur = tail;
-	level = 0;
-	while (cur && cur != head->prev)
-	{
-		if (cur->status == LEFT_PAREN)
-			level++;
-		else if (cur->status == RIGHT_PAREN)
-			level--;
-		else if (level == 0 && (cur->status == AND_OR))
-			return (cur);
-		cur = cur->prev;
-	}
-	return (NULL);
-}
-
 t_tree_node	*create_tree(t_token *head, t_token *tail)
 {
-	t_token		*op;
-	t_tree_node	*left;
-	t_tree_node	*right;
-	t_tree_node	*pipeline_root;
-	t_tree_node	*paratheneses_root;
-	t_token		*paren_tail;
+	t_token			*op;
+	t_create_tree	tree;
 
 	if (!head || !tail)
 		return (NULL);
 	head = skip_splitable_forward(head);
 	tail = skip_splitable_backward(tail);
-	paren_tail = NULL;
 	op = find_logical_operator(head, tail);
 	if (!op && head && head->status == LEFT_PAREN)
-	{
-		paren_tail = find_matching_paren(head);
-		if (paren_tail)
-		{
-			pipeline_root = create_tree(head->next, paren_tail->prev);
-			paratheneses_root = create_subshell_node(pipeline_root, head,
-					paren_tail);
-			return (create_pipeline_node(paratheneses_root, head, paren_tail));
-		}
-	}
+		return (parse_paren(&tree, head));
 	if (!op)
 	{
-		pipeline_root = create_pipeline_tree(head, tail);
-		return (create_pipeline_node(pipeline_root, head, tail));
+		tree.pipeline_root = create_pipeline_tree(head, tail);
+		return (create_pipeline_node(tree.pipeline_root, head, tail));
 	}
-	left = create_tree(head, op->prev);
-	right = create_tree(op->next, tail);
-	return (create_operator_node(op, left, right));
+	tree.left = create_tree(head, op->prev);
+	tree.right = create_tree(op->next, tail);
+	return (create_operator_node(op, tree.left, tree.right));
 }
 
 t_tree_node	*parser(t_token *head, t_env *env)

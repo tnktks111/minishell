@@ -123,6 +123,14 @@ typedef struct s_tree_node
 	t_data				data;
 }						t_tree_node;
 
+typedef struct s_create_tree
+{
+	t_tree_node			*left;
+	t_tree_node			*right;
+	t_tree_node			*pipeline_root;
+	t_tree_node			*paratheneses_root;
+}						t_create_tree;
+
 typedef struct s_env
 {
 	t_env_node			table[HASH_SIZE];

@@ -55,5 +55,3 @@ size_t	in_s_quote_token_strlen(char *str)
 		len++;
 	return (len);
 }
-
-

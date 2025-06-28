@@ -58,7 +58,6 @@ size_t			append_param_token_and_move_index(t_token **head, char *str);
 size_t			append_splitable(t_token **head, char *str);
 size_t			append_two_word_splitable(t_token **head, char *str);
 t_token			*tokenize_str(char *str);
-// void		print_tokens(t_token *head);
 t_token			*lexer(char *str);
 bool			is_valid_input(char *input);
 
@@ -71,8 +70,10 @@ bool			find_bang(t_token *head, t_token *tail);
 t_tree_node		*create_pipeline_node(t_tree_node *pipe_root, t_token *head,
 					t_token *tail);
 t_tree_node		*create_pipeline_tree(t_token *head, t_token *tail);
+//
+t_tree_node		*create_subshell_node(t_tree_node *cur_root, t_token *head,
+					t_token *tail);
 // redirect cmd
-
 char			**extract_args(t_token *head, t_token *tail);
 t_redirect_kind	get_redirect_kind(t_token *redirect_token);
 int				get_io_number(t_redirect_kind kind, t_token *redirect_token);
@@ -81,10 +82,12 @@ bool			check_if_expandable(char *filename);
 void			append_redirects(t_redirect **head, t_token *redirect_token);
 t_redirect		*extract_redirects(t_token *head, t_token *tail);
 t_tree_node		*create_simple_cmd_node(t_token *head, t_token *tail);
-
+//()()
+t_tree_node		*parse_paren(t_create_tree *tree, t_token *head);
+//
 t_tree_node		*create_tree(t_token *head, t_token *tail);
 // utils
-
+t_token			*find_matching_paren(t_token *head);
 t_token			*skip_splitable_forward(t_token *token);
 t_token			*skip_splitable_backward(t_token *token);
 t_node_kind		get_node_kind(t_token *token);
@@ -136,7 +139,6 @@ void			expand_ast(t_tree_node *node, t_env *env);
 
 int				ft_glob(char *pattern, t_list **res_head);
 void			free_list(t_list *list);
-void			free_env(t_env *env);
 void			free_tree_node(t_tree_node *node);
 void			free_all(t_env *env);
 

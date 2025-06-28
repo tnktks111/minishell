@@ -70,6 +70,7 @@ SRCS = 	builtin/builtin_cd.c \
 		parser/parser_utils2.c \
 		parser/parser_redirect.c \
 		parser/parser_pipeline.c \
+		parser/parser_parenthensis.c \
 		syntax_error.c \
 		ft_glob/ft_glob.c \
 		ft_glob/init.c \

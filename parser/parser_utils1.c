@@ -12,44 +12,29 @@
 
 #include "../minishell.h"
 
-// bool	is_parentheses_group(t_token *head, t_token *tail)
-// {
-// 	int		paren_level;
-// 	t_token	*cur;
+t_token	*find_matching_paren(t_token *head)
+{
+	int		level;
+	t_token	*cur;
 
-// 	paren_level = 0;
-// 	if (!head || !tail)
-// 		return (false);
-// 	if (head->status != LEFT_PAREN || tail->status != RIGHT_PAREN)
-// 	{
-// 		cur = head;
-// 		while (cur && cur != tail->next)
-// 		{
-// 			if (cur->status == LEFT_PAREN)
-// 				paren_level++;
-// 			else if (cur->status == RIGHT_PAREN)
-// 				paren_level--;
-// 			if (paren_level == 0 && cur != tail)
-// 				return (false);
-// 			cur = cur->next;
-// 		}
-// 	}
-// 	// else if (head->status == LEFT_PAREN && tail->status != RIGHT_PAREN)
-// 	// {
-// 	// 	cur = tail;
-// 	// 	while (cur && cur != head->prev)
-// 	// 	{
-// 	// 		if (cur->status == LEFT_PAREN)
-// 	// 			paren_level++;
-// 	// 		else if (cur->status == RIGHT_PAREN)
-// 	// 			paren_level--;
-// 	// 		if (paren_level == 0 && cur != tail)
-// 	// 			return (false);
-// 	// 		cur = cur->prev;
-// 	// 	}
-// 	// }
-// 	return (paren_level == 0);
-// }
+	level = 0;
+	cur = head;
+	if (!head || head->status != LEFT_PAREN)
+		return (NULL);
+	while (cur)
+	{
+		if (cur->status == LEFT_PAREN)
+			level++;
+		else if (cur->status == RIGHT_PAREN)
+		{
+			level--;
+			if (level == 0)
+				return (cur);
+		}
+		cur = cur->next;
+	}
+	return (NULL);
+}
 
 bool	find_bang(t_token *head, t_token *tail)
 {
