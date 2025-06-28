@@ -6,13 +6,13 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 10:42:50 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/26 21:04:58 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 23:02:38 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	is_valid_export_key(char *s);
+static int		is_valid_export_key(char *s);
 unsigned char	builtin_export(t_tree_node *node, t_env *env);
 
 static int	is_valid_export_key(char *s)

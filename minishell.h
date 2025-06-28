@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/28 22:11:11 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 22:48:24 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ void			execve_failure_handler(char *cmd_name, int errnum);
 /*here_doc*/
 int				prepare_here_doc(t_tree_node *node, t_env *env);
 char			*here_doc_handler(t_redirect *redirect, t_env *env);
-void			here_doc_expander(char **s, t_env *env);
+int				here_doc_expander(char **s, t_env *env);
 bool			have_quotes(char *limiter);
 void			remove_quotes(t_redirect *redirect);
 void			unlink_tmpfile(t_tree_node *node_simplecmd);

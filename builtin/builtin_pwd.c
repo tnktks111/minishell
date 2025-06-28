@@ -6,28 +6,36 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 10:43:19 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/26 18:20:56 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 23:01:44 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+static bool		is_valid_option(char *s);
 unsigned char	builtin_pwd(t_tree_node *node, t_env *env);
+
+static bool	is_valid_option(char *s)
+{
+	if (s[0] == '-' && s[1] && s[1] != '-')
+		return (false);
+	if (s[0] == '-' && s[1] == '-' && s[2])
+		return (false);
+	return (true);
+}
 
 unsigned char	builtin_pwd(t_tree_node *node, t_env *env)
 {
 	char	pwd[PATH_MAX];
-	char 	*envpwd;
+	char	*envpwd;
 
 	(void)env;
-	if (node->data.command.args[1])
+	if (node->data.command.args[1]
+		&& !is_valid_option(node->data.command.args[1]))
 	{
-		if (node->data.command.args[1][0] == '-')
-		{
-			error_invalid_option(node->data.command.args[0],
-				node->data.command.args[1]);
-			return (2);
-		}
+		error_invalid_option(node->data.command.args[0],
+			node->data.command.args[1]);
+		return (2);
 	}
 	if (!getcwd(pwd, PATH_MAX))
 	{
