@@ -132,9 +132,9 @@ char			*expand_filename_wildcard(char *filename, char **files);
 char			**expand_cmd_line(t_list *cmdline);
 
 void			takeoff_quotes(char *str);
-void			expand_filename(t_tree_node *simple_cmd_node, t_env *env);
+int				expand_filename(t_tree_node *simple_cmd_node, t_env *env);
 void			expand_cmd_args(t_tree_node *simple_cmd_node, t_env *env);
-void			expander(t_tree_node *pipeline_node, t_env *env);
+int				expander(t_tree_node *pipeline_node, t_env *env);
 void			expand_ast(t_tree_node *node, t_env *env);
 
 int				ft_glob(char *pattern, t_list **res_head);

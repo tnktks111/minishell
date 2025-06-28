@@ -43,7 +43,7 @@ void	takeoff_quotes(char *str)
 	str[write_index] = '\0';
 }
 
-void	expand_filename(t_tree_node *simple_cmd_node, t_env *env)
+int	expand_filename(t_tree_node *simple_cmd_node, t_env *env)
 {
 	char	*redir_filename;
 	char	*expanded_filename;
@@ -60,12 +60,15 @@ void	expand_filename(t_tree_node *simple_cmd_node, t_env *env)
 			expanded_filename = expand_filename_wildcard(temp, files);
 			free(temp);
 			temp = expanded_filename;
+			if (!expanded_filename)
+				return (EXIT_FAILURE);
 		}
 		if (simple_cmd_node->data.command.redirects->kind != REDIR_HEREDOC)
 			takeoff_quotes(temp);
 		simple_cmd_node->data.command.redirects->filename = temp;
 	}
 	free_splited_data(files);
+	return (EXIT_SUCCESS);
 }
 
 void	expand_cmd_args(t_tree_node *simple_cmd_node, t_env *env)
@@ -87,15 +90,18 @@ void	expand_cmd_args(t_tree_node *simple_cmd_node, t_env *env)
 	simple_cmd_node->data.command.args = wildcard_expanded;
 }
 
-void	expander(t_tree_node *simple_cmd_node, t_env *env)
+int	expander(t_tree_node *simple_cmd_node, t_env *env)
 {
 	if (simple_cmd_node->data.command.redirects)
-		expand_filename(simple_cmd_node, env);
+	{
+		return (expand_filename(simple_cmd_node, env));
+	}
 	if (simple_cmd_node->data.command.args[0])
 	{
 		if (simple_cmd_node->data.command.args)
 			expand_cmd_args(simple_cmd_node, env);
 	}
+	return (EXIT_SUCCESS);
 }
 
 void	expand_ast(t_tree_node *node, t_env *env)
