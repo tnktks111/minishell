@@ -6,7 +6,7 @@
 #    By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/17 19:06:08 by ttanaka           #+#    #+#              #
-#    Updated: 2025/06/28 15:06:24 by ttanaka          ###   ########.fr        #
+#    Updated: 2025/06/28 17:52:39 by ttanaka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,6 +41,7 @@ SRCS = 	builtin/builtin_cd.c \
 		exec/exec.c \
 		exec/exec_utils1.c \
 		exec/exec_utils2.c \
+		exec/exec_utils3.c \
 		exec/exec_builtin.c \
 		exec/exec_solo_command.c \
 		exec/exec_redirection.c \
@@ -74,10 +75,11 @@ SRCS = 	builtin/builtin_cd.c \
 		parser/parser_parenthensis.c \
 		syntax_error.c \
 		ft_glob/ft_glob.c \
+		ft_glob/ft_glob_utils1.c \
+		ft_glob/ft_glob_utils2.c \
+		ft_glob/ft_glob_utils3.c \
 		ft_glob/init.c \
-		ft_glob/matching.c \
-		ft_glob/utils.c \
-		ft_glob/utils2.c
+		ft_glob/matching.c
 
 OBJS = $(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS))
 

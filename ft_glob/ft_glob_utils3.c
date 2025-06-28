@@ -6,13 +6,14 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 17:50:55 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 17:53:39 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 20:18:51 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 t_wildcard_type	*create_type_arr(char *pattern);
+bool			is_valid_pattern_chr(t_wildcard_type type);
 
 t_wildcard_type	*create_type_arr(char *pattern)
 {
@@ -34,4 +35,9 @@ t_wildcard_type	*create_type_arr(char *pattern)
 		idx++;
 	}
 	return (type_array);
+}
+
+bool	is_valid_pattern_chr(t_wildcard_type type)
+{
+	return (type == EXPANDABLE_ASTERISK || type == PLAIN_CHR);
 }

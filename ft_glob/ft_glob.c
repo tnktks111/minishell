@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:51:25 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 18:24:04 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 20:18:36 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ int	ft_glob(char *pattern, t_list **res_head)
 //     t_list  *current;
 //     int     match_count;
 
-//     match_count = ft_glob("../*", &head);
+//     match_count = ft_glob("*", &head);
 
 //     printf("Total matches: %d\n", match_count);
 //     printf("--- Matched Paths ---\n");

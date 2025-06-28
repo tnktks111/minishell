@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/27 18:46:24 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 17:01:47 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include "libft/inc/libft.h"
 # include "struct.h"
 # include "ttanaka_minishell.h"
+# include "wildcard.h"
 # include <dirent.h>
 # include <fcntl.h>
 # include <limits.h>
@@ -66,10 +67,10 @@ void			free_table(t_env *env);
 
 /*execution*/
 unsigned char	exec_ast(t_tree_node *root, t_env *env);
-int				exec_and_or(t_tree_node *root, t_env *env);
 int				exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env,
 					pid_t *lastpid);
 int				exec_pipeline(t_tree_node *root, t_env *env);
+int				exec_pl_cmds(t_tree_node *root, t_env *env);
 void			exec_command_helper(t_tree_node *cmd_node, t_env *env);
 
 int				exec_solo_cmd(t_tree_node *curr, t_env *env);
@@ -77,14 +78,16 @@ int				exec_solo_cmd(t_tree_node *curr, t_env *env);
 unsigned char	exec_builtin(t_tree_node *node, t_env *env);
 int				exec_redirection(t_redirect *redirect);
 
+int				wcoredump(int status);
 void			setup_pipefd(t_pipefd *fd, t_tree_node *node, bool is_start);
 int				status_handler(int status);
-void			execve_failure_handler(char *cmd_name, int errnum);
 char			**get_path_prefix(t_env *env);
 void			find_builtin(t_tree_node *cmd_node, t_env *env);
 void			find_path(t_tree_node *cmd_node, t_env *env);
 bool			is_builtin(char *s);
 bool			is_directory(char *path);
+void			find_path_failure_handler(char *cmd_name, int errnum);
+void			execve_failure_handler(char *cmd_name, int errnum);
 
 /*here_doc*/
 int				prepare_here_doc(t_tree_node *node, t_env *env);
