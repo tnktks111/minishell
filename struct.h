@@ -35,16 +35,16 @@ typedef enum e_status
 	PIPE,
 	NORMAL,
 	USED
-}							t_status;
+}						t_status;
 
 /*分割すべき文字...space / tab / \n / '|' / '<''>''<<''>>' / '&&' '||' / ; /*/
 typedef struct s_token
 {
-	char					*str;
-	t_status				status;
-	struct s_token			*next;
-	struct s_token			*prev;
-}							t_token;
+	char				*str;
+	t_status			status;
+	struct s_token		*next;
+	struct s_token		*prev;
+}						t_token;
 
 typedef enum e_redirect_kind
 {
@@ -52,7 +52,7 @@ typedef enum e_redirect_kind
 	REDIR_OUT,    /* > */
 	REDIR_APPEND, /* >> */
 	REDIR_HEREDOC /* << */
-}							t_redirect_kind;
+}						t_redirect_kind;
 
 typedef enum e_node_kind
 {
@@ -63,21 +63,21 @@ typedef enum e_node_kind
 	NODE_PIPE_LINE,
 	NODE_SUBSHELL,
 	NODE_ROOT
-}							t_node_kind;
+}						t_node_kind;
 
 typedef struct s_env_node
 {
-	bool					is_empty;
-	char					*key;
-	char					*val;
-	struct s_env_node		*next;
-}							t_env_node;
+	bool				is_empty;
+	char				*key;
+	char				*val;
+	struct s_env_node	*next;
+}						t_env_node;
 
 typedef struct s_pipefd
 {
-	int						pipefd[2];
-	int						read_fd;
-}							t_pipefd;
+	int					pipefd[2];
+	int					read_fd;
+}						t_pipefd;
 
 /*
 > file1 2> file2 << END
@@ -89,86 +89,57 @@ typedef struct s_pipefd
 */
 typedef struct s_redirect
 {
-	t_redirect_kind			kind;
-	int						io_number;
-	bool					is_expandable;
-	char					*filename;
-	struct s_redirect		*next;
-}							t_redirect;
+	t_redirect_kind		kind;
+	int					io_number;
+	bool				is_expandable;
+	char				*filename;
+	struct s_redirect	*next;
+}						t_redirect;
 
 typedef struct s_command
 {
-	char					**args;
-	t_redirect				*redirects;
-}							t_command;
+	char				**args;
+	t_redirect			*redirects;
+}						t_command;
 
 typedef struct s_pipeline
 {
-	bool					have_bang;
-	long					exit_status;
-}							t_pipeline;
+	bool				have_bang;
+	long				exit_status;
+}						t_pipeline;
 
 typedef union u_data
 {
-	t_command				command;
-	t_pipeline				pipeline;
-}							t_data;
+	t_command			command;
+	t_pipeline			pipeline;
+}						t_data;
 
 typedef struct s_tree_node
 {
-	t_node_kind				kind;
-	struct s_tree_node		*parent;
-	struct s_tree_node		*left;
-	struct s_tree_node		*right;
-	t_data					data;
-}							t_tree_node;
+	t_node_kind			kind;
+	struct s_tree_node	*parent;
+	struct s_tree_node	*left;
+	struct s_tree_node	*right;
+	t_data				data;
+}						t_tree_node;
 
 typedef struct s_create_tree
 {
-	t_tree_node				*left;
-	t_tree_node				*right;
-	t_tree_node				*pipeline_root;
-	t_tree_node				*paratheneses_root;
-}							t_create_tree;
+	t_tree_node			*left;
+	t_tree_node			*right;
+	t_tree_node			*pipeline_root;
+	t_tree_node			*paratheneses_root;
+}						t_create_tree;
 
 typedef struct s_env
 {
-	t_env_node				table[HASH_SIZE];
-	char					**envp;
+	t_env_node			table[HASH_SIZE];
+	char				**envp;
 	int prev_exit_status; /* preserve $? */
-	bool					is_child;
-	bool					envp_is_malloced;
-	size_t					entry_cnt;
-	t_tree_node				*root;
-}							t_env;
-
-typedef enum e_wildcard_type
-{
-	PLAIN_CHR,
-	EXPANDABLE_ASTERISK,
-	QUOTE,
-	SLASH
-}							t_wildcard_type;
-
-typedef struct s_wildcard_tree
-{
-	char					*path;
-	char					*filename;
-	struct s_wildcard_tree	*parent;
-	struct s_wildcard_tree	**children;
-}							t_wc_tree;
-
-typedef struct s_matching_info
-{
-	t_list					*res;
-	int						**is_wildcard;
-	char					**ptn_secs;
-	size_tdepth;
-	inttotal_cnt;
-	size_thead_slash_cnt;
-	boolcontain_tail_slash;
-	boolis_abs_path;
-	boolerror_happened;
-}							t_matching_info;
+	bool				is_child;
+	bool				envp_is_malloced;
+	size_t				entry_cnt;
+	t_tree_node			*root;
+}						t_env;
 
 #endif
