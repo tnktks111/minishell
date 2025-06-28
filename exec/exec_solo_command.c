@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/27 18:58:11 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 15:28:14 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,14 @@ static unsigned char exec_solo_builtin(t_tree_node *cmd_node, t_env *env)
 
 static void exec_child_process_of_solo_cmd(t_tree_node *cmd_node, t_env *env)
 {
+	env->is_child = true;
     setup_child_signal_handlers();
 	if (exec_redirection(cmd_node->data.command.redirects) == EXIT_FAILURE)
 		exit(EXIT_FAILURE);
 	if (cmd_node->kind == NODE_SUBSHELL)
 		exit(exec_ast(cmd_node, env));
+	if (!cmd_node->data.command.args)
+		exit(0);
 	if (!cmd_node->data.command.args[0] || ! cmd_node->data.command.args[0][0])
 	{
 		ft_puterr_general(cmd_node->data.command.args[0], "command not found");
@@ -76,7 +79,7 @@ int	exec_solo_cmd(t_tree_node *cmd_node, t_env *env)
 		return (env->prev_exit_status);
 	if (cmd_node->kind == NODE_SIMPLE_COMMAND)
 		ft_set_underscore(cmd_node, env);
-	if (cmd_node->kind == NODE_SIMPLE_COMMAND && is_builtin(cmd_node->data.command.args[0]))
+	if (cmd_node->kind == NODE_SIMPLE_COMMAND && cmd_node->data.command.args && is_builtin(cmd_node->data.command.args[0]))
 		return (exec_solo_builtin(cmd_node, env));
 	else
 	{

@@ -6,12 +6,14 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 14:53:17 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/24 19:13:50 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 12:13:44 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <signal.h>
 #include <string.h>
+
+#define HEREDOC_SIGINT -1
 
 unsigned char builtin_cd(t_tree_node *cmd_node, t_env *env);
 

@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/27 19:07:32 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 15:39:43 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ unsigned char	exec_ast(t_tree_node *root, t_env *env)
 	while (curr->kind == NODE_AND || curr->kind == NODE_OR)
 		curr = curr->left;
 	prev_exit_status = exec_pipeline(curr, env);
-	if (prev_exit_status == -1)
+	if (prev_exit_status == HEREDOC_SIGINT)
 	{
 		env->prev_exit_status = 130;
 		return (130);
@@ -38,7 +38,7 @@ unsigned char	exec_ast(t_tree_node *root, t_env *env)
 		|| (prev_exit_status != 0 && curr->kind == NODE_OR))
 	{
 		prev_exit_status = exec_pipeline(curr->right, env);
-		if (prev_exit_status == -1)
+		if (prev_exit_status == HEREDOC_SIGINT)
 		{
 			env->prev_exit_status = 130;
 			return (130);
@@ -56,10 +56,10 @@ int	exec_pipeline(t_tree_node *node_pipeline, t_env *env)
 	env->envp_is_malloced = true;
 	node_pipeline->data.pipeline.exit_status = exec_pipeline_commands(node_pipeline,
 			env);
-	if (node_pipeline->data.pipeline.exit_status == -1)
+	if (node_pipeline->data.pipeline.exit_status == HEREDOC_SIGINT)
 	{
-		env->prev_exit_status = -1;
-		return (-1);
+		env->prev_exit_status = HEREDOC_SIGINT;
+		return (HEREDOC_SIGINT);
 	}
 	if (node_pipeline->data.pipeline.have_bang == true)
 	{
@@ -82,7 +82,7 @@ int	exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env, pid_t *lastpid)
 	while (node->kind != NODE_PIPE_LINE)
 	{
 		if (node->parent->kind == NODE_PIPE && pipe(fd->pipefd) == -1)
-			return (perror_string("pipe: "), -1);
+			return (perror_string("pipe: "), EXIT_FAILURE);
 		if (prepare_here_doc(node, env) == EXIT_FAILURE)
 			return (env->prev_exit_status);
 		cnt++;
@@ -90,7 +90,7 @@ int	exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env, pid_t *lastpid)
 		if (node->parent->kind == NODE_PIPE_LINE)
 			*lastpid = pid;
 		if (pid == -1)
-			return (perror_string("fork: "), -1);
+			return (perror_string("fork: "), EXIT_FAILURE);
 		if (pid == 0)
 		{
 			setup_child_signal_handlers();
@@ -123,7 +123,7 @@ int	exec_pipeline_commands(t_tree_node *node_pipeline, t_env *env)
 	while (curr->kind == NODE_PIPE)
 		curr = curr->left;
 	cnt = exec_loop(curr, &fd, env, &pid);
-	if (cnt == 1 || cnt == -1)
+	if (cnt == EXIT_FAILURE || cnt == HEREDOC_SIGINT)
 		return (cnt);
 	setup_parent_wait_signal_handlers();
 	waitpid(pid, &status, 0);
@@ -138,6 +138,7 @@ void	exec_command_helper(t_tree_node *node, t_env *env)
 {
 	t_tree_node	*cmd_node;
 
+	env->is_child = true;
 	if (node->right)
 		cmd_node = node->right;
 	else

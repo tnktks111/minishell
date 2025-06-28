@@ -1,6 +1,7 @@
 {
     "files.associations": {
-        "*.py": "python",
-        "minishell.h": "c"
-    }
+		"*.py": "python",
+		"minishell.h": "c",
+		"cstdlib": "c"
+	}
 }

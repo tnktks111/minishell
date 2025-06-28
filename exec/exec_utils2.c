@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:39:36 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/26 20:52:00 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 15:14:34 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,14 @@ void	find_path(t_tree_node *cmd_node, t_env *env)
 	if (ft_strchr(cmd_node->data.command.args[0], '/'))
 		return ;
 	prefix_table = get_path_prefix(env);
+	if (!prefix_table)
+		return ;
 	last_errno = ENOENT;
+	if (!prefix_table[0])
+	{
+		ft_puterr_general(cmd_node->data.command.args[0], strerror(ENOENT));
+		exit(126);
+	}
 	i = -1;
 	while (prefix_table[++i])
 	{

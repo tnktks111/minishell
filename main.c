@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 16:41:09 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/27 17:06:02 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 14:45:01 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,11 @@ int	main(int ac, char **av, char **envp)
 
 	rl_outstream = stderr;
 	setup_interactive_signal_handlers();
-	encode_envp(&env, envp);
+	if (encode_envp(&env, envp) == EXIT_FAILURE)
+	{
+		perror("encode_envp :");
+		return (0);
+	}
 	env.envp_is_malloced = false;
 	while (1)
 	{

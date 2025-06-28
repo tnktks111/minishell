@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 20:34:11 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/27 19:43:50 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 14:51:12 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ int ft_add_key_val_pair(char *key, char *val, t_env *env)
 {
     t_env_node *curr;
 
+	if (!key || !val)
+		return (free(key), free(val), EXIT_FAILURE);
     curr = &(env->table[_hash_fnv1a(key) % HASH_SIZE]);
     if (curr->is_empty == true)
         return(_set_key_val(key, val, curr, env));
@@ -51,7 +53,7 @@ int ft_add_key_val_pair(char *key, char *val, t_env *env)
     }
     curr->next = _create_env_node(key, val, env);
     if (!curr->next)
-        return (EXIT_FAILURE);
+        return (free(key), free(val), EXIT_FAILURE);
     return (EXIT_SUCCESS);
 }
 

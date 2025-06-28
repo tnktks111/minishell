@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 20:32:15 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/27 16:58:56 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 14:55:10 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,8 @@ t_env_node	*_create_env_node(char *key, char *val, t_env *env)
 	t_env_node	*newnode;
 
 	newnode = (t_env_node *)malloc(sizeof(t_env_node));
+	if (!newnode)
+		return (NULL);
 	newnode->key = key;
 	newnode->val = val;
 	newnode->is_empty = false;
