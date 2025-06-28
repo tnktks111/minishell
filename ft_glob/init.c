@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:51:28 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 16:50:32 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 18:41:39 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,81 +14,20 @@
 
 //"/Users/Guest" -> 2, "venv/*" -> 2
 
-size_t	_cnt_depth(char *pattern);
-t_wildcard_type	_judge_chr_type(char c, bool *in_squote, bool *in_dquote);
-t_wildcard_type	*_create_type_arr(char *pattern);
-int	*_is_wildcard_splitter(size_t window_size, size_t len, t_wildcard_type *type_array_start);
-int	_create_is_wildcard(t_wildcard_type *type_array, t_matching_info *info, char *pattern);
-char	*_pattern_section_splitter(char *pattern_start, size_t window_size, size_t len, t_wildcard_type *type_array_start);
-int	_create_pattern_sections(t_wildcard_type *type_array, t_matching_info *info, char *pattern);
-int	_init_matching_info(t_matching_info *info, char *pattern);
+int		*_is_wildcard_splitter(size_t window_size, size_t len,
+			t_wildcard_type *type_array_start);
+char	*_ptn_sec_splitter(char *pattern_start, size_t window_size, size_t len,
+			t_wildcard_type *type_array_start);
+int		_init_pattern_and_wc_secs(t_wildcard_type *type_array,
+			t_matching_info *info, char *pattern);
+int		_init_matching_info(t_matching_info *info, char *pattern);
 
-size_t	_cnt_depth(char *pattern)
-{
-	size_t	cnt;
-
-	cnt = 0;
-	while (*pattern)
-	{
-		if (*pattern != '/')
-		{
-			cnt++;
-			while (*pattern && *pattern != '/')
-				pattern++;
-		}
-		else
-			pattern++;
-	}
-	return (cnt);
-}
-
-t_wildcard_type	_judge_chr_type(char c, bool *in_squote, bool *in_dquote)
-{
-	if (c == '/')
-		return (SLASH);
-	if (*in_squote == true && c == '\'')
-		return (*in_squote = false, QUOTE);
-	if (*in_dquote == true && c == '\"')
-		return (*in_dquote = false, QUOTE);
-	if (*in_squote == false && *in_dquote == false)
-	{
-		if (c == '\'')
-			return (*in_squote = true, QUOTE);
-		if (c == '\"')
-			return (*in_dquote = true, QUOTE);
-		if (c == '*')
-			return (EXPANDABLE_ASTERISK);
-	}
-	return (PLAIN_CHR);
-}
-
-t_wildcard_type	*_create_type_arr(char *pattern)
-{
-	t_wildcard_type	*type_array;
-	size_t			idx;
-	bool			in_squote;
-	bool			in_dquote;
-
-	in_squote = false;
-	in_dquote = false;
-	type_array = (t_wildcard_type *)malloc(sizeof(t_wildcard_type)
-			* ft_strlen(pattern));
-	if (!type_array)
-		return (NULL);
-	idx = 0;
-	while (pattern[idx])
-	{
-		type_array[idx] = _judge_chr_type(pattern[idx], &in_squote, &in_dquote);
-		idx++;
-	}
-	return (type_array);
-}
-
-int	*_is_wildcard_splitter(size_t window_size, size_t len, t_wildcard_type *type_array_start)
+int	*_is_wildcard_splitter(size_t window_size, size_t len,
+		t_wildcard_type *type_array_start)
 {
 	size_t	idx;
 	size_t	sec_idx;
-	int	*is_wildcard;
+	int		*is_wildcard;
 
 	is_wildcard = (int *)malloc(sizeof(int) * (len));
 	if (!is_wildcard)
@@ -106,52 +45,12 @@ int	*_is_wildcard_splitter(size_t window_size, size_t len, t_wildcard_type *type
 	return (is_wildcard);
 }
 
-int	_create_is_wildcard(t_wildcard_type *type_array, t_matching_info *info, char *pattern)
+char	*_ptn_sec_splitter(char *pattern_start, size_t window_size, size_t len,
+		t_wildcard_type *type_array_start)
 {
 	size_t	idx;
-	size_t	left;
-	size_t	right;
-	size_t	cnt;
-
-	info->is_wildcard = (int **)malloc(sizeof(int *) * (info->depth + 1));
-	if (!info->is_wildcard)
-		return (EXIT_FAILURE);
-	cnt = 0;
-	idx = 0;
-	left = 0;
-	right = 0;
-	while (right < ft_strlen(pattern))
-	{
-		if (type_array[right] == SLASH)
-		{
-			info->is_wildcard[idx] = _is_wildcard_splitter(right
-					- left, cnt, &type_array[left]);
-			if (!info->is_wildcard[idx++])
-				return (EXIT_FAILURE);
-			while (right < ft_strlen(pattern) && type_array[right] == SLASH)
-				right++;
-			left = right;
-			cnt = 0;
-		}
-		cnt += (type_array[right] == PLAIN_CHR
-				|| type_array[right] == EXPANDABLE_ASTERISK);
-		right++;
-	}
-	if (left < right)
-	{
-		info->is_wildcard[idx] = _is_wildcard_splitter(right
-				- left, cnt, &type_array[left]);
-		if (!info->is_wildcard[idx++])
-			return (EXIT_FAILURE);
-	}
-	return (info->is_wildcard[idx] = NULL, EXIT_SUCCESS);
-}
-
-char	*_pattern_section_splitter(char *pattern_start, size_t window_size, size_t len, t_wildcard_type *type_array_start)
-{
-	size_t		idx;
-	size_t		sec_idx;
-	char		*section;
+	size_t	sec_idx;
+	char	*section;
 
 	section = (char *)malloc(sizeof(char) * (len + 1));
 	if (!section)
@@ -168,46 +67,59 @@ char	*_pattern_section_splitter(char *pattern_start, size_t window_size, size_t 
 	return (section);
 }
 
-int	_create_pattern_sections(t_wildcard_type *type_array, t_matching_info *info, char *pattern)
+static void exec_init_pt_wc_loop(t_matching_info *info, t_wildcard_type *type_array, char *pattern, size_t len)
 {
-	size_t	idx;
-	size_t	left;
-	size_t	right;
-	size_t	cnt;
+	size_t l;
+	size_t r;
+	size_t idx;
+	size_t cnt;
 
-	info->pattern_sections = (char **)malloc(sizeof(char *) * (info->depth
-				+ 1));
-	if (!info->pattern_sections)
-		return (EXIT_FAILURE);
-	cnt = 0;
+	l = 0;
+	r = 0;
 	idx = 0;
-	left = 0;
-	right = 0;
-	while (right < ft_strlen(pattern))
+	cnt = 0;
+	while (r < len)
 	{
-		if (type_array[right] == SLASH)
+		if (pattern[r] == SLASH)
 		{
-			info->pattern_sections[idx] = _pattern_section_splitter(pattern
-					+ left, right - left, cnt, &type_array[left]);
-			if (!info->pattern_sections[idx++])
+			info->ptn_secs[idx] = _ptn_sec_splitter(pattern + l, r - l, cnt,
+					&type_array[l]);
+			info->is_wildcard[idx] = _is_wildcard_splitter(r - l, cnt,
+					&type_array[l]);
+			if (!info->ptn_secs[idx] || !info->is_wildcard[idx])
 				return (EXIT_FAILURE);
-			while (right < ft_strlen(pattern) && type_array[right] == SLASH)
-				right++;
-			left = right;
+			while (r < len && type_array[r] == SLASH)
+				r++;
+			l = r;
 			cnt = 0;
+			idx++;
 		}
-		cnt += (type_array[right] == PLAIN_CHR
-				|| type_array[right] == EXPANDABLE_ASTERISK);
-		right++;
+		cnt += (type_array[r] == PLAIN_CHR
+				|| type_array[r] == EXPANDABLE_ASTERISK);
+		r++;
 	}
-	if (left < right)
+	if (l < r)
 	{
-		info->pattern_sections[idx] = _pattern_section_splitter(pattern + left,
-				right - left, cnt, &type_array[left]);
-		if (!info->pattern_sections[idx++])
-			return (EXIT_FAILURE);
+		info->ptn_secs[idx] = _ptn_sec_splitter(pattern + l, r - l, cnt,
+				&type_array[l]);
+		info->is_wildcard[idx] = _is_wildcard_splitter(r - l, cnt,
+				&type_array[l]);
+		if (!info->ptn_secs[idx] || !info->is_wildcard[idx])
+				return (EXIT_FAILURE);
 	}
-	return (info->pattern_sections[idx] = NULL, EXIT_SUCCESS);
+}
+
+int	_init_pattern_and_wc_secs(t_wildcard_type *type_array,
+		t_matching_info *info, char *pattern)
+{
+	info->ptn_secs = (char **)ft_calloc(info->depth + 1, sizeof(char *));
+	if (!info->ptn_secs)
+		return (EXIT_FAILURE);
+	info->is_wildcard = (int **)ft_malloc(info->depth + 1, sizeof(int *));
+	if (!info->is_wildcard)
+		return (free(info->ptn_secs), EXIT_FAILURE);
+
+	return (EXIT_SUCCESS);
 }
 
 int	_init_matching_info(t_matching_info *info, char *pattern)
@@ -228,13 +140,11 @@ int	_init_matching_info(t_matching_info *info, char *pattern)
 		info->is_abs_path = false;
 	while (*pattern == '/')
 		pattern++;
-	info->depth = _cnt_depth(pattern);
-	type_array = _create_type_arr(pattern);
+	info->depth = cnt_depth(pattern);
+	type_array = create_type_arr(pattern);
 	if (!type_array)
 		return (EXIT_FAILURE);
-	if (_create_is_wildcard(type_array, info, pattern) == EXIT_FAILURE)
-		return (free(type_array), EXIT_FAILURE);
-	if (_create_pattern_sections(type_array, info, pattern) == EXIT_FAILURE)
+	if (_init_pattern_and_wc_secs(type_array, info, pattern) == EXIT_FAILURE)
 		return (free(type_array), EXIT_FAILURE);
 	return (free(type_array), EXIT_SUCCESS);
 }

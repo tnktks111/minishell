@@ -6,18 +6,17 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:51:33 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 17:07:56 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 17:45:14 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-bool			judge_contain_tail_slash(char *pattern);
-char			*join_path(char *dir, char *file);
-t_wildcard_tree	*_create_wildcard_tree_node(char *parent_path, char *filename);
-size_t			_cnt_base_dir_file(char *base_dir, bool show_hidden_files);
-t_wildcard_tree	**_gen_base_dir_file_array(char *base_dir,
-					bool show_hidden_files);
+bool		judge_contain_tail_slash(char *pattern);
+char		*join_path(char *dir, char *file);
+t_wc_tree	*_create_wildcard_tree_node(char *parent_path, char *filename);
+size_t		_cnt_base_dir_file(char *base_dir, bool show_hidden_files);
+t_wc_tree	**_gen_base_dir_file_array(char *base_dir, bool show_hidden_files);
 
 bool	judge_contain_tail_slash(char *pattern)
 {
@@ -40,15 +39,15 @@ char	*join_path(char *dir, char *file)
 	return (res);
 }
 
-t_wildcard_tree	*_create_wildcard_tree_node(char *parent_path, char *filename)
+t_wc_tree	*_create_wildcard_tree_node(char *parent_path, char *filename)
 {
-	t_wildcard_tree	*newnode;
-	char			*content;
+	t_wc_tree	*newnode;
+	char		*content;
 
 	content = join_path(parent_path, filename);
 	if (!content)
 		return (NULL);
-	newnode = (t_wildcard_tree *)malloc(sizeof(t_wildcard_tree));
+	newnode = (t_wc_tree *)malloc(sizeof(t_wc_tree));
 	if (!newnode)
 		return (free(content), NULL);
 	newnode->filename = ft_strdup(filename);
@@ -89,43 +88,31 @@ size_t	_cnt_base_dir_file(char *base_dir, bool show_hidden_files)
 	return (cnt);
 }
 
-t_wildcard_tree	**_gen_base_dir_file_array(char *base_dir,
-		bool show_hidden_files)
+t_wc_tree	**_gen_base_dir_file_array(char *base_dir, bool show_hidden_files)
 {
-	DIR *dir;
-	struct dirent *dp;
-	size_t cnt;
-	t_wildcard_tree **children;
+	DIR				*dir;
+	struct dirent	*dp;
+	size_t			cnt;
+	t_wc_tree		**children;
 
 	cnt = _cnt_base_dir_file(base_dir, show_hidden_files);
-	children = (t_wildcard_tree **)malloc(sizeof(t_wildcard_tree *) * (cnt
-				+ 1));
+	children = (t_wc_tree **)calloc(cnt + 1, sizeof(t_wc_tree *));
 	if (!children)
 		return (NULL);
-	children[cnt] = NULL;
 	dir = opendir(base_dir);
 	if (dir == NULL)
 		return (free(children), (NULL));
 	cnt = 0;
 	dp = readdir(dir);
-	while (dp != NULL)
+	while (dp)
 	{
-		if (show_hidden_files && dp->d_name[0] == '.')
+		if (show_hidden_files == is_hidden(dp->d_name))
 		{
 			children[cnt] = _create_wildcard_tree_node(base_dir, dp->d_name);
-			if (!children[cnt])
+			if (!children[cnt++])
 				return (NULL);
-			cnt++;
-		}
-		if (!show_hidden_files && dp->d_name[0] != '.')
-		{
-			children[cnt] = _create_wildcard_tree_node(base_dir, dp->d_name);
-			if (!children[cnt])
-				return (NULL);
-			cnt++;
 		}
 		dp = readdir(dir);
 	}
-	closedir(dir);
-	return (children);
+	return (closedir(dir), children);
 }

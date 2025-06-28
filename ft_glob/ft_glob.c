@@ -6,23 +6,22 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:51:25 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 16:50:37 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 18:24:04 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int				_set_child_of_wc_tree_node(t_wildcard_tree *node,
-					bool show_hidden_files);
-void			_build_wc_tree_recursive(t_wildcard_tree *node, size_t depth,
-					t_matching_info *info);
-t_wildcard_tree	*_gen_root_node(bool is_abs_path, size_t head_slash_cnt);
-int				ft_glob(char *pattern, t_list **res_head);
+int			_set_child_of_wc_tree_node(t_wc_tree *node, bool show_hidden_files);
+void		_build_wc_tree_recursive(t_wc_tree *node, size_t depth,
+				t_matching_info *info);
+t_wc_tree	*_gen_root_node(bool is_abs_path, size_t head_slash_cnt);
+int			ft_glob(char *pattern, t_list **res_head);
 
-char *adjust_result(char *result, bool is_abs_path, bool contain_tail_slash)
+char	*adjust_result(char *result, bool is_abs_path, bool contain_tail_slash)
 {
-	char *tmp;
-	char *adjusted_res;
+	char	*tmp;
+	char	*adjusted_res;
 
 	if (is_abs_path)
 		tmp = ft_strdup(result + 1);
@@ -40,7 +39,7 @@ char *adjust_result(char *result, bool is_abs_path, bool contain_tail_slash)
 	return (adjusted_res);
 }
 
-int	_set_child_of_wc_tree_node(t_wildcard_tree *node, bool show_hidden_files)
+int	_set_child_of_wc_tree_node(t_wc_tree *node, bool show_hidden_files)
 {
 	size_t	i;
 
@@ -53,7 +52,7 @@ int	_set_child_of_wc_tree_node(t_wildcard_tree *node, bool show_hidden_files)
 	return (EXIT_SUCCESS);
 }
 
-void	_build_wc_tree_recursive(t_wildcard_tree *node, size_t depth,
+void	_build_wc_tree_recursive(t_wc_tree *node, size_t depth,
 		t_matching_info *info)
 {
 	size_t	i;
@@ -63,14 +62,15 @@ void	_build_wc_tree_recursive(t_wildcard_tree *node, size_t depth,
 
 	if (!node || !info || info->error_happened)
 		return ;
-	if (!info->pattern_sections || !info->pattern_sections)
+	if (!info->ptn_secs || !info->ptn_secs)
 	{
 		info->error_happened = true;
 		return ;
 	}
 	if (depth == info->depth)
 	{
-		content = adjust_result(node->path, info->is_abs_path, info->contain_tail_slash);
+		content = adjust_result(node->path, info->is_abs_path,
+				info->contain_tail_slash);
 		if (!content)
 		{
 			info->error_happened = true;
@@ -86,27 +86,26 @@ void	_build_wc_tree_recursive(t_wildcard_tree *node, size_t depth,
 		ft_lstadd_back(&info->res, newnode);
 		return ;
 	}
-	show_hidden_files = (info->pattern_sections[depth][0] == '.');
+	show_hidden_files = (info->ptn_secs[depth][0] == '.');
 	_set_child_of_wc_tree_node(node, show_hidden_files);
 	i = 0;
 	if (node->children)
 	{
 		while (node->children[i])
 		{
-			if (ft_ismatch(node->children[i]->filename,
-					info->pattern_sections[depth], info->is_wildcard[depth],
-					ft_strlen(info->pattern_sections[depth])))
+			if (ft_ismatch(node->children[i]->filename, info->ptn_secs[depth],
+					info->is_wildcard[depth], ft_strlen(info->ptn_secs[depth])))
 				_build_wc_tree_recursive(node->children[i], depth + 1, info);
 			i++;
 		}
 	}
 }
 
-t_wildcard_tree	*_gen_root_node(bool is_abs_path, size_t head_slash_cnt)
+t_wc_tree	*_gen_root_node(bool is_abs_path, size_t head_slash_cnt)
 {
-	t_wildcard_tree	*root;
+	t_wc_tree	*root;
 
-	root = (t_wildcard_tree *)malloc(sizeof(t_wildcard_tree));
+	root = (t_wc_tree *)malloc(sizeof(t_wc_tree));
 	if (!root)
 		return (NULL);
 	if (is_abs_path)
@@ -124,7 +123,7 @@ t_wildcard_tree	*_gen_root_node(bool is_abs_path, size_t head_slash_cnt)
 int	ft_glob(char *pattern, t_list **res_head)
 {
 	t_matching_info	info;
-	t_wildcard_tree	*root;
+	t_wc_tree		*root;
 
 	_init_matching_info(&info, pattern);
 	root = _gen_root_node(info.is_abs_path, info.head_slash_cnt);
