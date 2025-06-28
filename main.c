@@ -43,10 +43,7 @@ int	main(int ac, char **av, char **envp)
 		input = readline(BLUE "minishell$ " RESET);
 		if (input == NULL)
 		{
-			// free_table(&env);
-			// ft_putendl_fd("exit", STDERR_FILENO);
-			fprintf(stderr, RED "🂡🂡死神クイズに回答者はいらない♤\n" RESET);
-			// ft_putendl_fd("Bye\n", STDERR_FILENO);
+			ft_putendl_fd("exit", STDERR_FILENO);
 			free_all(&env);
 			break ;
 		}
@@ -56,15 +53,20 @@ int	main(int ac, char **av, char **envp)
 		{
 			free(input);
 			free_all(&env);
-			ft_putendl_fd("コムギ...まだ居るか...\n", STDERR_FILENO);
+			ft_putendl_fd("exit", STDERR_FILENO);
 			break ;
 		}
 		if (is_valid_input(input))
 		{
 			head = lexer(input);
 			root = parser(head, &env);
-			env.root = root;
-			exec_ast(root, &env);
+			print_tree(root);
+			if (root)
+			{
+				env.root = root;
+				exec_ast(root, &env);
+				print_tree(root);
+			}
 		}
 		free(input);
 	}

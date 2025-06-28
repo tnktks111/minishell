@@ -49,33 +49,40 @@ void	handle_syntax_error(t_env *env)
 
 bool	check_paren_syntax_error(t_token *head)
 {
-	// bool	prev_is_meta; 使われてない
 	t_token	*cur;
-	// char	*current_str; 使われてない
+	int		level;
 
-	// current_str = NULL; 使われてない
-	// prev_is_meta = false; 使われてない
+	level = 0;
 	cur = head;
-	if (!cur)
+	if (!head)
 		return (false);
-	if (cur->status == RIGHT_PAREN)
+	while (cur)
+	{
+		if (cur->status == LEFT_PAREN)
+			level++;
+		else if (cur->status == RIGHT_PAREN)
+		{
+			level--;
+			if (level < 0)
+				return (error_unexpected_token(cur->str), true);
+		}
+		cur = cur->next;
+	}
+	if (level != 0)
 		return (error_unexpected_token(cur->str), true);
-	return (false);
+	else
+		return (false);
 }
 
 bool	check_syntax_error(t_token *head)
 {
 	bool	prev_is_meta;
 	t_token	*cur;
-	// char	*current_str; 使われてない
 
-	// current_str = NULL; 使われてない
 	prev_is_meta = false;
 	cur = head;
 	if (!cur)
 		return (false);
-	if (is_status_meta(cur->status))
-		return (error_unexpected_token(cur->str), true);
 	while (cur)
 	{
 		if (is_status_meta(cur->status))
@@ -88,7 +95,7 @@ bool	check_syntax_error(t_token *head)
 			prev_is_meta = false;
 		cur = cur->next;
 	}
-	// if (prev_is_meta)
-	// 	return (error_unexpected_token("newline"), true);
+	if (prev_is_meta)
+		return (error_unexpected_token("newline"), true);
 	return (check_paren_syntax_error(head));
 }

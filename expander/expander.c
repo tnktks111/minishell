@@ -73,18 +73,18 @@ void	expand_cmd_args(t_tree_node *simple_cmd_node, t_env *env)
 	char	**cmd_args;
 	size_t	i;
 	char	**expanded;
-	char	**files;
 
-	files = gen_tmp_dir_file_array();
 	cmd_args = simple_cmd_node->data.command.args;
 	i = 0;
 	while (cmd_args[i])
 	{
 		if (check_variable_expand(cmd_args[i]))
+		{
 			cmd_args[i] = expand_every_variable(cmd_args[i], env);
+		}
 		i++;
 	}
-	expanded = expand_cmd_wildcard(cmd_args, files);
+	expanded = expand_cmd_wildcard(cmd_args);
 	free_splited_data(cmd_args);
 	i = 0;
 	while (expanded[i])
@@ -93,7 +93,6 @@ void	expand_cmd_args(t_tree_node *simple_cmd_node, t_env *env)
 		i++;
 	}
 	simple_cmd_node->data.command.args = expanded;
-	free_splited_data(files);
 }
 
 void	expander(t_tree_node *pipeline_node, t_env *env)
@@ -103,8 +102,11 @@ void	expander(t_tree_node *pipeline_node, t_env *env)
 	simple_cmd_node = pipeline_node->left;
 	if (simple_cmd_node->data.command.redirects)
 		expand_filename(simple_cmd_node, env);
-	if (simple_cmd_node->data.command.args)
-		expand_cmd_args(simple_cmd_node, env);
+	if (simple_cmd_node->data.command.args[0])
+	{
+		if (simple_cmd_node->data.command.args)
+			expand_cmd_args(simple_cmd_node, env);
+	}
 }
 
 void	expand_ast(t_tree_node *node, t_env *env)

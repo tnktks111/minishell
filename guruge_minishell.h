@@ -116,10 +116,10 @@ char			*expand_individual_variable(char *str, t_env *env);
 char			*expand_every_variable(char *str, t_env *env);
 
 bool			check_wildcard_expand(char *str);
-char			**expand_cmd_wildcard(char **cmd_args, char **files);
+char			**expand_cmd_wildcard(char **cmd_args);
 void			init_wildcard_array(int *src, char *str, size_t str_len);
 char			*expand_filename_wildcard(char *filename, char **files);
-char			**expand_cmd_line(t_list *cmdline, char **files);
+char			**expand_cmd_line(t_list *cmdline);
 
 void			takeoff_quotes(char *str);
 void			expand_filename(t_tree_node *simple_cmd_node, t_env *env);

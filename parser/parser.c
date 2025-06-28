@@ -129,7 +129,7 @@ t_tree_node	*create_tree(t_token *head, t_token *tail)
 	tail = skip_splitable_backward(tail);
 	paren_tail = NULL;
 	op = find_logical_operator(head, tail);
-	if (head && head->status == LEFT_PAREN)
+	if (!op && head && head->status == LEFT_PAREN)
 	{
 		paren_tail = find_matching_paren(head);
 		if (paren_tail)
@@ -160,13 +160,17 @@ t_tree_node	*parser(t_token *head, t_env *env)
 	root = NULL;
 	syntax_error = check_syntax_error(head);
 	if (syntax_error)
+	{
 		handle_syntax_error(env);
+		free_token(head, tail);
+		return (NULL);
+	}
 	else
 	{
 		tail = get_tail(head);
 		root = create_tree(head, tail);
 		root = add_tree_root(root);
+		free_token(head, tail);
 	}
-	free_token(head, tail);
 	return (root);
 }

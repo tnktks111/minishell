@@ -34,13 +34,12 @@ bool	check_wildcard_expand(char *str)
 	return (false);
 }
 
-char	**expand_cmd_line(t_list *cmdline, char **files)
+char	**expand_cmd_line(t_list *cmdline)
 {
 	char	**result;
 	t_list	*head;
 	t_list	*cur;
 
-	(void)files;
 	head = NULL;
 	append_command_line(&head, cmdline->content);
 	cur = cmdline->next;
@@ -58,13 +57,13 @@ char	**expand_cmd_line(t_list *cmdline, char **files)
 	return (result);
 }
 
-char	**expand_cmd_wildcard(char **cmd_args, char **files)
+char	**expand_cmd_wildcard(char **cmd_args)
 {
 	t_list	*cmd_line;
 	char	**result;
 
 	get_cmd_line_list(&cmd_line, cmd_args);
-	result = expand_cmd_line(cmd_line, files);
+	result = expand_cmd_line(cmd_line);
 	return (result);
 }
 
