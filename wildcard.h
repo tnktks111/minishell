@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:51:37 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 18:31:36 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 20:21:42 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,3 +85,4 @@ t_wc_tree					**_gen_base_dir_file_array(char *base_dir,
 bool						is_hidden(char *filename);
 char						*create_n_slashes(size_t n);
 size_t						cnt_head_slashes(char *pattern);
+bool						is_valid_pattern_chr(t_wildcard_type type);
