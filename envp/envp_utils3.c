@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 20:34:11 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/24 16:24:53 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/27 19:43:50 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void ft_remove_key(char *key, t_env *env);
 
 int _modify_val_of_entry(char *val, t_env_node *node)
 {
+	free(node->val);
     node->val = val;
     return (EXIT_SUCCESS);
 }

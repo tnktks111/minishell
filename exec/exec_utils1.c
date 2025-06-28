@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:39:49 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/26 21:30:30 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/27 18:52:31 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,9 @@ void	setup_pipefd(t_pipefd *fd, t_tree_node *node, bool is_start)
 int status_handler(int status)
 {
 	if (WIFEXITED(status))
+	{
 		return (WEXITSTATUS(status));
+	}
 	else if (WIFSIGNALED(status))
 	{
 		if (WTERMSIG(status) == SIGINT)

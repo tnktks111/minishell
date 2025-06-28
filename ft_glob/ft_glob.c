@@ -1,11 +1,44 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_glob.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/28 11:51:25 by ttanaka           #+#    #+#             */
+/*   Updated: 2025/06/28 12:03:32 by ttanaka          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "wildcard.h"
 
 int				_set_child_of_wc_tree_node(t_wildcard_tree *node,
 					bool show_hidden_files);
 void			_build_wc_tree_recursive(t_wildcard_tree *node, size_t depth,
 					t_matching_info *info);
-t_wildcard_tree	*_gen_root_node(bool is_abs_path);
+t_wildcard_tree	*_gen_root_node(bool is_abs_path, size_t head_slash_cnt);
 int				ft_glob(char *pattern, t_list **res_head);
+
+char *adjust_result(char *result, bool is_abs_path, bool contain_tail_slash)
+{
+	char *tmp;
+	char *adjusted_res;
+
+	if (is_abs_path)
+		tmp = ft_strdup(result + 1);
+	else
+		tmp = ft_strdup(result + 2);
+	if (!tmp)
+		return (NULL);
+	if (contain_tail_slash)
+	{
+		adjusted_res = ft_strjoin(tmp, "/");
+		free(tmp);
+	}
+	else
+		adjusted_res = tmp;
+	return (adjusted_res);
+}
 
 int	_set_child_of_wc_tree_node(t_wildcard_tree *node, bool show_hidden_files)
 {
@@ -37,10 +70,7 @@ void	_build_wc_tree_recursive(t_wildcard_tree *node, size_t depth,
 	}
 	if (depth == info->depth)
 	{
-		if (info->is_abs_path)
-			content = ft_strdup(node->path + 1);
-		else
-			content = ft_strdup(node->path + 2);
+		content = adjust_result(node->path, info->is_abs_path, info->contain_tail_slash);
 		if (!content)
 		{
 			info->error_happened = true;
@@ -72,7 +102,7 @@ void	_build_wc_tree_recursive(t_wildcard_tree *node, size_t depth,
 	}
 }
 
-t_wildcard_tree	*_gen_root_node(bool is_abs_path)
+t_wildcard_tree	*_gen_root_node(bool is_abs_path, size_t head_slash_cnt)
 {
 	t_wildcard_tree	*root;
 
@@ -80,9 +110,11 @@ t_wildcard_tree	*_gen_root_node(bool is_abs_path)
 	if (!root)
 		return (NULL);
 	if (is_abs_path)
-		root->path = "/";
+		root->path = create_n_slashes(head_slash_cnt);
 	else
 		root->path = ".";
+	if (!root->path)
+		return (free(root), NULL);
 	root->parent = NULL;
 	root->children = NULL;
 	root->filename = NULL;
@@ -93,15 +125,9 @@ int	ft_glob(char *pattern, t_list **res_head)
 {
 	t_matching_info	info;
 	t_wildcard_tree	*root;
-	int				i;
 
 	_init_matching_info(&info, pattern);
-	i = 0;
-	// while (info.pattern_sections[i])
-	// {
-	// 	printf("%s", info.pattern_sections[i++]);
-	// }
-	root = _gen_root_node(info.is_abs_path);
+	root = _gen_root_node(info.is_abs_path, info.head_slash_cnt);
 	if (!root)
 		return (-1);
 	_build_wc_tree_recursive(root, 0, &info);

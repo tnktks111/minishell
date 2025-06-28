@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   wildcard.h                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/28 11:51:37 by ttanaka           #+#    #+#             */
+/*   Updated: 2025/06/28 12:02:16 by ttanaka          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 #include "libft/inc/libft.h"
 #include <dirent.h>
@@ -30,6 +42,8 @@ typedef struct s_matching_info
 	char					**pattern_sections;
 	size_t					depth;
 	int						total_cnt;
+	size_t					head_slash_cnt;
+	bool					contain_tail_slash;
 	bool					is_abs_path;
 	bool					error_happened;
 }							t_matching_info;
@@ -60,6 +74,7 @@ int							ft_ismatch(char *str, char *pattern,
 								int *is_wildcard, size_t pat_len);
 
 // utils.c
+bool						judge_contain_tail_slash(char *pattern);
 char						*join_path(char *dir, char *file);
 t_wildcard_tree				*_create_wildcard_tree_node(char *parent_path,
 								char *filename);
@@ -67,3 +82,7 @@ size_t						_cnt_base_dir_file(char *base_dir,
 								bool show_hidden_files);
 t_wildcard_tree				**_gen_base_dir_file_array(char *base_dir,
 								bool show_hidden_files);
+
+// utils2.c
+char	*create_n_slashes(size_t n);
+size_t	cnt_head_slashes(char *pattern);

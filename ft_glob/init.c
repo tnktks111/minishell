@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/28 11:51:28 by ttanaka           #+#    #+#             */
+/*   Updated: 2025/06/28 12:01:20 by ttanaka          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "wildcard.h"
 
 //"/Users/Guest" -> 2, "venv/*" -> 2
@@ -205,6 +217,8 @@ int	_init_matching_info(t_matching_info *info, char *pattern)
 	info->total_cnt = 0;
 	info->res = NULL;
 	info->error_happened = false;
+	info->head_slash_cnt = cnt_head_slashes(pattern);
+	info->contain_tail_slash = judge_contain_tail_slash(pattern);
 	if (pattern[0] == '/')
 	{
 		info->is_abs_path = true;

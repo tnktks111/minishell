@@ -1,10 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/28 11:51:33 by ttanaka           #+#    #+#             */
+/*   Updated: 2025/06/28 11:51:34 by ttanaka          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "wildcard.h"
 
+bool			judge_contain_tail_slash(char *pattern);
 char			*join_path(char *dir, char *file);
 t_wildcard_tree	*_create_wildcard_tree_node(char *parent_path, char *filename);
 size_t			_cnt_base_dir_file(char *base_dir, bool show_hidden_files);
 t_wildcard_tree	**_gen_base_dir_file_array(char *base_dir,
 					bool show_hidden_files);
+
+bool	judge_contain_tail_slash(char *pattern)
+{
+	while (*pattern)
+		pattern++;
+	pattern--;
+	return (*pattern == '/');
+}
 
 char	*join_path(char *dir, char *file)
 {

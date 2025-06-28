@@ -1,19 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_all.c                                         :+:      :+:    :+:   */
+/*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/27 17:05:14 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/27 18:45:50 by ttanaka          ###   ########.fr       */
+/*   Created: 2025/06/28 11:51:17 by ttanaka           #+#    #+#             */
+/*   Updated: 2025/06/28 12:00:23 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "wildcard.h"
+#include "../minishell.h"
 
-void	free_all(t_env *env)
+char	*create_n_slashes(size_t n)
 {
-	free_table(env);
-	free_tree_node(env->root);
+	char *res;
+
+	res = (char *)malloc(sizeof(char) *(n + 1));
+	if (!res)
+		return (res);
+	ft_memset(res, '/', n);
+	res[n] = 0;
+	return (res);
+}
+
+size_t	cnt_head_slashes(char *pattern)
+{
+	size_t cnt;
+
+	cnt = 0;
+	while (*pattern && *pattern == '/')
+	{
+		cnt++;
+		pattern++;
+	}
+	return (cnt);
 }

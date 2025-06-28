@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/27 16:55:51 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/27 19:07:32 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,9 @@ int	exec_pipeline_commands(t_tree_node *node_pipeline, t_env *env)
 	cnt = 0;
 	fd.read_fd = STDIN_FILENO;
 	if (curr->kind == NODE_SIMPLE_COMMAND || curr->kind == NODE_SUBSHELL)
+	{
 		return (exec_solo_cmd(curr, env));
+	}
 	while (curr->kind == NODE_PIPE)
 		curr = curr->left;
 	cnt = exec_loop(curr, &fd, env, &pid);
