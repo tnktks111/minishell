@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/28 17:01:47 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 22:11:11 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ bool			have_quotes(char *limiter);
 void			remove_quotes(t_redirect *redirect);
 void			unlink_tmpfile(t_tree_node *node_simplecmd);
 void			unlink_all_tmpfiles(t_tree_node *node_pipeline);
+int				file_iswdir(char *filepath);
 
 void			perror_string(char *str);
 void			ft_puterr_general(char *cmd_name, char *errmsg);
@@ -108,6 +109,7 @@ void			error_illegal_arguments(char *cmd_name, char *arg);
 void			error_invalid_option(char *cmd_name, char *arg);
 void			builtin_error(char *cmd_name, char *arg, char *errmsg);
 void			warning_shlvl_too_high(int shlvl);
+void			error_heredoc_delimited_by_eof(char *delimiter);
 
 unsigned char	builtin_echo(t_tree_node *node, t_env *env);
 unsigned char	builtin_pwd(t_tree_node *node, t_env *env);

@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:51:37 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 20:21:42 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 21:54:24 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,14 @@ typedef struct s_wildcard_tree
 	struct s_wildcard_tree	*parent;
 	struct s_wildcard_tree	**children;
 }							t_wc_tree;
+
+typedef struct s_split_vars
+{
+	size_t					l;
+	size_t					r;
+	size_t					idx;
+	size_t					cnt;
+}							t_split_vars;
 
 typedef struct s_matching_info
 {
@@ -86,3 +94,6 @@ bool						is_hidden(char *filename);
 char						*create_n_slashes(size_t n);
 size_t						cnt_head_slashes(char *pattern);
 bool						is_valid_pattern_chr(t_wildcard_type type);
+
+char						*adjust_result(char *result, bool is_abs_path,
+								bool contain_tail_slash);

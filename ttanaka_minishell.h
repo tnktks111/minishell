@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 14:53:17 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 12:13:44 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 21:58:19 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <string.h>
 
 #define HEREDOC_SIGINT -1
+#define TMPFILE_CHR "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 /// ぬけてた
 char			*join_path(char *dir, char *file);
