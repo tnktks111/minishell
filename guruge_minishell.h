@@ -71,7 +71,7 @@ t_tree_node		*create_pipeline_node(t_tree_node *pipe_root, t_token *head,
 					t_token *tail);
 t_tree_node		*create_pipeline_tree(t_token *head, t_token *tail);
 //
-t_token			*get_redir_tail(t_token *head);
+t_token			*get_redir_tail(t_token *head, t_token *tail);
 t_tree_node		*create_subshell_node(t_tree_node *cur_root, t_token *head,
 					t_token *tail);
 // redirect cmd

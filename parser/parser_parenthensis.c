@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_token	*get_redir_tail(t_token *head)
+t_token	*get_redir_tail(t_token *head, t_token *tail)
 {
 	t_token	*cur;
 	t_token	*last;
@@ -33,7 +33,7 @@ t_token	*get_redir_tail(t_token *head)
 		}
 		cur = cur->next;
 	}
-	return (cur);
+	return (tail);
 }
 
 t_tree_node	*parse_paren(t_create_tree *tree, t_token *head)
