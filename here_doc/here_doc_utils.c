@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:30:34 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 21:59:51 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/28 22:26:31 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 int		file_iswdir(char *filepath);
 /*check node_simplecmd and delete tmpfile if the node has REDIR_HEREDOCs*/
 void	unlink_tmpfile(t_tree_node *node_simplecmd);
-/*check all simplecmd nodes below the node_pipeline and apply unlink_tmpfile to them*/
+/*check all simplecmd nodes below the node_pipeline 
+and apply unlink_tmpfile to them*/
 void	unlink_all_tmpfiles(t_tree_node *node_pipeline);
 
 void	unlink_tmpfile(t_tree_node *node_simplecmd)
