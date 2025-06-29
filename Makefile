@@ -6,17 +6,17 @@
 #    By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/17 19:06:08 by ttanaka           #+#    #+#              #
-#    Updated: 2025/06/29 15:50:41 by ttanaka          ###   ########.fr        #
+#    Updated: 2025/06/29 15:52:08 by ttanaka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-# CC = cc
-CC = gcc
+CC = cc
+# CC = gcc
 
-# CFLAGS = -Wall -Wextra -Werror
-CFLAGS = -g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror
+# CFLAGS = -g -fsanitize=address
 
 RM = rm -f
 MKDIR = mkdir -p

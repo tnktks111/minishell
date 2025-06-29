@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 15:43:37 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/29 15:50:11 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 15:51:40 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	bindpwd(t_env *env);
 int	absolute_pathname(const char *string);
+int	change_to_directory(char *path);
 
 int	bindpwd(t_env *env)
 {

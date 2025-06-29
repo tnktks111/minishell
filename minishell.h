@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/28 22:48:24 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 15:52:29 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,11 @@ unsigned char	builtin_unset(t_tree_node *node, t_env *env);
 unsigned char	builtin_env(t_tree_node *node, t_env *env);
 unsigned char	builtin_exit(t_tree_node *node, t_env *env);
 int				sh_mktmpfd(char **file_path_ptr);
+
+int				bindpwd(t_env *env);
+int				absolute_pathname(const char *string);
+char			*make_absolute(char *path);
+int				change_to_directory(char *path);
 
 void			free_splited_data(char **data);
 char			**free_allocated_data(char **datas, size_t allocated);
