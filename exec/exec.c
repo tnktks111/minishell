@@ -107,6 +107,7 @@ int	exec_pl_cmds(t_tree_node *node_pipeline, t_env *env)
 	int			status;
 
 	expand_ast(node_pipeline, env);
+	print_tree(node_pipeline);
 	curr = node_pipeline->left;
 	cnt = 0;
 	fd.read_fd = STDIN_FILENO;

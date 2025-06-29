@@ -43,3 +43,14 @@ bool	check_closed_paren_syntax_error(t_token *head)
 	}
 	return (false);
 }
+
+bool	check_syntax_error(t_token *head)
+{
+	t_token	*cur;
+
+	cur = head;
+	skip_splitable_forward(cur);
+	if (is_status_meta(cur->status))
+		return (error_unexpected_token(cur->str), true);
+	return (check_op_placement(head));
+}

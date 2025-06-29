@@ -65,7 +65,7 @@ bool	check_paren_syntax_error(t_token *head)
 		return (check_closed_paren_syntax_error(head));
 }
 
-bool	check_syntax_error(t_token *head)
+bool	check_op_placement(t_token *head)
 {
 	bool	prev_is_meta;
 	char	*temp;
