@@ -40,7 +40,7 @@ unsigned char	exec_ast(t_tree_node *root, t_env *env)
 		if (curr->kind == NODE_OR && prev_exit_status == 0)
 		{
 			curr = curr->parent;
-			continue;
+			continue ;
 		}
 		prev_exit_status = exec_pipeline(curr->right, env);
 		if (prev_exit_status == HEREDOC_SIGINT)

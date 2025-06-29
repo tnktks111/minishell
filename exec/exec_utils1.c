@@ -21,7 +21,7 @@ bool	is_directory(char *path);
 
 int	wcoredump(int status)
 {
-	return ((status)&0x80);
+	return ((status) & 0x80);
 }
 
 void	setup_pipefd(t_pipefd *fd, t_tree_node *node, bool is_start)

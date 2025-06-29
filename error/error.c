@@ -12,74 +12,10 @@
 
 #include "minishell.h"
 
-void	perror_string(char *str);
-void	ft_puterr_general(char *cmd_name, char *errmsg);
-void	ft_puterr_nbr(int nbr, char *errmsg);
-void	error_too_many_args(char *cmd_name);
-void	error_numeric_arg_required(char *cmd_name, char *arg);
-void	error_not_a_valid_identifier(char *cmd_name, char *arg);
-void	error_illegal_arguments(char *cmd_name, char *arg);
 void	error_invalid_option(char *cmd_name, char *arg);
 void	builtin_error(char *cmd_name, char *arg, char *errmsg);
 void	warning_shlvl_too_high(int shlvl);
 void	error_heredoc_delimited_by_eof(char *delimiter);
-
-void	perror_string(char *str)
-{
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	perror(str);
-}
-
-void	ft_puterr_general(char *cmd_name, char *errmsg)
-{
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_putstr_fd(cmd_name, STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO);
-	ft_putendl_fd(errmsg, STDERR_FILENO);
-}
-
-void	ft_puterr_nbr(int nbr, char *errmsg)
-{
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_putnbr_fd(nbr, STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO);
-	ft_putendl_fd(errmsg, STDERR_FILENO);
-}
-
-void	error_too_many_args(char *cmd_name)
-{
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_putstr_fd(cmd_name, STDERR_FILENO);
-	ft_putstr_fd(": too many arguments\n", STDERR_FILENO);
-}
-
-void	error_numeric_arg_required(char *cmd_name, char *arg)
-{
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_putstr_fd(cmd_name, STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO);
-	ft_putstr_fd(arg, STDERR_FILENO);
-	ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
-}
-
-void	error_not_a_valid_identifier(char *cmd_name, char *arg)
-{
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_putstr_fd(cmd_name, STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO);
-	ft_putstr_fd(arg, STDERR_FILENO);
-	ft_putstr_fd(": not a valid identifier\n", STDERR_FILENO);
-}
-
-void	error_illegal_arguments(char *cmd_name, char *arg)
-{
-	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_putstr_fd(cmd_name, STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO);
-	ft_putstr_fd(arg, STDERR_FILENO);
-	ft_putstr_fd(": you must not pass any arguments to the command\n",
-		STDERR_FILENO);
-}
 
 void	error_invalid_option(char *cmd_name, char *arg)
 {

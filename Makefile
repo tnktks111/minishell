@@ -37,7 +37,10 @@ SRCS = 	builtin/builtin_cd.c \
 		envp/envp_utils2.c \
 		envp/envp_utils3.c \
 		envp/handle_shlvl.c \
-		error.c \
+		error/error.c \
+		error/error_args.c \
+		error/error_general.c \
+		error/error_syntax.c \
 		exec/exec.c \
 		exec/exec_utils1.c \
 		exec/exec_utils2.c \
@@ -73,7 +76,6 @@ SRCS = 	builtin/builtin_cd.c \
 		parser/parser_redirect.c \
 		parser/parser_pipeline.c \
 		parser/parser_parenthensis.c \
-		syntax_error.c \
 		ft_glob/ft_glob.c \
 		ft_glob/ft_glob_init1.c \
 		ft_glob/ft_glob_init2.c \
