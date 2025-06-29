@@ -96,23 +96,14 @@ void	free_redirects(t_redirect *redirect)
 
 void	free_tree_node(t_tree_node *node)
 {
-
-
 	if (!node)
 		return ;
-	// 子ノードから解放♠️
 	free_tree_node(node->left);
 	free_tree_node(node->right);
-	// 自分の中身を解放♣️
-	if (node->kind == NODE_SIMPLE_COMMAND)
+	if (node->kind == NODE_SIMPLE_COMMAND || node->kind == NODE_SUBSHELL)
 	{
-		if (node->data.command.args)
-		{
-			free_splited_data(node->data.command.args);
-		}
 		if (node->data.command.redirects)
 			free_redirects(node->data.command.redirects);
 	}
-	// 最後に自分自身を解放♥️
 	free(node);
 }

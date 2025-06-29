@@ -13,7 +13,7 @@
 #include "../minishell.h"
 
 static long long	ft_strtol_for_exit(char *s, bool *error);
-unsigned char	    builtin_exit(t_tree_node *node, t_env *env);
+unsigned char		builtin_exit(t_tree_node *node, t_env *env);
 
 long long	ft_strtol_for_exit(char *s, bool *error)
 {

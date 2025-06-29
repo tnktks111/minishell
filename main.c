@@ -58,7 +58,7 @@ int	main(int ac, char **av, char **envp)
 		{
 			head = lexer(input);
 			root = parser(head, &env);
-			// print_tree(root);
+			print_tree(root);
 			if (root)
 			{
 				env.root = root;
