@@ -41,7 +41,7 @@ void	takeoff_quotes(char *str)
 	str[write_index] = '\0';
 }
 
-int	expand_filename(t_tree_node *simple_cmd_node, t_env *env)
+int	expand_filename(t_redirect *cur, t_env *env)
 {
 	char	*redir_filename;
 	char	*expanded_filename;
@@ -49,7 +49,7 @@ int	expand_filename(t_tree_node *simple_cmd_node, t_env *env)
 	char	**files;
 
 	files = gen_tmp_dir_file_array();
-	redir_filename = simple_cmd_node->data.command.redirects->filename;
+	redir_filename = cur->filename;
 	if (redir_filename)
 	{
 		temp = expand_every_variable(redir_filename, env);
@@ -61,9 +61,9 @@ int	expand_filename(t_tree_node *simple_cmd_node, t_env *env)
 			if (!expanded_filename)
 				return (EXIT_FAILURE);
 		}
-		if (simple_cmd_node->data.command.redirects->kind != REDIR_HEREDOC)
+		if (cur->kind != REDIR_HEREDOC)
 			takeoff_quotes(temp);
-		simple_cmd_node->data.command.redirects->filename = temp;
+		cur->filename = temp;
 	}
 	free_splited_data(files);
 	return (EXIT_SUCCESS);
@@ -91,13 +91,18 @@ void	expand_cmd_args(t_tree_node *simple_cmd_node, t_env *env)
 
 int	expander(t_tree_node *simple_cmd_node, t_env *env)
 {
-	int	res_status;
+	int			res_status;
+	t_redirect	*cur;
 
+	cur = NULL;
 	if (simple_cmd_node->data.command.redirects)
+		cur = simple_cmd_node->data.command.redirects;
+	while (cur)
 	{
-		res_status = expand_filename(simple_cmd_node, env);
+		res_status = expand_filename(cur, env);
 		if (res_status == EXIT_FAILURE)
 			return (EXIT_FAILURE);
+		cur = cur->next;
 	}
 	if (simple_cmd_node->data.command.args[0])
 	{
