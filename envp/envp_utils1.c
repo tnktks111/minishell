@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 20:27:04 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 16:16:46 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 17:15:25 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char	*extract_key(char *s)
 		return (NULL);
 	sep = ft_strchr(tmp, '=');
 	if (!sep)
-		return (strdup(s));
+		return (tmp);
 	*sep = 0;
 	res = ft_strdup(tmp);
 	free(tmp);

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   free1.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 15:03:28 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/17 15:03:48 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 17:08:43 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,6 @@ void	free_tree_node(t_tree_node *node)
 	{
 		if (node->data.command.args)
 		{
-
 			free_splited_data(node->data.command.args);
 		}
 		if (node->data.command.redirects)

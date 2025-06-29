@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:51:37 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 21:54:24 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 16:59:08 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,3 +97,6 @@ bool						is_valid_pattern_chr(t_wildcard_type type);
 
 char						*adjust_result(char *result, bool is_abs_path,
 								bool contain_tail_slash);
+
+void						destroy_entire_tree_recursive(t_wc_tree *root);
+

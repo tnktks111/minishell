@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 15:35:15 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/29 15:48:54 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 16:11:32 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ unsigned char	builtin_cd(t_tree_node *cmd_node, t_env *env)
 		if (find_success)
 			return (bindpwd(env));
 		else
-			return (2);
+			return (1);
 	}
 	if (change_to_directory(dirname))
 	{
@@ -129,5 +129,5 @@ unsigned char	builtin_cd(t_tree_node *cmd_node, t_env *env)
 			printf("%s\n", dirname);
 		return (bindpwd(env));
 	}
-	return (builtin_error("cd", dirname, strerror(errno)), 2);
+	return (builtin_error("cd", dirname, strerror(errno)), 1);
 }

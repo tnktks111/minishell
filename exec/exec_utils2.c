@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:39:36 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 17:05:38 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 17:27:59 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ char	**get_path_prefix(t_env *env)
 	if (!val)
 		return (NULL);
 	res = ft_split(val, ':');
+	free(val);
 	return (res);
 }
 
@@ -76,8 +77,9 @@ void	find_path(t_tree_node *cmd_node, t_env *env)
 	last_errno = ENOENT;
 	if (!prefix_table[0])
 	{
+		free_splited_data(prefix_table);
 		ft_puterr_general(cmd_node->data.command.args[0], strerror(ENOENT));
-		exit(126);
+		free_for_exit(env, 126);
 	}
 	i = -1;
 	while (prefix_table[++i])

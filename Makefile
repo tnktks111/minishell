@@ -6,17 +6,17 @@
 #    By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/17 19:06:08 by ttanaka           #+#    #+#              #
-#    Updated: 2025/06/29 15:52:08 by ttanaka          ###   ########.fr        #
+#    Updated: 2025/06/29 17:12:45 by ttanaka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-CC = cc
-# CC = gcc
+# CC = cc
+CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror
-# CFLAGS = -g -fsanitize=address
+# CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -g -fsanitize=address
 
 RM = rm -f
 MKDIR = mkdir -p
@@ -38,7 +38,6 @@ SRCS = 	builtin/builtin_cd.c \
 		envp/envp_utils1.c \
 		envp/envp_utils2.c \
 		envp/envp_utils3.c \
-		envp/handle_shlvl.c \
 		error/error.c \
 		error/error_args.c \
 		error/error_general.c \
@@ -58,7 +57,8 @@ SRCS = 	builtin/builtin_cd.c \
 		expander/expander_variable.c \
 		expander/expander_variable_utils1.c \
 		file_expander.c \
-		free/free.c \
+		free/free1.c \
+		free/free2.c \
 		free/free_all.c \
 		here_doc/here_doc.c \
 		here_doc/here_doc_expander.c \

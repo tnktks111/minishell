@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 10:42:50 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 23:02:38 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 16:13:24 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ unsigned char	builtin_export(t_tree_node *node, t_env *env);
 
 static int	is_valid_export_key(char *s)
 {
-	if (ft_isdigit(*s))
+	if (ft_isdigit(*s) || *s == '=')
 		return (false);
 	while (*s)
 	{

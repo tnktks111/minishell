@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 20:28:23 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 16:15:25 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 17:22:53 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int	encode_envp(t_env *env, char *envp[])
 	have_shlvl = false;
 	while (envp[i] != NULL)
 	{
-		if (register_entry_to_table(envp[i++], &have_shlvl, &have_shlvl,
+		if (register_entry_to_table(envp[i++], &have_underscore, &have_shlvl,
 				env) == EXIT_FAILURE)
 			return (EXIT_FAILURE);
 	}

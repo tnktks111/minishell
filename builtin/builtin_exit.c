@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 10:40:08 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 15:38:58 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 17:00:35 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,17 +52,17 @@ unsigned char	builtin_exit(t_tree_node *node, t_env *env)
 	if (env->is_child == false)
 		ft_putendl_fd("exit", STDERR_FILENO);
 	if (!node->data.command.args[1])
-		exit(0);
+		free_for_exit(env, 0);
 	exit_status = ft_strtol_for_exit(node->data.command.args[1], &error);
 	if (error == true)
 	{
 		error_numeric_arg_required("exit", node->data.command.args[1]);
-		exit(2);
+		free_for_exit(env, 2);
 	}
 	if (node->data.command.args[2])
 	{
 		error_too_many_args("exit");
 		return (EXIT_FAILURE);
 	}
-	exit((unsigned char)exit_status);
+	free_for_exit(env, (unsigned char)exit_status);
 }

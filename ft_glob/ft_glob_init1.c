@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:51:28 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 21:56:18 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 16:54:26 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,8 @@ static int	exec_init_pt_wc_loop(t_matching_info *info, t_wildcard_type *arr,
 			v.cnt = 0;
 			v.idx++;
 		}
-		v.cnt += is_valid_pattern_chr(arr[v.r++]);
+		else
+			v.cnt += is_valid_pattern_chr(arr[v.r++]);
 	}
 	if (v.l < v.r)
 	{
@@ -115,7 +116,7 @@ int	_init_pattern_and_wc_secs(t_wildcard_type *type_array,
 		return (EXIT_FAILURE);
 	info->is_wildcard = (int **)ft_calloc(info->depth + 1, sizeof(int *));
 	if (!info->is_wildcard)
-		return (free(info->ptn_secs), EXIT_FAILURE);
+		return (free(info->ptn_secs), EXIT_FAILURE);\
 	if (exec_init_pt_wc_loop(info, type_array, pattern,
 			ft_strlen(pattern)) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
