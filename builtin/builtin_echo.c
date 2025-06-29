@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 10:43:55 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 23:05:24 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 20:00:23 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,14 @@ static bool	is_valid_echo_option(char *s)
 	size_t	i;
 
 	i = 0;
+	if (!s)
+		return (false);
+	if (ft_strcmp(s, "-") == 0)
+		return (false);
 	if (s[i++] == '-')
 	{
-		while (s[i] && s[i++] != 'n')
-		{
-			return (false);
-		}
+		while (s[i] && s[i] == 'n')
+			i++;
 		if (!s[i])
 			return (true);
 	}
@@ -59,3 +61,4 @@ unsigned char	builtin_echo(t_tree_node *node, t_env *env)
 		ft_putstr_fd("\n", STDOUT_FILENO);
 	return (EXIT_SUCCESS);
 }
+

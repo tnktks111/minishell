@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 10:40:08 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/29 17:35:39 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 19:47:54 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ long long	ft_strtol_for_exit(char *s, bool *error)
 		*error = true;
 	while (*s && ft_isdigit(*s))
 	{
-		if (num >= num * 10 + (*s - '0'))
+		if (num > num * 10 + (*s - '0'))
 			*error = true;
 		num = num * 10 + (*s++ - '0');
 	}

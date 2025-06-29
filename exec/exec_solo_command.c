@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/29 18:04:25 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 21:41:14 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static void	exec_child_process_of_solo_cmd(t_tree_node *cmd_node, t_env *env)
 	if (exec_redirection(cmd_node->data.command.redirects) == EXIT_FAILURE)
 		free_for_exit(env, EXIT_FAILURE);
 	if (cmd_node->kind == NODE_SUBSHELL)
-		free_for_exit(env, exec_ast(cmd_node, env));
+		exit(exec_ast(cmd_node, env));
 	if (!cmd_node->data.command.args)
 		free_for_exit(env, 0);
 	if (!cmd_node->data.command.args[0] || !cmd_node->data.command.args[0][0])

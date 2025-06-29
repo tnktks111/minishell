@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 15:35:15 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/29 16:11:32 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 20:29:32 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,8 @@ static int	edge_case_handler(t_tree_node *cmd_node, t_env *env,
 		*dirname = ft_search((char *)target[code], env);
 	else
 		*dirname = NULL;
-	if (!(*dirname) || (*dirname)[0])
-		return (free(*dirname), builtin_error("cd", NULL, (char *)errmsg[code]),
+	if (!(*dirname) || !(*dirname)[0])
+		return (free(*dirname), *dirname = NULL, builtin_error("cd", NULL, (char *)errmsg[code]),
 			2);
 	return (0);
 }

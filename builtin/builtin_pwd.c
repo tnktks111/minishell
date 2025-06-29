@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 10:43:19 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 23:01:44 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 20:06:11 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ unsigned char	builtin_pwd(t_tree_node *node, t_env *env)
 		if (!envpwd || !envpwd[0])
 		{
 			perror("getcwd():");
-			return (EXIT_FAILURE);
+			return (free(envpwd), EXIT_FAILURE);
 		}
 		ft_putendl_fd(envpwd, STDOUT_FILENO);
 		return (EXIT_SUCCESS);
