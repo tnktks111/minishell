@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/29 17:47:42 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 18:02:57 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,20 +138,20 @@ void	exec_command_helper(t_tree_node *node, t_env *env)
 	else
 		cmd_node = node;
 	if (exec_redirection(cmd_node->data.command.redirects) == EXIT_FAILURE)
-		exit(EXIT_FAILURE);
+		free_for_exit(env, EXIT_FAILURE);
 	if (cmd_node->kind == NODE_SIMPLE_COMMAND)
 	{
 		args = cmd_node->data.command.args;
 		if (!args[0] || !args[0][0])
 		{
 			ft_puterr_general(args[0], "command not found");
-			exit(127);
+			free_for_exit(env, 127);
 		}
 		find_builtin(cmd_node, env);
 		find_path(cmd_node, env);
 		execve(args[0], args, env->envp);
-		execve_failure_handler(args[0], errno);
+		execve_failure_handler(args[0], errno, env);
 	}
 	else
-		exit(exec_ast(cmd_node, env));
+		free_for_exit(env, exec_ast(cmd_node, env));
 }

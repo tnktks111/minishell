@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 16:22:38 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 18:04:25 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,21 +57,21 @@ static void	exec_child_process_of_solo_cmd(t_tree_node *cmd_node, t_env *env)
 	env->is_child = true;
 	setup_child_signal_handlers();
 	if (exec_redirection(cmd_node->data.command.redirects) == EXIT_FAILURE)
-		exit(EXIT_FAILURE);
+		free_for_exit(env, EXIT_FAILURE);
 	if (cmd_node->kind == NODE_SUBSHELL)
-		exit(exec_ast(cmd_node, env));
+		free_for_exit(env, exec_ast(cmd_node, env));
 	if (!cmd_node->data.command.args)
-		exit(0);
+		free_for_exit(env, 0);
 	if (!cmd_node->data.command.args[0] || !cmd_node->data.command.args[0][0])
 	{
 		ft_puterr_general(cmd_node->data.command.args[0], "command not found");
-		exit(127);
+		free_for_exit(env, 127);
 	}
 	if (!ft_strchr(cmd_node->data.command.args[0], '/'))
 		find_path(cmd_node, env);
 	execve(cmd_node->data.command.args[0], cmd_node->data.command.args,
 		env->envp);
-	execve_failure_handler(cmd_node->data.command.args[0], errno);
+	execve_failure_handler(cmd_node->data.command.args[0], errno, env);
 }
 
 int	exec_solo_cmd(t_tree_node *cmd_node, t_env *env)
