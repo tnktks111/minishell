@@ -6,7 +6,7 @@
 #    By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/17 19:06:08 by ttanaka           #+#    #+#              #
-#    Updated: 2025/06/28 21:40:13 by ttanaka          ###   ########.fr        #
+#    Updated: 2025/06/29 15:50:41 by ttanaka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,6 +25,8 @@ OBJS_DIR = objs
 LIBFT_DIR = libft
 
 SRCS = 	builtin/builtin_cd.c \
+		builtin/builtin_cd_utils1.c \
+		builtin/builtin_cd_utils2.c \
 		builtin/builtin_echo.c \
 		builtin/builtin_env.c \
 		builtin/builtin_exit.c \

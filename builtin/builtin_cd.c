@@ -6,219 +6,122 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 15:35:15 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/24 16:24:11 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 15:48:54 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int		bindpwd(t_env *env);
-static int		absolute_pathname(const char *string);
-char			*make_absolute(char *path);
-int				change_to_directory(char *path);
-char			*concatnate_paths(char *s1, char *s2);
+static int		find_cdpath(char *dirname, t_env *env, bool *find_success);
+static int		edge_case_handler(t_tree_node *cmd_node, t_env *env,
+					bool *print_path, char **dirname);
+static char		*decide_dirname(t_tree_node *cmd_node, t_env *env,
+					bool *print_path, bool *find_success);
 unsigned char	builtin_cd(t_tree_node *cmd_node, t_env *env);
 
-static int	bindpwd(t_env *env)
+static int	find_cdpath(char *dirname, t_env *env, bool *find_success)
 {
-	char	*oldpwd;
-	char	*pwd;
-	char	tmppwd[PATH_MAX];
+	char	*cdpath;
+	char	**cdpath_arr;
+	char	*tmp;
+	size_t	i;
 
-	if (!getcwd(tmppwd, PATH_MAX))
-	{
-		perror("getcwd(): ");
-		return (2);
-	}
-	pwd = ft_strdup(tmppwd);
-	if (!pwd)
-	{
-		perror("malloc(): ");
-		return (2);
-	}
-	oldpwd = ft_search("PWD", env);
-	ft_add_key_val_pair("OLDPWD", oldpwd, env);
-	ft_add_key_val_pair("PWD", pwd, env);
-	return (0);
-}
-
-static int	absolute_pathname(const char *string)
-{
-	if (string == 0 || *string == '\0')
-		return (0);
-	if (string[0] == '/')
-		return (1);
-	if (string[0] == '.' && string[1] == '/') /* . and ./ */
-		return (1);
-	if (string[0] == '.' && string[1] == '.' && string[2] == '/')
-		return (1);
-	return (0);
-}
-
-char	*make_absolute(char *path)
-{
-	char	*abs_path;
-	char	**path_sections;
-	int		unused_section[PATH_MAX];
-	int		i;
-	int		j;
-	size_t	len;
-	char	*p_dst;
-
-	ft_bzero((void *)unused_section, sizeof(int) * PATH_MAX);
-	path_sections = ft_split(path, '/');
-	if (!path_sections)
-		return (NULL);
+	cdpath = ft_search("CDPATH", env);
+	if (!cdpath || !cdpath[0])
+		return (free(cdpath), 1);
+	cdpath_arr = ft_split(cdpath, ':');
+	if (!cdpath_arr)
+		return (free(cdpath), 2);
 	i = 0;
-	while (path_sections[i])
+	while (cdpath_arr[i])
 	{
-		if (ft_strcmp(path_sections[i], "..") == 0)
+		tmp = join_path(cdpath_arr[i], dirname);
+		if (change_to_directory(tmp))
 		{
-			unused_section[i] = 1;
-			j = i - 1;
-			while (j >= 0 && unused_section[j] == 1)
-				j--;
-			if (j >= 0)
-				unused_section[j] = 1;
+			if (cdpath_arr[i][0])
+				printf("%s\n", tmp);
+			return (free(tmp), *find_success = true, bindpwd(env));
 		}
-		else if (ft_strcmp(path_sections[i], ".") == 0)
-			unused_section[i] = 1;
-		i++;
-	}
-	i = 0;
-	len = 0;
-	while (path_sections[i])
-	{
-		if (!unused_section[i] && path_sections[i][0])
-		{
-			len += ft_strlen(path_sections[i]);
-			len++;
-		}
-		i++;
-	}
-	if (len == 0)
-		len++;
-	abs_path = (char *)malloc(sizeof(char) * (len + 1));
-	if (!abs_path)
-		return (free_splited_data(path_sections), NULL);
-	i = 0;
-	p_dst = abs_path;
-	while (path_sections[i])
-	{
-		if (!unused_section[i] && path_sections[i][0])
-		{
-			*p_dst++ = '/';
-			ft_strcpy(p_dst, path_sections[i]);
-			p_dst += ft_strlen(path_sections[i]);
-		}
-		i++;
-	}
-	if (p_dst == abs_path)
-		*p_dst++ = '/';
-	*p_dst = 0;
-	free_splited_data(path_sections);
-	return (abs_path);
-}
-
-int	change_to_directory(char *path)
-{
-	char	*abs_path;
-
-	abs_path = make_absolute(path);
-	if (chdir(abs_path) < 0)
-	{
-		return (0);
+		else
+			free(tmp);
 	}
 	return (1);
 }
 
-char	*concatnate_paths(char *s1, char *s2)
+static int	edge_case_handler(t_tree_node *cmd_node, t_env *env,
+		bool *print_path, char **dirname)
 {
-	char	*tmp;
-	char	*res;
+	static const char	*target[3] = {"HOME", NULL, "OLDPWD"};
+	static const char	*errmsg[3] = {"HOME not set", "too many arguments",
+		"OLDPWD not set"};
+	size_t				code;
 
-	tmp = ft_strjoin(s1, "/");
-	if (!tmp)
-		return (NULL);
-	res = ft_strjoin(tmp, s2);
-	free(tmp);
-	return (res);
+	if (!cmd_node->data.command.args[1])
+		code = 0;
+	else if (cmd_node->data.command.args[2])
+		code = 1;
+	else if (ft_strcmp(cmd_node->data.command.args[1], "-") == 0)
+	{
+		code = 2;
+		*print_path = true;
+	}
+	else
+		return (1);
+	if (target[code])
+		*dirname = ft_search((char *)target[code], env);
+	else
+		*dirname = NULL;
+	if (!(*dirname) || (*dirname)[0])
+		return (free(*dirname), builtin_error("cd", NULL, (char *)errmsg[code]),
+			2);
+	return (0);
+}
+
+static char	*decide_dirname(t_tree_node *cmd_node, t_env *env, bool *print_path,
+		bool *find_success)
+{
+	char	cwd[PATH_MAX];
+	char	*dirname;
+	int		code;
+	char	*tmp;
+
+	if (!getcwd(cwd, PATH_MAX))
+		return (perror("getcwd(): "), NULL);
+	code = edge_case_handler(cmd_node, env, print_path, &dirname);
+	if (code == 1)
+	{
+		dirname = cmd_node->data.command.args[1];
+		if (absolute_pathname(dirname))
+		{
+			if (find_cdpath(dirname, env, find_success) != 1)
+				return (NULL);
+		}
+		if (dirname[0] != '/')
+		{
+			tmp = join_path(cwd, cmd_node->data.command.args[1]);
+			if (change_to_directory(tmp))
+				return (free(tmp), *find_success = true, NULL);
+			free(tmp);
+		}
+	}
+	return (dirname);
 }
 
 unsigned char	builtin_cd(t_tree_node *cmd_node, t_env *env)
 {
-	char	cwd[PATH_MAX];
 	char	*dirname;
-	char	*cdpath;
-	char	**cdpath_arr;
-	char	*tmp;
 	bool	printpath;
-	size_t	i;
+	bool	find_success;
 
-	if (!getcwd(cwd, PATH_MAX))
-	{
-		perror("getcwd(): ");
-		return (2);
-	}
 	printpath = false;
-	cdpath = ft_search("CDPATH", env);
-	if (!cmd_node->data.command.args[1])
+	find_success = false;
+	dirname = decide_dirname(cmd_node, env, &printpath, &find_success);
+	if (!dirname)
 	{
-		dirname = ft_search("HOME", env);
-		if (!dirname || !dirname[0])
-		{
-			builtin_error("cd", NULL, "HOME not set");
+		if (find_success)
+			return (bindpwd(env));
+		else
 			return (2);
-		}
-	}
-	else if (cmd_node->data.command.args[2])
-	{
-		builtin_error("cd", NULL, "too many arguments");
-		return (2);
-	}
-	else if (ft_strcmp(cmd_node->data.command.args[1], "-") == 0)
-	{
-		dirname = ft_search("OLDPWD", env);
-		printpath = true;
-		if (!dirname || !dirname[0])
-		{
-			builtin_error("cd", NULL, "OLDPWD not set");
-			return (2);
-		}
-	}
-	else
-	{
-		dirname = cmd_node->data.command.args[1];
-		if (!absolute_pathname(cmd_node->data.command.args[1]) && cdpath)
-		{
-			cdpath_arr = ft_split(cdpath, ':');
-			i = 0;
-			while (cdpath_arr[i])
-			{
-				tmp = concatnate_paths(cdpath_arr[i],
-						cmd_node->data.command.args[1]);
-				if (change_to_directory(tmp))
-				{
-					if (cdpath_arr[i][0])
-						printf("%s\n", tmp);
-					free(tmp);
-					return (bindpwd(env));
-				}
-				else
-					free(tmp);
-			}
-		}
-		if (cmd_node->data.command.args[1][0] != '/')
-		{
-			tmp = concatnate_paths(cwd, cmd_node->data.command.args[1]);
-			if (change_to_directory(tmp))
-			{
-				free(tmp);
-				return (bindpwd(env));
-			}
-			else
-				free(tmp);
-		}
 	}
 	if (change_to_directory(dirname))
 	{
@@ -226,19 +129,5 @@ unsigned char	builtin_cd(t_tree_node *cmd_node, t_env *env)
 			printf("%s\n", dirname);
 		return (bindpwd(env));
 	}
-	builtin_error("cd", dirname, strerror(errno));
-	return (2);
+	return (builtin_error("cd", dirname, strerror(errno)), 2);
 }
-
-// void buildin_error(char *cmd_name, char *arg, char *errmsg)
-// {
-//     ft_putstr_fd("minishell: ", STDERR_FILENO);
-//     ft_putstr_fd(cmd_name, STDERR_FILENO);
-//     if (arg)
-//     {
-//         ft_putstr_fd(": ", STDERR_FILENO);
-//         ft_putchar_fd(arg, STDERR_FILENO);
-//     }
-//     ft_putstr_fd(": ", STDERR_FILENO);
-//     ft_putstr_fd(errmsg, STDERR_FILENO);
-// }
