@@ -19,24 +19,60 @@ t_status	get_status(t_status status1, t_status status2)
 	return (NORMAL);
 }
 
-void	join_conseqetive_tokens(t_token **cur)
+// void	join_consecutive_tokens(t_token **cur)
+// {
+// 	t_token	*first;
+// 	t_token	*second;
+// 	t_token	*joined;
+// 	t_token	*next_token;
+
+// 	first = *cur;
+// 	second = first->next;
+// 	if (second->next)
+// 		next_token = second->next;
+// 	else
+// 		next_token = NULL;
+// 	joined = malloc(sizeof(t_token));
+// 	if (!joined)
+// 		return ;
+// 	joined->str = ft_strjoin(first->str, second->str);
+// 	if (!joined->str)
+// 	{
+// 		free(joined);
+// 		return ;
+// 	}
+// 	joined->status = get_status(first->status, second->status);
+// 	joined->next = next_token;
+// 	free(first->str);
+// 	free(second->str);
+// 	free(first);
+// 	free(second);
+// 	*cur = joined;
+// }
+
+void	join_consecutive_tokens(t_token **cur)
 {
 	t_token	*first;
 	t_token	*second;
-	t_token	*next;
+	t_token	*next_token;
 	t_token	*joined;
 
 	first = *cur;
 	second = first->next;
-	next = second->next;
-	if (!second)
-		return ;
+	next_token = second->next;
 	joined = malloc(sizeof(t_token));
 	if (!joined)
 		return ;
 	joined->str = ft_strjoin(first->str, second->str);
+	if (!joined->str)
+		return (free(joined));
 	joined->status = get_status(first->status, second->status);
-	joined->next = next;
+	joined->next = next_token;
+	joined->prev = first->prev;
+	if (first->prev)
+		first->prev->next = joined;
+	if (next_token)
+		next_token->prev = joined;
 	free(first->str);
 	free(second->str);
 	free(first);
@@ -57,7 +93,9 @@ void	fix_non_splitted_tokens(t_token **head)
 	while (cur && (*cur)->next)
 	{
 		if (is_mergeable((*cur)->status) && is_mergeable((*cur)->next->status))
-			join_conseqetive_tokens(cur);
+		{
+			join_consecutive_tokens(cur);
+		}
 		else
 			cur = &(*cur)->next;
 	}

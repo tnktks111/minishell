@@ -27,11 +27,21 @@ t_node_kind	get_node_kind(t_token *token)
 t_token	*find_third_lowest_precedence_operator(t_token *head, t_token *tail)
 {
 	t_token	*cur;
+	int		level;
 
+	if (!head || !tail)
+		return (NULL);
 	cur = tail;
+	level = 0;
 	while (cur && cur != head->prev)
 	{
-		if (cur->status == PIPE)
+		if (cur == head->prev)
+			break ;
+		if (cur->status == LEFT_PAREN)
+			level--;
+		else if (cur->status == RIGHT_PAREN)
+			level++;
+		else if (level == 0 && (cur->status == PIPE))
 			return (cur);
 		cur = cur->prev;
 	}
@@ -71,10 +81,14 @@ t_token	*find_logical_operator(t_token *head, t_token *tail)
 	t_token	*cur;
 	int		level;
 
+	if (!head || !tail)
+		return (NULL);
 	cur = tail;
 	level = 0;
 	while (cur && cur != head->prev)
 	{
+		if (cur == head->prev)
+			break ;
 		if (cur->status == LEFT_PAREN)
 			level++;
 		else if (cur->status == RIGHT_PAREN)

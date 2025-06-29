@@ -30,18 +30,21 @@ t_tree_node	*create_pipeline_node(t_tree_node *cur_root, t_token *head,
 	return (node);
 }
 
-t_tree_node	*create_pipeline_tree(t_token *head, t_token *tail)
+t_tree_node	*create_pipeline_tree(t_token *head, t_token *tail,
+		t_create_tree *tree)
 {
 	t_token		*op;
 	t_tree_node	*left;
 	t_tree_node	*right;
 
+	// t_token paren_tail
+	// check_for_previous_paren(head);
 	op = find_third_lowest_precedence_operator(head, tail);
 	if (!op)
 	{
 		return (create_simple_cmd_node(head, tail));
 	}
-	left = create_pipeline_tree(head, op->prev);
-	right = create_pipeline_tree(op->next, tail);
+	left = create_pipeline_tree(head, op->prev, tree);
+	right = create_pipeline_tree(op->next, tail, tree);
 	return (create_operator_node(op, left, right));
 }

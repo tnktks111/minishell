@@ -73,6 +73,8 @@ t_redirect	*extract_redirects(t_token *head, t_token *tail)
 	t_redirect	*redirect_head;
 	t_token		*cur;
 
+	if (!head || !tail)
+		return (NULL);
 	redirect_head = NULL;
 	cur = head;
 	while (cur && cur != tail->next && cur->status != PIPE)
@@ -102,3 +104,12 @@ t_tree_node	*create_simple_cmd_node(t_token *head, t_token *tail)
 	cmd_node->data.command.args = extract_args(head, tail);
 	return (cmd_node);
 }
+
+// t_redirect	*cur;
+// if (cmd_node->data.command.redirects)
+// 	cur = cmd_node->data.command.redirects;
+// if (cur)
+// {
+// 	printf("%s\n", cur->filename);
+// 	cur = cur->next;
+// }

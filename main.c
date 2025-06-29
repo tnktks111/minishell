@@ -49,7 +49,7 @@ int	main(int ac, char **av, char **envp)
 		{
 			// ft_putendl_fd("exit", STDERR_FILENO);
 			ft_putendl_fd("exit", STDOUT_FILENO);
-			free_all(&env);
+			free_table(&env);
 			break ;
 		}
 		if (input[0] && !contain_space_only(input))
@@ -58,7 +58,7 @@ int	main(int ac, char **av, char **envp)
 		{
 			head = lexer(input);
 			root = parser(head, &env);
-			print_tree(root);
+			// print_tree(root);
 			if (root)
 			{
 				env.root = root;
