@@ -41,16 +41,18 @@ bool	find_bang(t_token *head, t_token *tail)
 	t_token	*cur;
 	bool	result;
 
+	cur = NULL;
 	result = false;
-	cur = head;
-	while (cur && cur != tail->next)
+	if (head)
+		cur = head;
+	while (cur && tail && cur != tail->next)
 	{
 		cur = skip_splitable_forward(cur);
 		if (!cur)
 			break ;
-		if (cur->status == LEFT_PAREN)
+		if (cur && cur->status == LEFT_PAREN)
 			break ;
-		if (ft_strncmp(cur->str, "!", 2) == 0)
+		if (cur->str && ft_strncmp(cur->str, "!", 2) == 0)
 		{
 			result = !result;
 			cur->status = USED;

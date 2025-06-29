@@ -70,7 +70,8 @@ t_tree_node		*create_operator_node(t_token *op, t_tree_node *left,
 bool			find_bang(t_token *head, t_token *tail);
 t_tree_node		*create_pipeline_node(t_tree_node *pipe_root, t_token *head,
 					t_token *tail);
-t_tree_node		*create_pipeline_tree(t_token *head, t_token *tail);
+t_tree_node		*create_pipeline_tree(t_token *head, t_token *tail,
+					t_create_tree *tree);
 //
 t_token			*get_redir_tail(t_token *head, t_token *tail);
 t_tree_node		*create_subshell_node(t_tree_node *cur_root, t_token *head,
@@ -134,7 +135,7 @@ char			*expand_filename_wildcard(char *filename, char **files);
 char			**expand_cmd_line(t_list *cmdline);
 
 void			takeoff_quotes(char *str);
-int				expand_filename(t_tree_node *simple_cmd_node, t_env *env);
+int				expand_filename(t_redirect *simple_cmd_node, t_env *env);
 void			expand_cmd_args(t_tree_node *simple_cmd_node, t_env *env);
 int				expander(t_tree_node *pipeline_node, t_env *env);
 void			expand_ast(t_tree_node *node, t_env *env);
@@ -154,5 +155,6 @@ void			error_unexpected_token(char *token_str);
 bool			is_status_meta(t_status status);
 bool			is_status_splitable(t_status status);
 bool			is_status_paren(t_status status);
+bool			check_op_placement(t_token *head);
 
 #endif

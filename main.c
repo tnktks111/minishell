@@ -26,14 +26,13 @@ static bool	contain_space_only(char *s)
 
 int	main(int ac, char **av, char **envp)
 {
-	char *input;
-	t_env env;
-	t_token *head;
-	t_tree_node *root;
+	char		*input;
+	t_env		env;
+	t_token		*head;
+	t_tree_node	*root;
 
 	(void)ac;
 	(void)av;
-
 	rl_outstream = stderr;
 	setup_interactive_signal_handlers();
 	if (encode_envp(&env, envp) == EXIT_FAILURE)
@@ -59,7 +58,7 @@ int	main(int ac, char **av, char **envp)
 		{
 			head = lexer(input);
 			root = parser(head, &env);
-			print_tree(root);
+			// print_tree(root);
 			if (root)
 			{
 				env.root = root;

@@ -84,7 +84,7 @@ t_tree_node	*create_tree(t_token *head, t_token *tail)
 		return (parse_paren(&tree, head));
 	if (!op)
 	{
-		tree.pipeline_root = create_pipeline_tree(head, tail);
+		tree.pipeline_root = create_pipeline_tree(head, tail,&tree);
 		return (create_pipeline_node(tree.pipeline_root, head, tail));
 	}
 	tree.left = create_tree(head, op->prev);
