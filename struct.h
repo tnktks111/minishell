@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   struct.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sguruge <sguruge@student.42tokyo.jp>       #+#  +:+       +#+        */
+/*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-06-29 04:53:42 by sguruge           #+#    #+#             */
-/*   Updated: 2025-06-29 04:53:42 by sguruge          ###   ########.fr       */
+/*   Created: 2025/06/29 04:53:42 by sguruge           #+#    #+#             */
+/*   Updated: 2025/06/29 15:55:04 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ typedef enum e_status
 	USED
 }						t_status;
 
-/*分割すべき文字...space / tab / \n / '|' / '<''>''<<''>>' / '&&' '||' / ; /*/
 typedef struct s_token
 {
 	char				*str;
@@ -60,17 +59,17 @@ typedef struct s_token
 
 typedef enum e_redirect_kind
 {
-	REDIR_IN,     /* < */
-	REDIR_OUT,    /* > */
-	REDIR_APPEND, /* >> */
-	REDIR_HEREDOC /* << */
+	REDIR_IN,
+	REDIR_OUT,
+	REDIR_APPEND,
+	REDIR_HEREDOC
 }						t_redirect_kind;
 
 typedef enum e_node_kind
 {
-	NODE_PIPE, /* | */
-	NODE_AND,  /* '&&' */
-	NODE_OR,   /* '||' */
+	NODE_PIPE,
+	NODE_AND,
+	NODE_OR,
 	NODE_SIMPLE_COMMAND,
 	NODE_PIPE_LINE,
 	NODE_SUBSHELL,
@@ -91,14 +90,6 @@ typedef struct s_pipefd
 	int					read_fd;
 }						t_pipefd;
 
-/*
-> file1 2> file2 << END
-のときは、
-{REDIR_OUT, 1, file1, (2>file2のノード)}
-{REDIR_OUT, 2, file2, (<<ENDのノード)}
-{REDIR_HEREDOC, 0, END, (NULL)}
-となる
-*/
 typedef struct s_redirect
 {
 	t_redirect_kind		kind;
@@ -147,7 +138,7 @@ typedef struct s_env
 {
 	t_env_node			table[HASH_SIZE];
 	char				**envp;
-	int prev_exit_status; /* preserve $? */
+	int					prev_exit_status;
 	bool				is_child;
 	bool				envp_is_malloced;
 	size_t				entry_cnt;
