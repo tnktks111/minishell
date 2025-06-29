@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/11 12:49:45 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/24 17:13:44 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 18:14:20 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,5 +177,6 @@ t_token	*lexer(char *str)
 
 	head = tokenize_str(str);
 	fix_non_splitted_tokens(&head);
+	// print_tokens(head);
 	return (head);
 }

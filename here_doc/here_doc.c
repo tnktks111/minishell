@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:35:53 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 22:33:38 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 20:18:44 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,6 @@ char	*here_doc_handler(t_redirect *redirect, t_env *env)
 	is_expandable = true;
 	if (have_quotes(redirect->filename) == true)
 	{
-		printf("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n");
 		is_expandable = false;
 		remove_quotes(redirect);
 	}

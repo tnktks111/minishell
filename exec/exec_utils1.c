@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:39:49 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 16:59:49 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 18:02:42 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 int		wcoredump(int status);
 void	setup_pipefd(t_pipefd *fd, t_tree_node *node, bool is_start);
 int		status_handler(int status);
-void	execve_failure_handler(char *cmd_name, int errnum);
 /*check whether the given path is directory or not*/
 bool	is_directory(char *path);
 
