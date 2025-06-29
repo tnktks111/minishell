@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/29 15:52:29 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 17:47:02 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void			find_builtin(t_tree_node *cmd_node, t_env *env);
 void			find_path(t_tree_node *cmd_node, t_env *env);
 bool			is_builtin(char *s);
 bool			is_directory(char *path);
-void			find_path_failure_handler(char *cmd_name, int errnum);
+void			find_path_failure_handler(char *cmd_name, int errnum, t_env *env);
 void			execve_failure_handler(char *cmd_name, int errnum);
 
 /*here_doc*/

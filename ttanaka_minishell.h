@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 14:53:17 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/29 16:59:10 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 17:47:07 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@
 
 /// ぬけてた
 char			*join_path(char *dir, char *file);
-void			find_path_failure_handler(char *cmd_name, int errnum);
+void			find_path_failure_handler(char *cmd_name, int errnum,
+					t_env *env);
 /// 関数
 
 unsigned char	builtin_cd(t_tree_node *cmd_node, t_env *env);
@@ -36,3 +37,4 @@ int				here_doc_expander(char **s, t_env *env);
 
 void			free_int_matrix(int **matrix);
 void			free_for_exit(t_env *env, unsigned char exit_status);
+unsigned char	free_for_exec_ast(t_env *env);

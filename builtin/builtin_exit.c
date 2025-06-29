@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 10:40:08 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/29 17:00:35 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 17:35:39 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,5 @@ unsigned char	builtin_exit(t_tree_node *node, t_env *env)
 		return (EXIT_FAILURE);
 	}
 	free_for_exit(env, (unsigned char)exit_status);
+	return (EXIT_SUCCESS);
 }

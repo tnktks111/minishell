@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:39:36 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/29 17:27:59 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 17:33:41 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	find_path(t_tree_node *cmd_node, t_env *env)
 		try_one_prefix(prefix_table[i], cmd_node->data.command.args, env,
 			&last_errno);
 	free_splited_data(prefix_table);
-	find_path_failure_handler(cmd_node->data.command.args[0], last_errno);
+	find_path_failure_handler(cmd_node->data.command.args[0], last_errno, env);
 }
 
 bool	is_builtin(char *s)
