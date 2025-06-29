@@ -177,6 +177,6 @@ t_token	*lexer(char *str)
 
 	head = tokenize_str(str);
 	fix_non_splitted_tokens(&head);
-	// print_tokens(head);
+	print_tokens(head);
 	return (head);
 }

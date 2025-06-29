@@ -37,17 +37,22 @@ bool	check_paren_syntax_error(t_token *head)
 {
 	t_token	*cur;
 	int		level;
+	char	*temp;
 
 	level = 0;
 	cur = head;
 	if (!head)
 		return (false);
-	while (cur->next)
+	while (cur)
 	{
 		if (cur->status == LEFT_PAREN)
+		{
+			temp = cur->str;
 			level++;
+		}
 		else if (cur->status == RIGHT_PAREN)
 		{
+			temp = cur->str;
 			level--;
 			if (level < 0)
 				return (error_unexpected_token(cur->str), true);
@@ -55,9 +60,9 @@ bool	check_paren_syntax_error(t_token *head)
 		cur = cur->next;
 	}
 	if (level != 0)
-		return (error_unexpected_token(cur->str), true);
+		return (error_unexpected_token(temp), true);
 	else
-		return (check_closed_paren_synttax_error(head));
+		return (check_closed_paren_syntax_error(head));
 }
 
 bool	check_syntax_error(t_token *head)

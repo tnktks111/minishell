@@ -147,7 +147,7 @@ void			free_all(t_env *env);
 /*errors*/
 bool			check_syntax_error(t_token *head);
 bool			check_paren_syntax_error(t_token *head);
-bool			check_closed_paren_synttax_error(t_token *head);
+bool			check_closed_paren_syntax_error(t_token *head);
 void			handle_syntax_error(t_env *env);
 void			error_ambiguous_redirect(char *filename);
 void			error_unexpected_token(char *token_str);
