@@ -53,7 +53,7 @@ int	main(int ac, char **av, char **envp)
 		}
 		if (input[0] && !contain_space_only(input))
 			add_history(input);
-		if (is_valid_input(input))
+		if (is_valid_input(input, &env))
 		{
 			head = lexer(input);
 			root = parser(head, &env);

@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-bool	is_valid_input(char *input)
+bool	is_valid_input(char *input, t_env *env)
 {
 	size_t	i;
 	size_t	len;
@@ -22,7 +22,7 @@ bool	is_valid_input(char *input)
 	while (i < len)
 	{
 		if (!is_space(input[i]))
-			return (true);
+			return (check_for_unclosed_quotes(input, env));
 		i++;
 	}
 	return (false);
@@ -70,4 +70,38 @@ size_t	token_strlen(char *str)
 			&& is_two_word_splitable(str[len], str[len + 1])))
 		len++;
 	return (len);
+}
+
+bool	check_for_unclosed_quotes(char *input, t_env *env)
+{
+	bool	in_squote;
+	bool	in_dquote;
+	char	temp;
+	size_t	i;
+
+	in_squote = false;
+	in_dquote = false;
+	i = 0;
+	while (input[i])
+	{
+		if (!in_dquote && is_s_quote(input[i]))
+		{
+			temp = input[i];
+			in_squote = !in_squote;
+		}
+		if (!in_squote && is_d_quote(input[i]))
+		{
+			temp = input[i];
+			in_dquote = !in_dquote;
+		}
+		i++;
+	}
+	if (!in_dquote && !in_squote)
+		return (true);
+	else
+	{
+		handle_syntax_error(env);
+		error_unexpected_token(&temp);
+		return (false);
+	}
 }

@@ -49,7 +49,8 @@ void	warning_shlvl_too_high(int shlvl)
 
 void	error_heredoc_delimited_by_eof(char *delimiter)
 {
-	ft_putendl_fd("bash: warning: here-document delimited by end-of-file (wanted '",
+	ft_putendl_fd("bash: warning:", STDERR_FILENO);
+	ft_putendl_fd(" here-document delimited by end-of-file (wanted '",
 		STDERR_FILENO);
 	ft_putstr_fd(delimiter, STDERR_FILENO);
 	ft_putendl_fd("`)", STDERR_FILENO);

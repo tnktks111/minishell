@@ -32,6 +32,7 @@
 /* lexer prototype */
 
 // token_fix
+bool			check_for_unclosed_quotes(char *str, t_env *env);
 bool			is_mergeable(t_status status);
 t_status		get_status(t_status status1, t_status status2);
 void			fix_non_splitted_tokens(t_token **head);
@@ -59,7 +60,7 @@ size_t			append_splitable(t_token **head, char *str);
 size_t			append_two_word_splitable(t_token **head, char *str);
 t_token			*tokenize_str(char *str);
 t_token			*lexer(char *str);
-bool			is_valid_input(char *input);
+bool			is_valid_input(char *input, t_env *env);
 
 /* parser prototype */
 // && ||
@@ -145,8 +146,13 @@ void			free_all(t_env *env);
 
 /*errors*/
 bool			check_syntax_error(t_token *head);
+bool			check_paren_syntax_error(t_token *head);
+bool			check_closed_paren_synttax_error(t_token *head);
 void			handle_syntax_error(t_env *env);
 void			error_ambiguous_redirect(char *filename);
 void			error_unexpected_token(char *token_str);
+bool			is_status_meta(t_status status);
+bool			is_status_splitable(t_status status);
+bool			is_status_paren(t_status status);
 
 #endif

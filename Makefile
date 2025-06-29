@@ -12,11 +12,11 @@
 
 NAME = minishell
 
-CC = cc
-# CC = gcc
+# CC = cc
+CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror
-# CFLAGS = -g -fsanitize=address
+# CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -g -fsanitize=address
 
 RM = rm -f
 MKDIR = mkdir -p
@@ -41,6 +41,8 @@ SRCS = 	builtin/builtin_cd.c \
 		error/error_args.c \
 		error/error_general.c \
 		error/error_syntax.c \
+		error/error_syntax_utils1.c \
+		error/error_syntax_utils2.c \
 		exec/exec.c \
 		exec/exec_utils1.c \
 		exec/exec_utils2.c \

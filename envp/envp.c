@@ -89,6 +89,7 @@ int	encode_envp(t_env *env, char *envp[])
 
 	_init_table(env);
 	i = 0;
+	env->root = NULL;
 	env->prev_exit_status = 0;
 	have_underscore = false;
 	have_shlvl = false;
@@ -126,8 +127,7 @@ char	**decode_table(t_env *env, bool include_quote)
 			continue ;
 		while (curr)
 		{
-			res[j] = _concatnate_key_val(curr->key, curr->val,
-					include_quote);
+			res[j] = _concatnate_key_val(curr->key, curr->val, include_quote);
 			if (!res[j++])
 				return (free_allocated_data(res, j - 1));
 			curr = curr->next;
