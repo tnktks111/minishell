@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/29 18:02:57 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 19:13:36 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,6 @@ int	exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env, pid_t *lastpid)
 	return (cnt);
 }
 
-/*fork, pipeのエラーハンドリングあとで*/
 int	exec_pl_cmds(t_tree_node *node_pipeline, t_env *env)
 {
 	t_tree_node	*curr;
