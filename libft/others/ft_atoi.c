@@ -60,21 +60,21 @@ int	ft_atoi(const char *str)
 	return ((int)(sign * num));
 }
 
-int ft_atoi_for_shlvl(const char *str)
+int	ft_atoi_for_shlvl(const char *str)
 {
-	unsigned long num;
-	int sign;
+	unsigned long	num;
+	int				sign;
 
 	if (!str)
 		return (0);
 	num = 0;
 	sign = 1;
 	while (*str && ft_isspace(*str))
-	str++;
+		str++;
 	if (*str && (*str == '+' || *str == '-'))
 	{
 		if (*str++ == '-')
-		sign *= -1;
+			sign *= -1;
 	}
 	while (*str && ft_isdigit(*str))
 	{

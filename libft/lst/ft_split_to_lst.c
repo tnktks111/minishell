@@ -92,8 +92,8 @@ t_list	*ft_split_to_rev_lst(char const *s, char c)
 {
 	size_t	i;
 	size_t	len;
-    t_list *head;
-    t_list *new_node;
+	t_list	*head;
+	t_list	*new_node;
 
 	len = ft_count(s, c);
 	head = NULL;
@@ -103,9 +103,9 @@ t_list	*ft_split_to_rev_lst(char const *s, char c)
 		while (s[i] && s[i] == c)
 			i++;
 		new_node = word_splitter(s + i, c);
-        if (!new_node)
-            return (ft_lstclear(&head, free), NULL);
-        ft_lstadd_front(&head, new_node);
+		if (!new_node)
+			return (ft_lstclear(&head, free), NULL);
+		ft_lstadd_front(&head, new_node);
 		while (s[i] && s[i] != c)
 			i++;
 	}

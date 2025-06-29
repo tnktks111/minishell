@@ -12,23 +12,23 @@
 
 #include "../inc/libft.h"
 
-char *ft_concatenate_strarr(char **words)
+char	*ft_concatenate_strarr(char **words)
 {
-	size_t i;
-	size_t len;
-	char *res;
-	char *p_dst;
+	size_t	i;
+	size_t	len;
+	char	*res;
+	char	*p_dst;
 
 	i = 0;
 	len = 0;
-	while(words[i])
+	while (words[i])
 		len += ft_strlen(words[i++]);
 	res = (char *)malloc(sizeof(char) * (len + 1));
 	if (!res)
 		return (NULL);
 	i = 0;
 	p_dst = res;
-	while(words[i])
+	while (words[i])
 	{
 		ft_strcpy(p_dst, words[i]);
 		p_dst += ft_strlen(words[i]);
