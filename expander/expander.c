@@ -61,8 +61,7 @@ int	expand_filename(t_tree_node *simple_cmd_node, t_env *env)
 			if (!expanded_filename)
 				return (EXIT_FAILURE);
 		}
-		if (temp
-			&& simple_cmd_node->data.command.redirects->kind != REDIR_HEREDOC)
+		if (simple_cmd_node->data.command.redirects->kind != REDIR_HEREDOC)
 			takeoff_quotes(temp);
 		simple_cmd_node->data.command.redirects->filename = temp;
 	}
@@ -92,9 +91,13 @@ void	expand_cmd_args(t_tree_node *simple_cmd_node, t_env *env)
 
 int	expander(t_tree_node *simple_cmd_node, t_env *env)
 {
+	int	res_status;
+
 	if (simple_cmd_node->data.command.redirects)
 	{
-		return (expand_filename(simple_cmd_node, env));
+		res_status = expand_filename(simple_cmd_node, env);
+		if (res_status == EXIT_FAILURE)
+			return (EXIT_FAILURE);
 	}
 	if (simple_cmd_node->data.command.args[0])
 	{
