@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_syntax_utils1.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sguruge <sguruge@student.42tokyo.jp>       #+#  +:+       +#+        */
+/*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-06-29 06:05:37 by sguruge           #+#    #+#             */
-/*   Updated: 2025-06-29 06:05:37 by sguruge          ###   ########.fr       */
+/*   Created: 2025/06/29 06:05:37 by sguruge           #+#    #+#             */
+/*   Updated: 2025/06/30 18:34:13 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

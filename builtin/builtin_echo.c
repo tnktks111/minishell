@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 10:43:55 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 17:53:25 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 18:30:07 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,3 @@ unsigned char	builtin_echo(t_tree_node *node, t_env *env)
 		ft_putstr_fd("\n", STDOUT_FILENO);
 	return (EXIT_SUCCESS);
 }
-

@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 20:28:23 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 19:29:22 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 20:43:16 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ char	*shlvl_handler(char *val)
 	}
 	free(val);
 	val = ft_itoa(shlvl);
+	if (!val)
+		return (ft_puterr_malloc());
 	return (val);
 }
 

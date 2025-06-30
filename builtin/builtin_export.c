@@ -6,18 +6,19 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 10:42:50 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 18:18:47 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 19:40:07 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int		_is_valid_export_key(char *s);
-unsigned char	builtin_export(t_tree_node *node, t_env *env);
+static int				_is_valid_export_key(char *s);
+static unsigned char	_builtin_export_helper(char *arg, t_env *env);
+unsigned char			builtin_export(t_tree_node *node, t_env *env);
 
 static int	_is_valid_export_key(char *s)
 {
-	if (ft_isdigit(*s) || *s == '=')
+	if (ft_isdigit(*s) || *s == '=' || *s == '+')
 		return (false);
 	while (*s)
 	{
@@ -37,11 +38,11 @@ static int	_is_valid_export_key(char *s)
 	return (1);
 }
 
-static unsigned char _builtin_export_helper(char *arg, t_env *env)
+static unsigned char	_builtin_export_helper(char *arg, t_env *env)
 {
-	char *key;
-	char *val;
-	int code;
+	char	*key;
+	char	*val;
+	int		code;
 
 	code = _is_valid_export_key(arg);
 	if (!code)

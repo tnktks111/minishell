@@ -6,20 +6,20 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 15:35:15 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/29 20:29:32 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 18:32:04 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int		find_cdpath(char *dirname, t_env *env, bool *find_success);
-static int		edge_case_handler(t_tree_node *cmd_node, t_env *env,
+static int		_find_cdpath(char *dirname, t_env *env, bool *find_success);
+static int		_edge_case_handler(t_tree_node *cmd_node, t_env *env,
 					bool *print_path, char **dirname);
-static char		*decide_dirname(t_tree_node *cmd_node, t_env *env,
+static char		*_decide_dirname(t_tree_node *cmd_node, t_env *env,
 					bool *print_path, bool *find_success);
 unsigned char	builtin_cd(t_tree_node *cmd_node, t_env *env);
 
-static int	find_cdpath(char *dirname, t_env *env, bool *find_success)
+static int	_find_cdpath(char *dirname, t_env *env, bool *find_success)
 {
 	char	*cdpath;
 	char	**cdpath_arr;
@@ -48,7 +48,7 @@ static int	find_cdpath(char *dirname, t_env *env, bool *find_success)
 	return (1);
 }
 
-static int	edge_case_handler(t_tree_node *cmd_node, t_env *env,
+static int	_edge_case_handler(t_tree_node *cmd_node, t_env *env,
 		bool *print_path, char **dirname)
 {
 	static const char	*target[3] = {"HOME", NULL, "OLDPWD"};
@@ -72,13 +72,13 @@ static int	edge_case_handler(t_tree_node *cmd_node, t_env *env,
 	else
 		*dirname = NULL;
 	if (!(*dirname) || !(*dirname)[0])
-		return (free(*dirname), *dirname = NULL, builtin_error("cd", NULL, (char *)errmsg[code]),
-			2);
+		return (free(*dirname), *dirname = NULL, builtin_error("cd", NULL,
+				(char *)errmsg[code]), 2);
 	return (0);
 }
 
-static char	*decide_dirname(t_tree_node *cmd_node, t_env *env, bool *print_path,
-		bool *find_success)
+static char	*_decide_dirname(t_tree_node *cmd_node, t_env *env,
+		bool *print_path, bool *find_success)
 {
 	char	cwd[PATH_MAX];
 	char	*dirname;
@@ -87,13 +87,13 @@ static char	*decide_dirname(t_tree_node *cmd_node, t_env *env, bool *print_path,
 
 	if (!getcwd(cwd, PATH_MAX))
 		return (perror("getcwd(): "), NULL);
-	code = edge_case_handler(cmd_node, env, print_path, &dirname);
+	code = _edge_case_handler(cmd_node, env, print_path, &dirname);
 	if (code == 1)
 	{
 		dirname = cmd_node->data.command.args[1];
 		if (absolute_pathname(dirname))
 		{
-			if (find_cdpath(dirname, env, find_success) != 1)
+			if (_find_cdpath(dirname, env, find_success) != 1)
 				return (NULL);
 		}
 		if (dirname[0] != '/')
@@ -115,7 +115,7 @@ unsigned char	builtin_cd(t_tree_node *cmd_node, t_env *env)
 
 	printpath = false;
 	find_success = false;
-	dirname = decide_dirname(cmd_node, env, &printpath, &find_success);
+	dirname = _decide_dirname(cmd_node, env, &printpath, &find_success);
 	if (!dirname)
 	{
 		if (find_success)
