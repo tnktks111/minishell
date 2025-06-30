@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/29 21:38:09 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 10:30:43 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int	exec_pl_cmds(t_tree_node *node_pipeline, t_env *env)
 	int			status;
 
 	expand_ast(node_pipeline, env);
-	print_tree(node_pipeline);
+	// print_tree(node_pipeline);
 	curr = node_pipeline->left;
 	cnt = 0;
 	fd.read_fd = STDIN_FILENO;

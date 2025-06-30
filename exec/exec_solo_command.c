@@ -6,48 +6,31 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/29 21:41:14 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 12:04:13 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static void				backup_stdin_out(int *stdin_out);
-static void				restore_stdin_out(int *stdin_out);
 static unsigned char	exec_solo_builtin(t_tree_node *cmd_node, t_env *env);
 static void				exec_child_process_of_solo_cmd(t_tree_node *cmd_node,
 							t_env *env);
 int						exec_solo_cmd(t_tree_node *curr, t_env *env);
 
-static void	backup_stdin_out(int *stdin_out)
-{
-	stdin_out[0] = dup(STDIN_FILENO);
-	if (stdin_out[0] == -1)
-	{
-		perror("dup :");
-		return ;
-	}
-	stdin_out[1] = dup(STDOUT_FILENO);
-	if (stdin_out[1] == -1)
-		perror("dup :");
-}
-
-static void	restore_stdin_out(int *stdin_out)
-{
-	dup2(stdin_out[0], STDIN_FILENO);
-	dup2(stdin_out[1], STDOUT_FILENO);
-}
-
 static unsigned char	exec_solo_builtin(t_tree_node *cmd_node, t_env *env)
 {
-	int				stdin_out[2];
+	int				saved_std_fds[3];
 	unsigned char	status;
-
-	backup_stdin_out(stdin_out);
-	if (exec_redirection(cmd_node->data.command.redirects) == EXIT_FAILURE)
+	
+	if (save_std_fds(saved_std_fds) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
+	if (exec_redirection(cmd_node->data.command.redirects) == EXIT_FAILURE)
+	{
+		restore_std_fds(saved_std_fds);
+		return (EXIT_FAILURE);
+	}
 	status = exec_builtin(cmd_node, env);
-	restore_stdin_out(stdin_out);
+	restore_std_fds(save_std_fds);
 	unlink_tmpfile(cmd_node);
 	return (status);
 }
@@ -57,7 +40,9 @@ static void	exec_child_process_of_solo_cmd(t_tree_node *cmd_node, t_env *env)
 	env->is_child = true;
 	setup_child_signal_handlers();
 	if (exec_redirection(cmd_node->data.command.redirects) == EXIT_FAILURE)
+	{
 		free_for_exit(env, EXIT_FAILURE);
+	}
 	if (cmd_node->kind == NODE_SUBSHELL)
 		exit(exec_ast(cmd_node, env));
 	if (!cmd_node->data.command.args)

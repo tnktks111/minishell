@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 14:33:04 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/29 15:49:59 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 10:40:35 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ char			*make_absolute(char *path);
 
 static void	unused_section_init(char **path_sections, int *unused_section)
 {
-	size_t	i;
-	size_t	j;
+	int	i;
+	int	j;
 
 	i = 0;
 	while (path_sections[i])

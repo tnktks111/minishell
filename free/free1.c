@@ -6,11 +6,11 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 15:03:28 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/29 17:08:43 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 12:02:51 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void	free_tree_node(t_tree_node *node);
 void	free_redirects(t_redirect *redirect);

@@ -6,11 +6,11 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 17:05:14 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/29 17:46:49 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 12:02:56 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void	free_all(t_env *env)
 {
