@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 10:30:43 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 19:15:38 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ int	exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env, pid_t *lastpid)
 			return (perror_string("pipe: "), EXIT_FAILURE);
 		if (prepare_here_doc(node, env) == EXIT_FAILURE)
 			return (env->prev_exit_status);
-		cnt++;
 		pid = fork();
 		if (pid == -1)
 			return (perror_string("fork: "), EXIT_FAILURE);
@@ -91,6 +90,7 @@ int	exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env, pid_t *lastpid)
 			setup_pipefd(fd, node, true);
 			exec_command_helper(node, env);
 		}
+		cnt++;
 		*lastpid = pid;
 		setup_pipefd(fd, node, false);
 		node = node->parent;
@@ -107,7 +107,6 @@ int	exec_pl_cmds(t_tree_node *node_pipeline, t_env *env)
 	int			status;
 
 	expand_ast(node_pipeline, env);
-	// print_tree(node_pipeline);
 	curr = node_pipeline->left;
 	cnt = 0;
 	fd.read_fd = STDIN_FILENO;
@@ -148,7 +147,7 @@ void	exec_command_helper(t_tree_node *node, t_env *env)
 			free_for_exit(env, 127);
 		}
 		find_builtin(cmd_node, env);
-		find_path(cmd_node, env);
+		find_path(cmd_node->data.command.args, env);
 		execve(args[0], args, env->envp);
 		execve_failure_handler(args[0], errno, env);
 	}

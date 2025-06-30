@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:34:15 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 17:25:55 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 18:34:52 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int	judge_type(char c, bool *in_squote, bool *in_d_quote);
 static char	*gen_quote_removed_str(char *limiter, int *is_removable,
 				size_t len);
 static int	*gen_is_removable(char *limiter, size_t *size);
-int		remove_quotes(t_redirect *redirect);
+int			remove_quotes(t_redirect *redirect);
 
 bool	have_quotes(char *limiter)
 {
@@ -102,7 +102,9 @@ static int	*gen_is_removable(char *limiter, size_t *size)
 	return (is_removable);
 }
 
-/*Each helper func("gen_is_removable(), gen_quote_removed_str") returned malloced data when success, otherwise NULL with error msg.*/
+/*Each helper func("gen_is_removable(),
+	gen_quote_removed_str") returned malloced data when success,
+	otherwise NULL with error msg.*/
 int	remove_quotes(t_redirect *redirect)
 {
 	char	*limiter;

@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 20:34:11 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 17:42:43 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 18:33:16 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,8 @@ int	ft_set_underscore(t_tree_node *cmd_node, t_env *env)
 	i = 0;
 	while (args[i + 1])
 		i++;
-	if (ft_add_key_val_pair(ft_strdup("_"), ft_strdup(args[i]), env) == EXIT_FAILURE)
+	if (ft_add_key_val_pair(ft_strdup("_"), ft_strdup(args[i]),
+			env) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }

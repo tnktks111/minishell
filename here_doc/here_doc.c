@@ -6,13 +6,18 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:35:53 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 18:19:23 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 18:28:05 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 int			prepare_here_doc(t_tree_node *node, t_env *env);
+static char	*_here_doc_fork_error_handler(t_env *env);
+static void	_exec_here_doc_child_process(t_redirect *redirect, int fd,
+				bool is_expandable, t_env *env);
+static char	*_exec_here_doc_parent_process(char *tmpfile, int *status, int fd,
+				t_env *env);
 char		*here_doc_handler(t_redirect *redirect, t_env *env);
 
 int	prepare_here_doc(t_tree_node *node, t_env *env)
@@ -100,7 +105,8 @@ static char	*_exec_here_doc_parent_process(char *tmpfile, int *status, int fd,
 	return (tmpfile);
 }
 
-/*Error msgs are collectly handled in remove_quotes(), shmktmpfd(), and _here_doc_fork_error_handler.*/
+/*Error msgs are collectly handled in remove_quotes(), shmktmpfd(),
+	and _here_doc_fork_error_handler.*/
 char	*here_doc_handler(t_redirect *redirect, t_env *env)
 {
 	int		fd;

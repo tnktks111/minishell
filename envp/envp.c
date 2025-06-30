@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 20:28:23 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/29 17:22:53 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 19:29:22 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,9 +115,9 @@ char	**decode_table(t_env *env, bool include_quote)
 	size_t		j;
 	t_env_node	*curr;
 
-	res = (char **)calloc(env->entry_cnt + 1, sizeof(char *));
+	res = (char **)ft_calloc(env->entry_cnt + 1, sizeof(char *));
 	if (!res)
-		return (NULL);
+		return (ft_puterr_malloc());
 	i = 0;
 	j = 0;
 	while (i < HASH_SIZE)
@@ -127,9 +127,9 @@ char	**decode_table(t_env *env, bool include_quote)
 			continue ;
 		while (curr)
 		{
-			res[j] = _concatnate_key_val(curr->key, curr->val, include_quote);
+			res[j] = _concatenate_key_val(curr->key, curr->val, include_quote);
 			if (!res[j++])
-				return (free_allocated_data(res, j - 1));
+				return (free_allocated_data(res, j - 1), ft_puterr_malloc());
 			curr = curr->next;
 		}
 	}

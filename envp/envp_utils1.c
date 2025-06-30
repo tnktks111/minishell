@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 20:27:04 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/29 17:15:25 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 19:26:09 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char	*extract_key(char *s);
 char	*extract_val(char *s);
 char	*extract_key_when_additional(char *s);
 char	*extract_val_when_additional(char *s, char *key, t_env *env);
-char	*_concatnate_key_val(char *key, char *val, bool have_quote);
+char	*_concatenate_key_val(char *key, char *val, bool have_quote);
 
 char	*extract_key(char *s)
 {
@@ -85,7 +85,7 @@ char	*extract_val_when_additional(char *s, char *key, t_env *env)
 	return (res);
 }
 
-char	*_concatnate_key_val(char *key, char *val, bool have_quote)
+char	*_concatenate_key_val(char *key, char *val, bool have_quote)
 {
 	char	*tmp;
 	char	*tmp2;

@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 17:50:17 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 19:13:36 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static void	exec_child_process_of_solo_cmd(t_tree_node *cmd_node, t_env *env)
 		free_for_exit(env, 127);
 	}
 	if (!ft_strchr(cmd_node->data.command.args[0], '/'))
-		find_path(cmd_node, env);
+		find_path(cmd_node->data.command.args, env);
 	execve(cmd_node->data.command.args[0], cmd_node->data.command.args,
 		env->envp);
 	execve_failure_handler(cmd_node->data.command.args[0], errno, env);
