@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 20:35:45 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 14:19:39 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 17:32:05 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ static char	**ft_env_split(char const *s)
 	len = ft_env_count(s);
 	words = (char **)malloc(sizeof(char *) * (len + 1));
 	if (!words)
-		return (ft_puterr_malloc());
+		return (NULL);
 	words[len] = NULL;
 	i = 0;
 	j = 0;
@@ -100,7 +100,7 @@ static char	**ft_env_split(char const *s)
 		if (!words[i])
 		{
 			free_allocated_data(words, i);
-			return (ft_puterr_malloc());
+			return (NULL);
 		}
 		j += ft_strlen(words[i++]);
 	}
@@ -117,7 +117,7 @@ char	*here_doc_expander(char *s, t_env *env)
 	tokens = ft_env_split(s);
 	free(s);
 	if (!tokens)
-		return (NULL);
+		return (ft_puterr_malloc());
 	i = 0;
 	while (tokens[i])
 	{

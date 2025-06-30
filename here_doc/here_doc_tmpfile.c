@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 20:45:34 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 14:20:08 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 17:28:32 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ int	sh_mktmpfd(char **file_path_ptr)
 	}
 	if (fd < 0)
 	{
-		perror("open");
+		perror("minishell: open");
 		free(file_path);
 		return (-1);
 	}

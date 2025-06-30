@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 15:43:37 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 10:41:15 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 17:56:37 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,18 +24,15 @@ int	bindpwd(t_env *env)
 
 	if (!getcwd(tmppwd, PATH_MAX))
 	{
-		perror("getcwd(): ");
+		perror_string("getcwd()");
 		return (2);
 	}
 	pwd = ft_strdup(tmppwd);
-	if (!pwd)
-	{
-		perror("malloc(): ");
-		return (2);
-	}
 	oldpwd = ft_search("PWD", env);
-	ft_add_key_val_pair(ft_strdup("OLDPWD"), oldpwd, env);
-	ft_add_key_val_pair(ft_strdup("PWD"), pwd, env);
+	if (ft_add_key_val_pair(ft_strdup("OLDPWD"), oldpwd, env) == EXIT_FAILURE)
+		return (2);
+	if (ft_add_key_val_pair(ft_strdup("PWD"), pwd, env) == EXIT_FAILURE)
+		return (2);
 	return (0);
 }
 

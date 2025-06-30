@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 20:34:11 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 10:36:17 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 17:42:43 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,10 @@ int	ft_add_key_val_pair(char *key, char *val, t_env *env)
 	t_env_node	*curr;
 
 	if (!key || !val)
+	{
+		ft_puterr_malloc();
 		return (free(key), free(val), EXIT_FAILURE);
+	}
 	curr = &(env->table[_hash_fnv1a(key) % HASH_SIZE]);
 	if (curr->is_empty == true)
 		return (_set_key_val(key, val, curr, env));
@@ -53,24 +56,24 @@ int	ft_add_key_val_pair(char *key, char *val, t_env *env)
 	}
 	curr->next = _create_env_node(key, val, env);
 	if (!curr->next)
+	{
+		ft_puterr_malloc();
 		return (free(key), free(val), EXIT_FAILURE);
+	}
 	return (EXIT_SUCCESS);
 }
 
 int	ft_set_underscore(t_tree_node *cmd_node, t_env *env)
 {
 	char	**args;
-	char	*last_arg;
 	size_t	i;
 
 	args = cmd_node->data.command.args;
 	i = 0;
 	while (args[i + 1])
 		i++;
-	last_arg = ft_strdup(args[i]);
-	if (!last_arg)
+	if (ft_add_key_val_pair(ft_strdup("_"), ft_strdup(args[i]), env) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
-	ft_add_key_val_pair(ft_strdup("_"), last_arg, env);
 	return (EXIT_SUCCESS);
 }
 

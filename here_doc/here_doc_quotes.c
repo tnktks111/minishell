@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:34:15 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 14:19:47 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 17:25:55 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ static int	*gen_is_removable(char *limiter, size_t *size)
 	return (is_removable);
 }
 
+/*Each helper func("gen_is_removable(), gen_quote_removed_str") returned malloced data when success, otherwise NULL with error msg.*/
 int	remove_quotes(t_redirect *redirect)
 {
 	char	*limiter;

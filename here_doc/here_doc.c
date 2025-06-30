@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:35:53 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 14:09:41 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 18:19:23 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	prepare_here_doc(t_tree_node *node, t_env *env)
 	return (EXIT_SUCCESS);
 }
 
-static char	*_here_doc_pipe_error_handler(t_env *env)
+static char	*_here_doc_fork_error_handler(t_env *env)
 {
 	perror("minishell: fork:");
 	env->prev_exit_status = EXIT_FAILURE;
@@ -66,7 +66,7 @@ static void	_exec_here_doc_child_process(t_redirect *redirect, int fd,
 		if (is_expandable)
 			s = here_doc_expander(s, env);
 		if (!s)
-			exit(1);
+			exit(EXIT_FAILURE);
 		ft_putendl_fd(s, fd);
 		free(s);
 		s = readline("> ");
@@ -82,9 +82,16 @@ static char	*_exec_here_doc_parent_process(char *tmpfile, int *status, int fd,
 	setup_parent_wait_signal_handlers();
 	wait(status);
 	setup_interactive_signal_handlers();
+	if (WIFEXITED(*status) && WEXITSTATUS(*status) == EXIT_FAILURE)
+	{
+		ft_putchar_fd('\n', STDERR_FILENO);
+		close(fd);
+		env->prev_exit_status = 1;
+		return (NULL);
+	}
 	if (WIFSIGNALED(*status) && WTERMSIG(*status) == SIGINT)
 	{
-		ft_putendl_fd("", STDERR_FILENO);
+		ft_putchar_fd('\n', STDERR_FILENO);
 		close(fd);
 		env->prev_exit_status = -1;
 		return (NULL);
@@ -93,6 +100,7 @@ static char	*_exec_here_doc_parent_process(char *tmpfile, int *status, int fd,
 	return (tmpfile);
 }
 
+/*Error msgs are collectly handled in remove_quotes(), shmktmpfd(), and _here_doc_fork_error_handler.*/
 char	*here_doc_handler(t_redirect *redirect, t_env *env)
 {
 	int		fd;
@@ -116,7 +124,7 @@ char	*here_doc_handler(t_redirect *redirect, t_env *env)
 	}
 	pid = fork();
 	if (pid == -1)
-		return (_here_doc_pipe_error_handler(env));
+		return (_here_doc_fork_error_handler(env));
 	if (pid == 0)
 		_exec_here_doc_child_process(redirect, fd, is_expandable, env);
 	return (_exec_here_doc_parent_process(tmpfile, &status, fd, env));
