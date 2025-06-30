@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/30 14:19:24 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 19:22:15 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char			*extract_key(char *s);
 char			*extract_val(char *s);
 char			*extract_key_when_additional(char *s);
 char			*extract_val_when_additional(char *s, char *key, t_env *env);
-char			*_concatnate_key_val(char *key, char *val, bool have_quote);
+char			*_concatenate_key_val(char *key, char *val, bool have_quote);
 void			display_env(t_env *env, bool print_declare);
 /*ハッシュテーブル初期化・生成・文字配列化*/
 void			_init_table(t_env *env);
@@ -81,12 +81,13 @@ void			setup_pipefd(t_pipefd *fd, t_tree_node *node, bool is_start);
 int				status_handler(int status);
 char			**get_path_prefix(t_env *env);
 void			find_builtin(t_tree_node *cmd_node, t_env *env);
-void			find_path(t_tree_node *cmd_node, t_env *env);
+void			find_path(char **args, t_env *env);
 bool			is_builtin(char *s);
 bool			is_directory(char *path);
-int		save_std_fds(int saved_std_fds[3]);
-void	restore_std_fds(int saved_fds[3]);
-void			find_path_failure_handler(char *cmd_name, int errnum, t_env *env);
+int				save_std_fds(int saved_std_fds[3]);
+void			restore_std_fds(int saved_fds[3]);
+void			find_path_failure_handler(char *cmd_name, int errnum,
+					t_env *env);
 void			execve_failure_handler(char *cmd_name, int errnum, t_env *env);
 
 /*here_doc*/
