@@ -36,7 +36,7 @@ t_token	*get_redir_tail(t_token *head, t_token *tail)
 	return (tail);
 }
 
-t_tree_node	*parse_paren(t_create_tree *tree, t_token *head)
+t_tree_node	*parse_paren(t_create_tree *tree, t_token *head, t_token *tail)
 {
 	t_token	*paren_tail;
 
@@ -46,8 +46,7 @@ t_tree_node	*parse_paren(t_create_tree *tree, t_token *head)
 		tree->pipeline_root = create_tree(head->next, paren_tail->prev);
 		tree->paratheneses_root = create_subshell_node(tree->pipeline_root,
 				head, paren_tail);
-		return (create_pipeline_node(tree->paratheneses_root, head,
-				paren_tail));
+		return (create_pipeline_node(tree->paratheneses_root, head, tail));
 	}
 	return (NULL);
 }

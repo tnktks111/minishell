@@ -72,24 +72,26 @@ t_tree_node	*create_operator_node(t_token *op, t_tree_node *left,
 
 t_tree_node	*create_tree(t_token *head, t_token *tail)
 {
-	t_token			*op;
 	t_create_tree	tree;
+	t_token			*and_or;
+	t_token			*pipe;
 
 	if (!head || !tail)
 		return (NULL);
 	head = skip_splitable_forward(head);
 	tail = skip_splitable_backward(tail);
-	op = find_logical_operator(head, tail);
-	if (!op && head && head->status == LEFT_PAREN)
-		return (parse_paren(&tree, head));
-	if (!op)
+	and_or = find_logical_operator(head, tail);
+	pipe = find_third_lowest_precedence_operator(head, tail);
+	if (!and_or && !pipe && head && head->status == LEFT_PAREN)
+		return (parse_paren(&tree, head, tail));
+	if (!and_or)
 	{
-		tree.pipeline_root = create_pipeline_tree(head, tail,&tree);
+		tree.pipeline_root = create_pipeline_tree(head, tail, &tree);
 		return (create_pipeline_node(tree.pipeline_root, head, tail));
 	}
-	tree.left = create_tree(head, op->prev);
-	tree.right = create_tree(op->next, tail);
-	return (create_operator_node(op, tree.left, tree.right));
+	tree.left = create_tree(head, and_or->prev);
+	tree.right = create_tree(and_or->next, tail);
+	return (create_operator_node(and_or, tree.left, tree.right));
 }
 
 t_tree_node	*parser(t_token *head, t_env *env)

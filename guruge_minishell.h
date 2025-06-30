@@ -68,7 +68,7 @@ t_tree_node		*create_operator_node(t_token *op, t_tree_node *left,
 					t_tree_node *right);
 // | "PIPELINE"
 bool			find_bang(t_token *head, t_token *tail);
-t_tree_node		*create_pipeline_node(t_tree_node *pipe_root, t_token *head,
+t_tree_node		*create_pipeline_node(t_tree_node *left, t_token *head,
 					t_token *tail);
 t_tree_node		*create_pipeline_tree(t_token *head, t_token *tail,
 					t_create_tree *tree);
@@ -86,7 +86,7 @@ void			append_redirects(t_redirect **head, t_token *redirect_token);
 t_redirect		*extract_redirects(t_token *head, t_token *tail);
 t_tree_node		*create_simple_cmd_node(t_token *head, t_token *tail);
 //()()
-t_tree_node		*parse_paren(t_create_tree *tree, t_token *head);
+t_tree_node		*parse_paren(t_create_tree *tree, t_token *head, t_token *tail);
 //
 t_tree_node		*create_tree(t_token *head, t_token *tail);
 // utils
