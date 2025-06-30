@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:51:33 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/29 14:26:55 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 13:54:40 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	*join_path(char *dir, char *file)
 
 	tmp = ft_strjoin(dir, "/");
 	if (!tmp)
-		return (NULL);
+		return (ft_puterr_malloc());
 	res = ft_strjoin(tmp, file);
 	free(tmp);
 	return (res);

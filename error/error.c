@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/14 15:22:41 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/29 14:34:49 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 14:24:11 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ void	warning_shlvl_too_high(int shlvl)
 
 void	error_heredoc_delimited_by_eof(char *delimiter)
 {
-	ft_putendl_fd("bash: warning:", STDERR_FILENO);
-	ft_putendl_fd(" here-document delimited by end-of-file (wanted '",
+	ft_putstr_fd("minishell: warning:", STDERR_FILENO);
+	ft_putstr_fd(" here-document delimited by end-of-file (wanted '",
 		STDERR_FILENO);
 	ft_putstr_fd(delimiter, STDERR_FILENO);
 	ft_putendl_fd("`)", STDERR_FILENO);

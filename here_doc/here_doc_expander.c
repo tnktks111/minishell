@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 20:35:45 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 22:49:25 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 14:19:39 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void		ft_env_count_loop(char const *s, size_t *cnt, bool *in_var);
 static size_t	ft_env_count(char const *s);
 static char		*env_word_splitter(char const *s);
 static char		**ft_env_split(char const *s);
-int				here_doc_expander(char **s, t_env *env);
+char			*here_doc_expander(char *s, t_env *env);
 
 static void	ft_env_count_loop(char const *s, size_t *cnt, bool *in_var)
 {
@@ -90,7 +90,7 @@ static char	**ft_env_split(char const *s)
 	len = ft_env_count(s);
 	words = (char **)malloc(sizeof(char *) * (len + 1));
 	if (!words)
-		return (NULL);
+		return (ft_puterr_malloc());
 	words[len] = NULL;
 	i = 0;
 	j = 0;
@@ -98,22 +98,26 @@ static char	**ft_env_split(char const *s)
 	{
 		words[i] = env_word_splitter(s + j);
 		if (!words[i])
-			return (free_allocated_data(words, i));
+		{
+			free_allocated_data(words, i);
+			return (ft_puterr_malloc());
+		}
 		j += ft_strlen(words[i++]);
 	}
 	return (words);
 }
 
-int	here_doc_expander(char **s, t_env *env)
+char	*here_doc_expander(char *s, t_env *env)
 {
 	char	*res;
 	char	**tokens;
 	char	*newtoken;
 	size_t	i;
 
-	tokens = ft_env_split(*s);
+	tokens = ft_env_split(s);
+	free(s);
 	if (!tokens)
-		return (EXIT_FAILURE);
+		return (NULL);
 	i = 0;
 	while (tokens[i])
 	{
@@ -126,9 +130,8 @@ int	here_doc_expander(char **s, t_env *env)
 		i++;
 	}
 	res = ft_concatenate_strarr(tokens);
+	free_splited_data(tokens);
 	if (!res)
-		return (free_splited_data(tokens), free(*s), EXIT_FAILURE);
-	free(*s);
-	*s = res;
-	return (free_splited_data(tokens), EXIT_SUCCESS);
+		return (ft_puterr_malloc());
+	return (res);
 }

@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:35:53 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/29 20:18:44 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 14:09:41 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,9 @@ static void	_exec_here_doc_child_process(t_redirect *redirect, int fd,
 			break ;
 		}
 		if (is_expandable)
-			here_doc_expander(&s, env);
+			s = here_doc_expander(s, env);
+		if (!s)
+			exit(1);
 		ft_putendl_fd(s, fd);
 		free(s);
 		s = readline("> ");
@@ -103,7 +105,8 @@ char	*here_doc_handler(t_redirect *redirect, t_env *env)
 	if (have_quotes(redirect->filename) == true)
 	{
 		is_expandable = false;
-		remove_quotes(redirect);
+		if (remove_quotes(redirect) == EXIT_FAILURE)
+			return (NULL);
 	}
 	fd = sh_mktmpfd(&tmpfile);
 	if (fd == -1)

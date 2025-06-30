@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:34:15 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 21:57:12 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 14:19:47 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int	judge_type(char c, bool *in_squote, bool *in_d_quote);
 static char	*gen_quote_removed_str(char *limiter, int *is_removable,
 				size_t len);
 static int	*gen_is_removable(char *limiter, size_t *size);
-void		remove_quotes(t_redirect *redirect);
+int		remove_quotes(t_redirect *redirect);
 
 bool	have_quotes(char *limiter)
 {
@@ -68,7 +68,7 @@ static char	*gen_quote_removed_str(char *limiter, int *is_removable, size_t len)
 
 	newlimiter = malloc(sizeof(char) * (len + 1));
 	if (!newlimiter)
-		return (NULL);
+		return (ft_puterr_malloc());
 	i = 0;
 	j = 0;
 	while (limiter[i])
@@ -90,7 +90,7 @@ static int	*gen_is_removable(char *limiter, size_t *size)
 
 	is_removable = (int *)malloc(sizeof(int) * ft_strlen(limiter));
 	if (!is_removable)
-		return (NULL);
+		return (ft_puterr_malloc());
 	in_squote = false;
 	in_dquote = false;
 	i = 0;
@@ -102,7 +102,7 @@ static int	*gen_is_removable(char *limiter, size_t *size)
 	return (is_removable);
 }
 
-void	remove_quotes(t_redirect *redirect)
+int	remove_quotes(t_redirect *redirect)
 {
 	char	*limiter;
 	int		*is_removable;
@@ -112,14 +112,15 @@ void	remove_quotes(t_redirect *redirect)
 	limiter = redirect->filename;
 	is_removable = gen_is_removable(limiter, &len);
 	if (!is_removable)
-		return ;
+		return (EXIT_FAILURE);
 	redirect->filename = gen_quote_removed_str(limiter, is_removable, len);
 	if (!redirect->filename)
 	{
 		free(is_removable);
 		free(limiter);
-		return ;
+		return (EXIT_FAILURE);
 	}
 	free(is_removable);
 	free(limiter);
+	return (EXIT_SUCCESS);
 }

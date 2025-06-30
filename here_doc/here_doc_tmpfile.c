@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 20:45:34 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 22:00:07 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 14:20:08 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,26 +79,13 @@ static char	*get_tmpdir(void)
 static char	*sh_mktmpname(void)
 {
 	char	*filepath;
-	char	*tmp;
 	char	buffer[RANDOM_SIZE + 1];
 	char	*tmpdir;
 
 	if (get_random_string(buffer) == EXIT_FAILURE)
 		return (NULL);
 	tmpdir = get_tmpdir();
-	tmp = ft_strjoin(tmpdir, "/");
-	if (!tmp)
-	{
-		perror("malloc :");
-		return (NULL);
-	}
-	filepath = ft_strjoin(tmp, buffer);
-	if (!filepath)
-	{
-		perror("malloc :");
-		return (free(tmp), NULL);
-	}
-	free(tmp);
+	filepath = join_path(tmpdir, buffer);
 	return (filepath);
 }
 
@@ -108,21 +95,20 @@ int	sh_mktmpfd(char **file_path_ptr)
 	int		fd;
 
 	file_path = sh_mktmpname();
+	if (!file_path)
+		return (-1);
 	fd = open(file_path, O_RDWR | O_CREAT | O_EXCL, 0644);
 	while (fd < 0 && errno == EEXIST)
 	{
 		free(file_path);
 		file_path = sh_mktmpname();
 		if (!file_path)
-		{
-			perror("malloc :");
 			return (-1);
-		}
 		fd = open(file_path, O_RDWR | O_CREAT | O_EXCL, 0644);
 	}
 	if (fd < 0)
 	{
-		perror("open :");
+		perror("open");
 		free(file_path);
 		return (-1);
 	}

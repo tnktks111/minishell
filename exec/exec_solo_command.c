@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 12:04:13 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 14:14:22 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static unsigned char	exec_solo_builtin(t_tree_node *cmd_node, t_env *env)
 		return (EXIT_FAILURE);
 	}
 	status = exec_builtin(cmd_node, env);
-	restore_std_fds(save_std_fds);
+	restore_std_fds(saved_std_fds);
 	unlink_tmpfile(cmd_node);
 	return (status);
 }
