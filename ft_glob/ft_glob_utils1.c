@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:51:33 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 13:54:40 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 23:06:15 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ t_wc_tree	**_gen_base_dir_file_array(char *base_dir, bool show_hidden_files)
 		{
 			children[cnt] = _create_wildcard_tree_node(base_dir, dp->d_name);
 			if (!children[cnt++])
-				return (NULL);
+				return (free_wc_allocated_data(children, cnt - 1), NULL);
 		}
 		dp = readdir(dir);
 	}
