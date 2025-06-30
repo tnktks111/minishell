@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 19:13:36 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 22:09:13 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,9 @@ static void	exec_child_process_of_solo_cmd(t_tree_node *cmd_node, t_env *env)
 		free_for_exit(env, EXIT_FAILURE);
 	if (cmd_node->kind == NODE_SUBSHELL)
 		exit(exec_ast(cmd_node, env));
-	if (!cmd_node->data.command.args)
+	if (!cmd_node->data.command.args || !cmd_node->data.command.args[0])
 		free_for_exit(env, 0);
-	if (!cmd_node->data.command.args[0] || !cmd_node->data.command.args[0][0])
+	if (!cmd_node->data.command.args[0][0])
 	{
 		ft_puterr_general(cmd_node->data.command.args[0], "command not found");
 		free_for_exit(env, 127);
@@ -68,8 +68,8 @@ int	exec_solo_cmd(t_tree_node *cmd_node, t_env *env)
 
 	if (prepare_here_doc(cmd_node, env) == EXIT_FAILURE)
 		return (env->prev_exit_status);
-	if (cmd_node->kind == NODE_SIMPLE_COMMAND && ft_set_underscore(cmd_node,
-			env) == EXIT_FAILURE)
+	if (cmd_node->kind == NODE_SIMPLE_COMMAND && cmd_node->data.command.args[0]
+		&& ft_set_underscore(cmd_node, env) == EXIT_FAILURE)
 		return (unlink_tmpfile(cmd_node), EXIT_FAILURE);
 	if (cmd_node->kind == NODE_SIMPLE_COMMAND && cmd_node->data.command.args
 		&& is_builtin(cmd_node->data.command.args[0]))
