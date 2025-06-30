@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/30 11:56:21 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 13:34:55 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
-
-extern int		g_is_in_heredoc;
 
 /*便利関数*/
 char			*extract_key(char *s);
