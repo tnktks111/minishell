@@ -14,7 +14,7 @@
 
 bool	is_status_meta(t_status status)
 {
-	if (status == REDIRECT || status == AND_OR || status == PIPE)
+	if (status == AND_OR || status == PIPE)
 		return (true);
 	else
 		return (false);

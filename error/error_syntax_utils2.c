@@ -20,6 +20,30 @@ bool	is_status_paren(t_status status)
 		return (false);
 }
 
+bool	check_cosecutive_paren_syntax_error(t_token *head)
+{
+	t_token	*cur;
+	t_token	*next;
+
+	cur = head;
+	while (cur)
+	{
+		if (cur->status == RIGHT_PAREN)
+		{
+			next = cur->next;
+			while (next && next->status == SPLITABLE)
+				next = next->next;
+			if (next && next->status == LEFT_PAREN)
+			{
+				error_unexpected_token(next->str);
+				return (true);
+			}
+		}
+		cur = cur->next;
+	}
+	return (false);
+}
+
 bool	check_closed_paren_syntax_error(t_token *head)
 {
 	t_token	*cur;
@@ -41,7 +65,7 @@ bool	check_closed_paren_syntax_error(t_token *head)
 		}
 		cur = cur->next;
 	}
-	return (false);
+	return (check_cosecutive_paren_syntax_error(head));
 }
 
 bool	check_syntax_error(t_token *head)

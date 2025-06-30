@@ -109,3 +109,19 @@ char	*expand_filename_wildcard(char *filename, char **files)
 		return (ft_strdup(filename));
 	return (result);
 }
+
+// char	*expand_filename_wildcard(char *filename, char **files)
+// {
+// 	char	**filename_args;
+// 	t_list	*file_list;
+// 	char	**result;
+
+// 	filename_args = malloc(sizeof(char *) * 2);
+// 	if (!filename_args)
+// 		return (NULL);
+// 	filename_args[0] = ft_strdup(filename);
+// 	filename_args[1] = NULL;
+// 	get_cmd_line_list(&file_list, filename_args);
+// 	result = expand_cmd_line(file_list);
+// 	return (result[0]);
+// }
