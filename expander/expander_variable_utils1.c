@@ -48,6 +48,7 @@ char	*create_expanded_str(char *str, char *val, char *variable, size_t i)
 	free(temp);
 	free(before);
 	free(after);
+	free(val);
 	return (expanded_str);
 }
 
@@ -70,7 +71,6 @@ char	*expand_individual_variable(char *str, t_env *env)
 		i++;
 	expanded_str = create_expanded_str(str, val, variable, i);
 	free(variable);
-	free(str);
 	return (expanded_str);
 }
 

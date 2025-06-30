@@ -41,8 +41,6 @@ bool	check_paren_syntax_error(t_token *head)
 
 	level = 0;
 	cur = head;
-	if (!head)
-		return (false);
 	while (cur)
 	{
 		if (cur->status == LEFT_PAREN)
@@ -61,8 +59,7 @@ bool	check_paren_syntax_error(t_token *head)
 	}
 	if (level != 0)
 		return (error_unexpected_token(temp), true);
-	else
-		return (check_closed_paren_syntax_error(head));
+	return (check_closed_paren_syntax_error(head));
 }
 
 bool	check_op_placement(t_token *head)
@@ -90,5 +87,5 @@ bool	check_op_placement(t_token *head)
 	}
 	if (prev_is_meta)
 		return (error_unexpected_token("newline"), true);
-	return (check_paren_syntax_error(head));
+	return (check_redirect_placement(head));
 }

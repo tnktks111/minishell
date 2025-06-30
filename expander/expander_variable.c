@@ -17,6 +17,7 @@ bool	check_variable_expand(char *str)
 	bool	in_squote;
 	bool	in_dquote;
 	size_t	i;
+	size_t	j;
 
 	in_squote = false;
 	in_dquote = false;
@@ -27,9 +28,9 @@ bool	check_variable_expand(char *str)
 			in_squote = !in_squote;
 		if (!in_squote && is_d_quote(str[i]))
 			in_dquote = !in_dquote;
-		if (!in_squote && str[i] == '$' && str[i + 1] && (ft_isalnum(str[i + 1])
-				|| str[i + 1] == '_' || str[i + 1] == '?' || is_s_quote(str[i
-					+ 1])))
+		j = i + 1;
+		if (!in_squote && str[i] == '$' && str[i + 1] && (ft_isalnum(str[j])
+				|| str[j] == '_' || str[j] == '?' || is_s_quote(str[j])))
 			return (true);
 		i++;
 	}

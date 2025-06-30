@@ -78,3 +78,32 @@ bool	check_syntax_error(t_token *head)
 		return (error_unexpected_token(cur->str), true);
 	return (check_op_placement(head));
 }
+
+bool	check_redirect_placement(t_token *head)
+{
+	bool	prev_is_redir;
+	t_token	*cur;
+
+	prev_is_redir = false;
+	cur = head;
+	if (!cur)
+		return (false);
+	while (cur)
+	{
+		if (cur->status == REDIRECT)
+		{
+			if (prev_is_redir)
+				return (error_unexpected_token(cur->str), true);
+			prev_is_redir = true;
+		}
+		if (is_status_meta(cur->status) || is_status_paren(cur->status))
+			if (prev_is_redir)
+				return (error_unexpected_token(cur->str), true);
+		if (!is_status_splitable(cur->status) && (cur->status != REDIRECT))
+			prev_is_redir = false;
+		cur = cur->next;
+	}
+	if (prev_is_redir)
+		return (error_unexpected_token("newline"), true);
+	return (check_paren_syntax_error(head));
+}

@@ -157,5 +157,6 @@ bool			is_status_meta(t_status status);
 bool			is_status_splitable(t_status status);
 bool			is_status_paren(t_status status);
 bool			check_op_placement(t_token *head);
+bool			check_redirect_placement(t_token *head);
 
 #endif

@@ -79,6 +79,7 @@ void	expand_cmd_args(t_tree_node *simple_cmd_node, t_env *env)
 	wildcard_expanded = NULL;
 	cmd_args = simple_cmd_node->data.command.args;
 	variable_expanded = expand_cmd_variable(cmd_args, env);
+	free_splited_data(cmd_args);
 	if (variable_expanded[0])
 	{
 		wildcard_expanded = expand_cmd_wildcard(variable_expanded);
@@ -92,10 +93,8 @@ void	expand_cmd_args(t_tree_node *simple_cmd_node, t_env *env)
 		simple_cmd_node->data.command.args = wildcard_expanded;
 	}
 	else
-	{
-		free_splited_data(variable_expanded);
 		simple_cmd_node->data.command.args = ft_calloc(1, sizeof(char *));
-	}
+	free_splited_data(variable_expanded);
 }
 
 int	expander(t_tree_node *simple_cmd_node, t_env *env)

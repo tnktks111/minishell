@@ -34,7 +34,7 @@ char	**extract_args(t_token *head, t_token *tail)
 	while (cur && cur != tail->next && cur->status != PIPE)
 	{
 		if (cur->status != SPLITABLE && cur->status != USED)
-			cmd_args[count++] = ft_strdup_len(cur->str, ft_strlen(cur->str));
+			cmd_args[count++] = ft_strdup(cur->str);
 		cur = cur->next;
 	}
 	cmd_args[count] = NULL;

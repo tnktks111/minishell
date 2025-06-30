@@ -98,10 +98,5 @@ bool	check_for_unclosed_quotes(char *input, t_env *env)
 	}
 	if (!in_dquote && !in_squote)
 		return (true);
-	else
-	{
-		handle_syntax_error(env);
-		error_unexpected_token(&temp);
-		return (false);
-	}
+	return (handle_syntax_error(env), error_unexpected_token(&temp), false);
 }

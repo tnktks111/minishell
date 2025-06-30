@@ -104,6 +104,8 @@ void	free_tree_node(t_tree_node *node)
 	{
 		if (node->data.command.redirects)
 			free_redirects(node->data.command.redirects);
+		if (node->data.command.args)
+			free_splited_data(node->data.command.args);
 	}
 	free(node);
 }
