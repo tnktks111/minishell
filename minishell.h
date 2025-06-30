@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/30 19:22:15 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 01:43:33 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void			ft_remove_key(char *key, t_env *env);
 void			free_table(t_env *env);
 
 /*execution*/
-unsigned char	exec_ast(t_tree_node *root, t_env *env);
+unsigned char	exec_ast(t_tree_node *root, t_env *env, bool is_subshell);
 int				exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env,
 					pid_t *lastpid);
 int				exec_pipeline(t_tree_node *root, t_env *env);
@@ -133,5 +133,6 @@ void			expand_ast(t_tree_node *node, t_env *env);
 
 void			print_tree(t_tree_node *node);
 void			print_tokens(t_token *head);
+void			**free_wc_allocated_data(t_wc_tree **datas, size_t allocated);
 
 #endif

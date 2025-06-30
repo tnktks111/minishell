@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 16:41:09 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/29 21:19:30 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 01:32:57 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int	main(int ac, char **av, char **envp)
 		return (0);
 	}
 	env.envp_is_malloced = false;
+	env.is_child = false;
 	while (1)
 	{
 		input = readline(BLUE "minishell$ " RESET);
@@ -62,7 +63,7 @@ int	main(int ac, char **av, char **envp)
 			if (root)
 			{
 				env.root = root;
-				exec_ast(root, &env);
+				exec_ast(root, &env, false);
 			}
 		}
 		free(input);
