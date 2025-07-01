@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 int			prepare_here_doc(t_tree_node *node, t_env *env);
 static char	*_here_doc_fork_error_handler(t_env *env);

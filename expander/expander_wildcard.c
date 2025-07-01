@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 bool	check_wildcard_expand(char *str)
 {

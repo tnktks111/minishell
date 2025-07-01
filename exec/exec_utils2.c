@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 /*search "PATH" in env and return prefix table*/
 char		**get_path_prefix(t_env *env);

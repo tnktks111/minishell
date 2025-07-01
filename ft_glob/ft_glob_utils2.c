@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 bool			is_hidden(char *filename);
 char			*create_n_slashes(size_t n);

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 static int				_is_valid_export_key(char *s);
 static unsigned char	_builtin_export_helper(char *arg, t_env *env);

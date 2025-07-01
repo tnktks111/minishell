@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 void	free_int_matrix(int **matrix);
 void	destroy_entire_tree_recursive(t_wc_tree *root);

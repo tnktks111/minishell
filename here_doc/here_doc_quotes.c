@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 bool		have_quotes(char *limiter);
 static int	judge_type(char c, bool *in_squote, bool *in_d_quote);

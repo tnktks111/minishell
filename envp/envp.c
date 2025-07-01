@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 char	*ft_search(char *key, t_env *env);
 int		encode_envp(t_env *env, char *envp[]);

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../inc/minishell.h"
 
 unsigned char	exec_ast(t_tree_node *root, t_env *env);
 int				exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env,
@@ -128,11 +128,11 @@ int	exec_pl_cmds(t_tree_node *node_pipeline, t_env *env)
 
 void	exec_command_helper(t_tree_node *node, t_env *env)
 {
-	char		**args;
+	char	**args;
 
 	env->is_child = true;
 	if (node->right)
-		node = node->right;		
+		node = node->right;
 	if (exec_redirection(node->data.command.redirects) == EXIT_FAILURE)
 		free_for_exit(env, EXIT_FAILURE);
 	if (node->kind == NODE_SIMPLE_COMMAND)

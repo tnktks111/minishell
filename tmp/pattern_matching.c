@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../inc/minishell.h"
 
 /*expansionの処理次第で調整必要*/
 void	build_wildcard_flag(int *is_wildcard, char *pattern, size_t len)

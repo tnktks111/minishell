@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 static bool	is_valid_option(char *s);
 unsigned char	builtin_unset(t_tree_node *node, t_env *env);

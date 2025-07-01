@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../inc/minishell.h"
 
 static void		ft_env_count_loop(char const *s, size_t *cnt, bool *in_var);
 static size_t	ft_env_count(char const *s);

@@ -51,12 +51,12 @@ SRCS = 	builtin/builtin_cd.c \
 		exec/exec_builtin.c \
 		exec/exec_solo_command.c \
 		exec/exec_redirection.c \
+		exec/signal.c \
 		expander/expander.c \
 		expander/expander_wildcard.c \
 		expander/expander_wildcard_utils1.c \
 		expander/expander_variable.c \
 		expander/expander_variable_utils1.c \
-		file_expander.c \
 		free/free1.c \
 		free/free2.c \
 		free/free_all.c \
@@ -71,8 +71,6 @@ SRCS = 	builtin/builtin_cd.c \
 		lexer/lexer_utils1.c \
 		lexer/lexer_utils2.c \
 		lexer/lexer_token_fixing.c \
-		main.c \
-		signal.c \
 		parser/parser.c \
 		parser/parser_simple_command.c \
 		parser/parser_utils1.c \
@@ -88,7 +86,9 @@ SRCS = 	builtin/builtin_cd.c \
 		ft_glob/ft_glob_utils3.c \
 		ft_glob/matching.c \
 		get_next_line/get_next_line.c \
-		get_next_line/get_next_line_utils.c
+		get_next_line/get_next_line_utils.c \
+		tmp/file_expander.c \
+		main.c 
 
 OBJS = $(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS))
 

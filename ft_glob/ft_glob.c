@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 int			_set_child_of_wc_tree_node(t_wc_tree *node, bool show_hidden_files);
 static int	_build_wc_tree_helper(t_wc_tree *node, t_matching_info *info);

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 bool		judge_contain_tail_slash(char *pattern);
 char		*join_path(char *dir, char *file);

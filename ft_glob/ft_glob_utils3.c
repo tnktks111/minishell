@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 t_wildcard_type	*create_type_arr(char *pattern);
 bool			is_valid_pattern_chr(t_wildcard_type type);

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 unsigned int	_hash_fnv1a(char *str);
 void			_init_table(t_env *env);

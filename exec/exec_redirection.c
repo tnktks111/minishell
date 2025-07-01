@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 static int	redir_flag_builder(t_redirect_kind kind);
 int			exec_redirection(t_redirect *redirect);

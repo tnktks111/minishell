@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../inc/minishell.h"
 
 static int		_find_cdpath(char *dirname, t_env *env, bool *find_success);
 static int		_edge_case_handler(t_tree_node *cmd_node, t_env *env,

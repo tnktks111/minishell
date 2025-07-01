@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 int		bindpwd(t_env *env);
 int		absolute_pathname(const char *string);

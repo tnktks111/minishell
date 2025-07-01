@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 static void		unused_section_init(char **path_sections, int *unused_section);
 static size_t	cnt_abs_path_len(char **path_sections, int *unused_section);

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 void	ft_int_array_swap(int *a, int *b, size_t size);
 void	ft_init_int_array(int *arr, size_t size);

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 t_redirect_kind	get_redirect_kind(t_token *redirect_token)
 {

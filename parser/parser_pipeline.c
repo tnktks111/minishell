@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 t_tree_node	*create_pipeline_node(t_tree_node *left, t_token *head,
 		t_token *tail)

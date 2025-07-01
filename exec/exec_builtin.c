@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 unsigned char	exec_builtin(t_tree_node *node, t_env *env, int *saved_std_fds)
 {

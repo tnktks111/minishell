@@ -16,7 +16,7 @@
 # define _POSIX_C_SOURCE 200809L
 
 # include "guruge_minishell.h"
-# include "libft/inc/libft.h"
+# include "../libft/inc/libft.h"
 # include "struct.h"
 # include "ttanaka_minishell.h"
 # include "wildcard.h"

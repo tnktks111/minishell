@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../inc/minishell.h"
 
 void	error_too_many_args(char *cmd_name);
 void	error_numeric_arg_required(char *cmd_name, char *arg);

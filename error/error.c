@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../inc/minishell.h"
 
 void	error_invalid_option(char *cmd_name, char *arg);
 void	builtin_error(char *cmd_name, char *arg, char *errmsg);

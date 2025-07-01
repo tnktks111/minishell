@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../inc/minishell.h"
 
 void	perror_string(char *str);
 void	ft_puterr_general(char *cmd_name, char *errmsg);

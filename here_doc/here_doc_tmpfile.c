@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 static int	get_random_string(char *buffer);
 static char	*get_sys_tmpdir(void);

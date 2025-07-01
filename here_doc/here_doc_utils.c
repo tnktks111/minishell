@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 int		file_iswdir(char *filepath);
 /*check node_simplecmd and delete tmpfile if the node has REDIR_HEREDOCs*/

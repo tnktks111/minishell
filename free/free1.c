@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 void	free_tree_node(t_tree_node *node);
 void	free_redirects(t_redirect *redirect);

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 int		*save_std_fds(void);
 void	restore_std_fds(int *saved_std_fds);

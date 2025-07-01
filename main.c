@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "inc/minishell.h"
 
 #define RED "\1\033[31m\2"
 #define GREEN "\1\033[32m\2"

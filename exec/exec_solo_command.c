@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../inc/minishell.h"
 
 static unsigned char	exec_solo_builtin(t_tree_node *cmd_node, t_env *env);
 static void				exec_child_process_of_solo_cmd(t_tree_node *cmd_node,
