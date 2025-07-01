@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 17:05:14 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 12:02:56 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 14:32:11 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	free_for_exit(t_env *env, unsigned char exit_status)
 	exit(exit_status);
 }
 
-unsigned char free_for_exec_ast(t_env *env)
+unsigned char	free_for_exec_ast(t_env *env)
 {
 	if (env->root)
 		free_tree_node(env->root);

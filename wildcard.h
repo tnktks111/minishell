@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:51:37 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/29 16:59:08 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 12:48:36 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,3 +100,5 @@ char						*adjust_result(char *result, bool is_abs_path,
 
 void						destroy_entire_tree_recursive(t_wc_tree *root);
 
+void						**free_wc_allocated_data(t_wc_tree **datas,
+								size_t allocated);

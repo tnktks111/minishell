@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 16:59:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 11:43:14 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 12:46:46 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	restore_std_fds(int saved_fds[3]);
 void	find_path_failure_handler(char *cmd_name, int errnum, t_env *env);
 void	execve_failure_handler(char *cmd_name, int errnum, t_env *env);
 
-int		save_std_fds(int saved_std_fds[3])
+int	save_std_fds(int saved_std_fds[3])
 {
 	saved_std_fds[0] = dup(STDIN_FILENO);
 	if (saved_std_fds[0] == -1)

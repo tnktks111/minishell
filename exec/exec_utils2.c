@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:39:36 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 19:16:50 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 12:49:54 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,8 @@ void	find_path(char **args, t_env *env)
 	i = -1;
 	while (prefix_table[++i])
 	{
-		if (try_one_prefix(prefix_table[i], args, env, &l_errno) == EXIT_FAILURE)
+		if (try_one_prefix(prefix_table[i], args, env,
+				&l_errno) == EXIT_FAILURE)
 		{
 			free_splited_data(prefix_table);
 			free_for_exit(env, EXIT_FAILURE);

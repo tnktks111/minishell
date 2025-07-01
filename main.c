@@ -6,66 +6,71 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 16:41:09 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/29 21:19:30 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 13:30:15 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 #define RED "\1\033[31m\2"
-#define BLUE "\1\033[32m\2"
+#define GREEN "\1\033[32m\2"
 #define RESET "\1\033[0m\2"
 
-static bool	contain_space_only(char *s)
+// static bool	contain_space_only(char *s)
+// {
+// 	while (*s)
+// 		if (!(*s++ == ' '))
+// 			return (false);
+// 	return (true);
+// }
+
+static int init_minishell(t_env *env, char **envp)
 {
-	while (*s)
-		if (!(*s++ == ' '))
-			return (false);
-	return (true);
+	rl_outstream = stderr;
+	setup_interactive_signal_handlers();
+	if (encode_envp(env, envp) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
+	env->envp_is_malloced = false;
+	env->is_child = false;
+	env->prev_exit_status = 0;
+	return (EXIT_SUCCESS);
+}
+
+static void line_executer(char *input, t_env *env)
+{
+	t_token		*head;
+	t_tree_node	*root;
+	
+	head = lexer(input);
+	root = parser(head, env);
+	if (root)
+	{
+		env->root = root;
+		exec_ast(root, env);
+	}
 }
 
 int	main(int ac, char **av, char **envp)
 {
 	char		*input;
 	t_env		env;
-	t_token		*head;
-	t_tree_node	*root;
 
 	(void)ac;
 	(void)av;
-	rl_outstream = stderr;
-	setup_interactive_signal_handlers();
-	if (encode_envp(&env, envp) == EXIT_FAILURE)
-	{
-		perror("encode_envp :");
-		return (0);
-	}
-	env.envp_is_malloced = false;
+	if (init_minishell(&env, envp) == EXIT_FAILURE)
+		return (1);
 	while (1)
 	{
-		input = readline(BLUE "minishell$ " RESET);
+		input = readline(GREEN "minishell$ " RESET);
 		if (input == NULL)
-		{
-			ft_putendl_fd("exit", STDERR_FILENO);
-			// ft_putendl_fd("exit", STDOUT_FILENO);
-			// free_all(&env);
-			free_table(&env);
 			break ;
-		}
-		if (input[0] && !contain_space_only(input))
+		if (input[0])
 			add_history(input);
 		if (is_valid_input(input, &env))
-		{
-			head = lexer(input);
-			root = parser(head, &env);
-			// print_tree(root);
-			if (root)
-			{
-				env.root = root;
-				exec_ast(root, &env);
-			}
-		}
+			line_executer(input, &env);
 		free(input);
 	}
-	return (0);
+	ft_putendl_fd("exit", STDERR_FILENO);
+	free_table(&env);
+	return (env.prev_exit_status);
 }

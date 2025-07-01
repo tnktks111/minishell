@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:35:53 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 18:28:05 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 14:25:40 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int			prepare_here_doc(t_tree_node *node, t_env *env);
 static char	*_here_doc_fork_error_handler(t_env *env);
-static void	_exec_here_doc_child_process(t_redirect *redirect, int fd,
-				bool is_expandable, t_env *env);
+static int	_exec_hd_child(t_redirect *redirect, int fd, bool is_expandable,
+				t_env *env);
 static char	*_exec_here_doc_parent_process(char *tmpfile, int *status, int fd,
 				t_env *env);
 char		*here_doc_handler(t_redirect *redirect, t_env *env);
@@ -51,8 +51,8 @@ static char	*_here_doc_fork_error_handler(t_env *env)
 	return (NULL);
 }
 
-static void	_exec_here_doc_child_process(t_redirect *redirect, int fd,
-		bool is_expandable, t_env *env)
+static int	_exec_hd_child(t_redirect *redirect, int fd, bool is_expandable,
+		t_env *env)
 {
 	char	*s;
 	bool	end_by_delimiter;
@@ -71,14 +71,14 @@ static void	_exec_here_doc_child_process(t_redirect *redirect, int fd,
 		if (is_expandable)
 			s = here_doc_expander(s, env);
 		if (!s)
-			exit(EXIT_FAILURE);
+			return (close(fd), EXIT_FAILURE);
 		ft_putendl_fd(s, fd);
 		free(s);
 		s = readline("> ");
 	}
 	if (end_by_delimiter == false)
 		error_heredoc_delimited_by_eof(redirect->filename);
-	exit(0);
+	return (close(fd), 0);
 }
 
 static char	*_exec_here_doc_parent_process(char *tmpfile, int *status, int fd,
@@ -132,6 +132,6 @@ char	*here_doc_handler(t_redirect *redirect, t_env *env)
 	if (pid == -1)
 		return (_here_doc_fork_error_handler(env));
 	if (pid == 0)
-		_exec_here_doc_child_process(redirect, fd, is_expandable, env);
+		free_for_exit(env, _exec_hd_child(redirect, fd, is_expandable, env));
 	return (_exec_here_doc_parent_process(tmpfile, &status, fd, env));
 }
