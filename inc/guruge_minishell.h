@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   guruge_minishell.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sguruge <sguruge@student.42tokyo.jp>       #+#  +:+       +#+        */
+/*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-06-18 09:00:44 by sguruge           #+#    #+#             */
-/*   Updated: 2025-06-18 09:00:44 by sguruge          ###   ########.fr       */
+/*   Created: 2025/06/18 09:00:44 by sguruge           #+#    #+#             */
+/*   Updated: 2025/07/01 22:16:15 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -6,21 +6,21 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:35:53 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 21:49:54 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 22:27:20 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-int			prepare_here_doc(t_tree_node *node, t_env *env);
+int			prepare_here_doc(t_tree_node *node, t_env *env, int *pipefd);
 static char	*_here_doc_fork_error_handler(t_env *env);
 static int	_exec_hd_child(t_redirect *redirect, int fd, bool is_expandable,
 				t_env *env);
 static char	*_exec_here_doc_parent_process(char *tmpfile, int *status, int fd,
 				t_env *env);
-char		*here_doc_handler(t_redirect *redirect, t_env *env);
+char		*here_doc_handler(t_redirect *redirect, t_env *env, int *pipefd);
 
-int	prepare_here_doc(t_tree_node *node, t_env *env)
+int	prepare_here_doc(t_tree_node *node, t_env *env, int *pipefd)
 {
 	t_redirect	*curr;
 	char		*tmpfile;
@@ -33,7 +33,7 @@ int	prepare_here_doc(t_tree_node *node, t_env *env)
 	{
 		if (curr->kind == REDIR_HEREDOC)
 		{
-			tmpfile = here_doc_handler(curr, env);
+			tmpfile = here_doc_handler(curr, env, pipefd);
 			if (!tmpfile)
 				return (EXIT_FAILURE);
 			free(curr->filename);
@@ -104,7 +104,7 @@ static char	*_exec_here_doc_parent_process(char *tmpfile, int *status, int fd,
 
 /*Error msgs are collectly handled in remove_quotes(), shmktmpfd(),
 	and _here_doc_fork_error_handler.*/
-char	*here_doc_handler(t_redirect *redirect, t_env *env)
+char	*here_doc_handler(t_redirect *redirect, t_env *env, int *pipefd)
 {
 	int		fd;
 	char	*tmpfile;
@@ -121,14 +121,14 @@ char	*here_doc_handler(t_redirect *redirect, t_env *env)
 	}
 	fd = sh_mktmpfd(&tmpfile);
 	if (fd == -1)
-	{
-		env->prev_exit_status = EXIT_FAILURE;
-		return (NULL);
-	}
+		return (env->prev_exit_status = EXIT_FAILURE, NULL);
 	pid = fork();
 	if (pid == -1)
-		return (_here_doc_fork_error_handler(env));
+		return (close_pipefd(pipefd), _here_doc_fork_error_handler(env));
 	if (pid == 0)
+	{
+		close_pipefd(pipefd);
 		free_for_exit(env, _exec_hd_child(redirect, fd, is_expandable, env));
+	}
 	return (_exec_here_doc_parent_process(tmpfile, &status, fd, env));
 }

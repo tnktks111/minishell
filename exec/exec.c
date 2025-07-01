@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 21:00:16 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 22:37:16 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ int	exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env, pid_t *lastpid)
 	{
 		if (node->parent->kind == NODE_PIPE && pipe(fd->pipefd) == -1)
 			return (perror_string("pipe: "), EXIT_FAILURE);
-		if (prepare_here_doc(node, env) == EXIT_FAILURE)
-			return (env->prev_exit_status);
+		if (prepare_here_doc(node, env, fd->pipefd) == EXIT_FAILURE)
+			return (close_pipefd(fd->pipefd), env->prev_exit_status);
 		pid = fork();
 		if (pid == -1)
 			return (perror_string("fork: "), EXIT_FAILURE);
@@ -151,5 +151,5 @@ void	exec_command_helper(t_tree_node *node, t_env *env)
 		execve_failure_handler(args[0], errno, env);
 	}
 	else
-		exec_ast(node, env);
+		exit(exec_ast(node, env));
 }

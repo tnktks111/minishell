@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 20:58:27 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 22:20:59 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	exec_solo_cmd(t_tree_node *cmd_node, t_env *env)
 	pid_t	pid;
 	int		wait_status;
 
-	if (prepare_here_doc(cmd_node, env) == EXIT_FAILURE)
+	if (prepare_here_doc(cmd_node, env, NULL) == EXIT_FAILURE)
 		return (env->prev_exit_status);
 	if (cmd_node->kind == NODE_SIMPLE_COMMAND && cmd_node->data.command.args[0]
 		&& ft_set_underscore(cmd_node, env) == EXIT_FAILURE)

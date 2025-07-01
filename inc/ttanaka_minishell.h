@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 14:53:17 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 12:48:16 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 22:14:10 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <string.h>
 
 #define HEREDOC_SIGINT -1
-#define TMPFILE_CHR "abcdefghijklmnopqrstuvwxyz \
+#define TMPFILE_CHR 	"abcdefghijklmnopqrstuvwxyz \
 	ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
 /// ぬけてた
@@ -39,3 +39,5 @@ char			*here_doc_expander(char *s, t_env *env);
 void			free_int_matrix(int **matrix);
 void			free_for_exit(t_env *env, unsigned char exit_status);
 unsigned char	free_for_exec_ast(t_env *env);
+
+void			close_pipefd(int *fd);
