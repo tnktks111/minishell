@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 15:35:15 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 17:19:52 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 17:44:54 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ static char	*_decide_dirname(t_tree_node *cmd_node, t_env *env,
 		dirname = ft_strdup(cmd_node->data.command.args[1]);
 		if (!dirname)
 			return (ft_puterr_malloc());
-		if (absolute_pathname(dirname) && _find_cdpath(dirname, env,
+		if (!absolute_pathname(dirname) && _find_cdpath(dirname, env,
 				find_success) != 1)
 			return (NULL);
 		if (dirname[0] != '/')

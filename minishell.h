@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/07/01 17:18:43 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 17:40:35 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ void			free_for_find_cdpath(char *s1, char *s2, char **splitted_data);
 void			free_splited_data(char **data);
 char			**free_allocated_data(char **datas, size_t allocated);
 
-void			expand_ast(t_tree_node *node, t_env *env);
+int				expand_ast(t_tree_node *node, t_env *env);
 
 void			print_tree(t_tree_node *node);
 void			print_tokens(t_token *head);

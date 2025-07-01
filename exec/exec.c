@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 22:58:50 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 17:47:11 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,8 @@ int	exec_pl_cmds(t_tree_node *node_pipeline, t_env *env)
 	t_pipefd	fd;
 	int			status;
 
-	expand_ast(node_pipeline, env);
+	if (expand_ast(node_pipeline, env) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
 	curr = node_pipeline->left;
 	fd.read_fd = STDIN_FILENO;
 	if (curr->kind == NODE_SIMPLE_COMMAND || curr->kind == NODE_SUBSHELL)
