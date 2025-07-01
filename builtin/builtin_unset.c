@@ -12,7 +12,7 @@
 
 #include "../inc/minishell.h"
 
-static bool	is_valid_option(char *s);
+static bool		is_valid_option(char *s);
 unsigned char	builtin_unset(t_tree_node *node, t_env *env);
 
 static bool	is_valid_option(char *s)
@@ -26,7 +26,7 @@ static bool	is_valid_option(char *s)
 
 unsigned char	builtin_unset(t_tree_node *node, t_env *env)
 {
-	size_t			i;
+	size_t	i;
 
 	if (node->data.command.args[1]
 		&& !is_valid_option(node->data.command.args[1]))

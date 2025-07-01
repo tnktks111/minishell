@@ -19,7 +19,7 @@ void	execve_failure_handler(char *cmd_name, int errnum, t_env *env);
 
 int	*save_std_fds(void)
 {
-	int *saved_std_fds;
+	int	*saved_std_fds;
 
 	saved_std_fds = (int *)malloc(sizeof(int) * 3);
 	if (!saved_std_fds)
@@ -95,4 +95,3 @@ void	execve_failure_handler(char *cmd_name, int errnum, t_env *env)
 		free_for_exit(env, 127);
 	}
 }
-

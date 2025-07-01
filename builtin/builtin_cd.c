@@ -71,7 +71,7 @@ static int	_edge_case_handler(t_tree_node *cmd_node, t_env *env,
 {
 	static const char	*target[3] = {"HOME", NULL, "OLDPWD"};
 	static const char	*errmsg[3] = {"HOME not set", "too many arguments",
-			"OLDPWD not set"};
+		"OLDPWD not set"};
 	size_t				code;
 
 	if (!cmd_node->data.command.args[1])

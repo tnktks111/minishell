@@ -16,7 +16,7 @@
 #define GREEN "\1\033[32m\2"
 #define RESET "\1\033[0m\2"
 
-volatile sig_atomic_t g_rcv_heredoc_sig;
+volatile sig_atomic_t	g_rcv_heredoc_sig;
 
 static int	init_minishell(t_env *env, char **envp)
 {
