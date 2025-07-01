@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 22:55:26 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 23:09:29 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,9 @@ unsigned char	exec_ast(t_tree_node *root, t_env *env)
 	if (prev_exit_status == HEREDOC_SIGINT)
 		return (env->prev_exit_status = 130, free_for_exec_ast(env));
 	curr = curr->parent;
-	while ((prev_exit_status == 0 && curr->kind == NODE_AND)
-		|| (curr->kind == NODE_OR))
+	while (curr->kind == NODE_AND || curr->kind == NODE_OR)
 	{
-		if (!(curr->kind == NODE_OR && prev_exit_status == 0))
+		if ((prev_exit_status == 0 && curr->kind == NODE_AND) || (prev_exit_status && curr->kind == NODE_OR))
 		{
 			prev_exit_status = exec_pipeline(curr->right, env);
 			if (prev_exit_status == HEREDOC_SIGINT)
