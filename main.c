@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 16:41:09 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 13:30:15 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 20:04:30 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,7 @@
 #define GREEN "\1\033[32m\2"
 #define RESET "\1\033[0m\2"
 
-// static bool	contain_space_only(char *s)
-// {
-// 	while (*s)
-// 		if (!(*s++ == ' '))
-// 			return (false);
-// 	return (true);
-// }
+volatile sig_atomic_t g_rcv_heredoc_sig;
 
 static int	init_minishell(t_env *env, char **envp)
 {
@@ -57,6 +51,7 @@ int	main(int ac, char **av, char **envp)
 
 	(void)ac;
 	(void)av;
+	g_rcv_heredoc_sig = 0;
 	if (init_minishell(&env, envp) == EXIT_FAILURE)
 		return (1);
 	while (1)

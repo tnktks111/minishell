@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/07/01 17:40:35 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 20:44:48 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include "get_next_line.h"
+
+extern volatile sig_atomic_t g_rcv_heredoc_sig;
 
 /*便利関数*/
 char			*extract_key(char *s);

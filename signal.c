@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 14:53:46 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/25 17:35:16 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 20:32:04 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,13 @@ static void	interactive_sigint_handler(int signo)
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
+}
+
+static void	here_doc_sigint_handler(int signo)
+{
+	(void)signo;
+	g_rcv_heredoc_sig = 1;
+	return ;
 }
 
 void	setup_interactive_signal_handlers(void)
@@ -48,7 +55,7 @@ void	setup_here_doc_signal_handlers(void)
 	struct sigaction	sa_quit;
 
 	sigemptyset(&sa_int.sa_mask);
-	sa_int.sa_handler = SIG_DFL;
+	sa_int.sa_handler = here_doc_sigint_handler;
 	sa_int.sa_flags = 0;
 	sigaction(SIGINT, &sa_int, NULL);
 	sigemptyset(&sa_quit.sa_mask);
