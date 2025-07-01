@@ -98,6 +98,13 @@ char	*expand_filename_wildcard(char *filename, bool *error)
 	result = expand_file_line(file_list);
 	expanded = ft_strdup(result[1]);
 	if (count_args(result) > 2)
-		return (free_splited_data(result), *error = true, NULL);
-	return (free_splited_data(result), expanded);
+	{
+		free(expanded);
+		free_splited_data(filename_args);
+		free_splited_data(result);
+		return (*error = true, NULL);
+	}
+	free_splited_data(filename_args);
+	free_splited_data(result);
+	return (expanded);
 }

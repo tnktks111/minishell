@@ -80,7 +80,7 @@ char	*expand_every_variable(char *str, t_env *env)
 	char	*result;
 	char	*temp;
 
-	temp = ft_strdup(str);
+	temp = str;
 	while (check_variable_expand(temp))
 	{
 		temp = expand_individual_variable(temp, env);
