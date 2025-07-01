@@ -123,7 +123,7 @@ int	expand_ast(t_tree_node *node, t_env *env)
 {
 	if (!node)
 		return (EXIT_SUCCESS);
-	if (node->kind == NODE_SIMPLE_COMMAND)
+	if (node->kind == NODE_SIMPLE_COMMAND || node->kind == NODE_SUBSHELL)
 		return (expander(node, env));
 	if (expand_ast(node->left, env) == EXIT_FAILURE || expand_ast(node->right,
 			env) == EXIT_FAILURE)

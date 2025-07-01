@@ -33,7 +33,7 @@ bool	check_cosecutive_paren_syntax_error(t_token *head)
 			next = cur->next;
 			while (next && next->status == SPLITABLE)
 				next = next->next;
-			if (next && next->status == LEFT_PAREN)
+			if (next && (next->status == LEFT_PAREN || next->status == NORMAL))
 			{
 				error_unexpected_token(next->str);
 				return (true);
