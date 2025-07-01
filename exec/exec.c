@@ -6,28 +6,25 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 01:25:35 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/30 22:58:50 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-unsigned char	exec_ast(t_tree_node *root, t_env *env, bool is_subshell);
+unsigned char	exec_ast(t_tree_node *root, t_env *env);
 int				exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env,
 					pid_t *lastpid);
 int				exec_pipeline(t_tree_node *node_pipeline, t_env *env);
 int				exec_pl_cmds(t_tree_node *node_pipeline, t_env *env);
 void			exec_command_helper(t_tree_node *cmd_node, t_env *env);
 
-unsigned char	exec_ast(t_tree_node *root, t_env *env, bool is_subshell)
+unsigned char	exec_ast(t_tree_node *root, t_env *env)
 {
 	t_tree_node	*curr;
 	int			prev_exit_status;
 
-	env->in_subshell = is_subshell;
 	curr = root->left;
-	if (curr->kind != NODE_PIPE_LINE)
-		env->in_subshell = false;
 	while (curr->kind == NODE_AND || curr->kind == NODE_OR)
 		curr = curr->left;
 	prev_exit_status = exec_pipeline(curr, env);
@@ -54,7 +51,6 @@ int	exec_pipeline(t_tree_node *node_pipeline, t_env *env)
 		free_splited_data(env->envp);
 	env->envp = decode_table(env, false);
 	env->envp_is_malloced = true;
-	env->have_pipe = false;
 	node_pipeline->data.pipeline.exit_status = exec_pl_cmds(node_pipeline, env);
 	if (node_pipeline->data.pipeline.exit_status == HEREDOC_SIGINT)
 	{
@@ -115,8 +111,6 @@ int	exec_pl_cmds(t_tree_node *node_pipeline, t_env *env)
 	fd.read_fd = STDIN_FILENO;
 	if (curr->kind == NODE_SIMPLE_COMMAND || curr->kind == NODE_SUBSHELL)
 		return (exec_solo_cmd(curr, env));
-	env->in_subshell = false;
-	env->have_pipe = true;
 	while (curr->kind == NODE_PIPE)
 		curr = curr->left;
 	cnt = exec_loop(curr, &fd, env, &pid);
@@ -157,5 +151,5 @@ void	exec_command_helper(t_tree_node *node, t_env *env)
 		execve_failure_handler(args[0], errno, env);
 	}
 	else
-		free_for_exit(env, exec_ast(cmd_node, env, true));
+		free_for_exit(env, exec_ast(cmd_node, env));
 }

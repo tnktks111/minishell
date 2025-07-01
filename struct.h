@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 04:53:42 by sguruge           #+#    #+#             */
-/*   Updated: 2025/07/01 01:22:41 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/06/29 15:55:04 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,8 +140,6 @@ typedef struct s_env
 	char				**envp;
 	int					prev_exit_status;
 	bool				is_child;
-	bool				in_subshell;
-	bool				have_pipe;
 	bool				envp_is_malloced;
 	size_t				entry_cnt;
 	t_tree_node			*root;
