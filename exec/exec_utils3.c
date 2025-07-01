@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 16:59:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 15:49:00 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 18:24:10 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,3 +95,4 @@ void	execve_failure_handler(char *cmd_name, int errnum, t_env *env)
 		free_for_exit(env, 127);
 	}
 }
+

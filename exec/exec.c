@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 17:47:11 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 18:28:47 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,29 +128,28 @@ int	exec_pl_cmds(t_tree_node *node_pipeline, t_env *env)
 
 void	exec_command_helper(t_tree_node *node, t_env *env)
 {
-	t_tree_node	*cmd_node;
 	char		**args;
 
 	env->is_child = true;
 	if (node->right)
-		cmd_node = node->right;
-	else
-		cmd_node = node;
-	if (exec_redirection(cmd_node->data.command.redirects) == EXIT_FAILURE)
+		node = node->right;		
+	if (exec_redirection(node->data.command.redirects) == EXIT_FAILURE)
 		free_for_exit(env, EXIT_FAILURE);
-	if (cmd_node->kind == NODE_SIMPLE_COMMAND)
+	if (node->kind == NODE_SIMPLE_COMMAND)
 	{
-		args = cmd_node->data.command.args;
-		if (!args[0] || !args[0][0])
+		args = node->data.command.args;
+		if (!args[0])
+			free_for_exit(env, 0);
+		if (!args[0][0])
 		{
 			ft_puterr_general(args[0], "command not found");
 			free_for_exit(env, 127);
 		}
-		find_builtin(cmd_node, env);
-		find_path(cmd_node->data.command.args, env);
+		find_builtin(node, env);
+		find_path(node->data.command.args, env);
 		execve(args[0], args, env->envp);
 		execve_failure_handler(args[0], errno, env);
 	}
 	else
-		free_for_exit(env, exec_ast(cmd_node, env));
+		free_for_exit(env, exec_ast(node, env));
 }

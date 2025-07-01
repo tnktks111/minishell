@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 15:35:15 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 17:44:54 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 18:09:18 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static int	_find_cdpath(char *dirname, t_env *env, bool *find_success)
 		if (*find_success == true)
 			return (free_for_find_cdpath(dirname, cdpath, cdpath_arr), 0);
 	}
-	return (free_for_find_cdpath(dirname, cdpath, cdpath_arr), 1);
+	return (free_for_find_cdpath(NULL, cdpath, cdpath_arr), 1);
 }
 
 static int	_edge_case_handler(t_tree_node *cmd_node, t_env *env,
