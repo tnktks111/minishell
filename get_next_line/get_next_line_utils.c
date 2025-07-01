@@ -6,11 +6,32 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:29:12 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 21:06:53 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 21:41:49 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	ft_putgnl_fd(char *str, int fd)
+{
+	size_t	len;
+
+	len = ft_strlen(str);
+	write(fd, str, len - 1);
+}
+
+int	ft_gnl_strcmp(char *gnlstr, char *s2)
+{
+	size_t	gnl_len;
+	size_t	s_len;
+
+	gnl_len = ft_strlen(gnlstr);
+	s_len = ft_strlen(s2);
+	if (ft_strncmp(gnlstr, s2, s_len) == 0 && gnl_len > s_len
+		&& gnlstr[s_len] == '\n')
+		return (0);
+	return (1);
+}
 
 t_buf_node	*create_buf_node(int fd)
 {

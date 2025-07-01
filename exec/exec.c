@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 18:28:47 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 21:00:16 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,5 +151,5 @@ void	exec_command_helper(t_tree_node *node, t_env *env)
 		execve_failure_handler(args[0], errno, env);
 	}
 	else
-		free_for_exit(env, exec_ast(node, env));
+		exec_ast(node, env);
 }

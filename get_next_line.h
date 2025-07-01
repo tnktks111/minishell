@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:29:08 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 21:07:08 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 21:23:51 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ typedef struct s_hashtable
 t_buf_node				*create_buf_node(int fd);
 void					init_buf_node(t_buf_node *node, int fd);
 char					*adjust_string(t_string *res);
+void					ft_putgnl_fd(char *str, int fd);
+int						ft_gnl_strcmp(char *gnlstr, char *s2);
 
 int						ft_getc(t_buf_node *node);
 int						ft_putc(t_string *str, char c);

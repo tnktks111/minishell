@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:35:53 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 20:37:39 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 21:49:54 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,23 +57,25 @@ static int	_exec_hd_child(t_redirect *redirect, int fd, bool is_expandable,
 	char	*s;
 
 	setup_here_doc_signal_handlers();
-	while (g_rcv_heredoc_sig == 0)
+	s = get_next_line("> ", STDIN_FILENO);
+	while (s)
 	{
-		s = get_next_line("> ", STDIN_FILENO);
-		if (!s)
+		if (g_rcv_heredoc_sig == 1)
 			break;
-		if (ft_strcmp(s, redirect->filename) == 0)
+		if (ft_gnl_strcmp(s, redirect->filename) == 0)
 			return (free(s), close(fd), 0);
 		if (is_expandable)
 			s = here_doc_expander(s, env);
 		if (!s)
 			return (close(fd), EXIT_FAILURE);
-		ft_putendl_fd(s, fd);
+		ft_putstr_fd(s, fd);
 		free(s);
+		s = get_next_line("> ", STDIN_FILENO);
 	}
 	close(fd);
-	if (g_rcv_heredoc_sig)	
+	if (g_rcv_heredoc_sig == 1)	
 		return (free(s), g_rcv_heredoc_sig = 0, 130);
+	ft_putchar_fd('\n', STDERR_FILENO);
 	error_heredoc_delimited_by_eof(redirect->filename);
 	close(fd);
 	return (0);
@@ -86,20 +88,15 @@ static char	*_exec_here_doc_parent_process(char *tmpfile, int *status, int fd,
 	setup_parent_wait_signal_handlers();
 	wait(status);
 	setup_interactive_signal_handlers();
-	if (WIFEXITED(*status) && WEXITSTATUS(*status) == EXIT_FAILURE)
+	if (WIFEXITED(*status) && WEXITSTATUS(*status) != EXIT_SUCCESS)
 	{
 		ft_putchar_fd('\n', STDERR_FILENO);
 		unlink(tmpfile);
 		free(tmpfile);
-		env->prev_exit_status = 1;
-		return (NULL);
-	}
-	if (WIFSIGNALED(*status) && WTERMSIG(*status) == SIGINT)
-	{
-		ft_putchar_fd('\n', STDERR_FILENO);
-		unlink(tmpfile);
-		free(tmpfile);
-		env->prev_exit_status = -1;
+		if (WEXITSTATUS(*status) == 130)
+			env->prev_exit_status = -1;
+		else
+			env->prev_exit_status = 1;
 		return (NULL);
 	}
 	return (tmpfile);
