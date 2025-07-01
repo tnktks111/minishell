@@ -44,28 +44,30 @@ void	takeoff_quotes(char *str)
 int	expand_filename(t_redirect *cur, t_env *env)
 {
 	char	*redir_filename;
-	char	*expanded_filename;
+	char	*exp_filename;
 	char	*temp;
-	char	**files;
+	bool	error;
 
-	files = gen_tmp_dir_file_array();
-	redir_filename = cur->filename;
-	if (redir_filename)
+	error = false;
+	redir_filename = ft_strdup(cur->filename);
+	if (cur->filename && cur->kind != REDIR_HEREDOC)
 	{
-		temp = expand_every_variable(redir_filename, env);
+		temp = expand_every_variable(cur->filename, env);
 		if (check_wildcard_expand(temp))
 		{
-			expanded_filename = expand_filename_wildcard(temp, files);
+			exp_filename = expand_filename_wildcard(temp, &error);
 			free(temp);
-			temp = expanded_filename;
-			if (!expanded_filename)
+			temp = exp_filename;
+			if (!exp_filename && !error)
 				return (EXIT_FAILURE);
+			else if (error)
+				return (cur->filename = redir_filename,
+					error_ambiguous_redirect(redir_filename), ERROR_AMBIGUOS);
 		}
-		if (cur->kind != REDIR_HEREDOC)
-			takeoff_quotes(temp);
+		takeoff_quotes(temp);
 		cur->filename = temp;
 	}
-	free_splited_data(files);
+	free(redir_filename);
 	return (EXIT_SUCCESS);
 }
 
@@ -110,6 +112,8 @@ int	expander(t_tree_node *simple_cmd_node, t_env *env)
 		res_status = expand_filename(cur, env);
 		if (res_status == EXIT_FAILURE)
 			return (EXIT_FAILURE);
+		else if (res_status == ERROR_AMBIGUOS)
+			return (EXIT_FAILURE);
 		cur = cur->next;
 	}
 	if (simple_cmd_node->data.command.args[0])
@@ -120,14 +124,13 @@ int	expander(t_tree_node *simple_cmd_node, t_env *env)
 	return (EXIT_SUCCESS);
 }
 
-void	expand_ast(t_tree_node *node, t_env *env)
+int	expand_ast(t_tree_node *node, t_env *env)
 {
 	if (!node)
-		return ;
+		return (EXIT_SUCCESS);
 	if (node->kind == NODE_SIMPLE_COMMAND)
-	{
-		expander(node, env);
-	}
-	expand_ast(node->left, env);
-	expand_ast(node->right, env);
+		return (expander(node, env));
+	if (expand_ast(node->left, env) == EXIT_FAILURE || expand_ast(node->right,
+			env) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
 }

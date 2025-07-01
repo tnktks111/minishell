@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void	get_cmd_line_list(t_list **head, char **cmd_args)
+int	get_cmd_line_list(t_list **head, char **cmd_args)
 {
 	size_t	i;
 	t_list	*new_token;
@@ -24,8 +24,8 @@ void	get_cmd_line_list(t_list **head, char **cmd_args)
 	while (cmd_args[i])
 	{
 		new_token = malloc(sizeof(t_list));
-		// if (!new_token)
-		// 	malloc_error();
+		if (!new_token)
+			return (ft_puterr_malloc(), EXIT_FAILURE);
 		new_token->content = ft_strdup(cmd_args[i]);
 		new_token->next = NULL;
 		if (!*head)
@@ -35,9 +35,10 @@ void	get_cmd_line_list(t_list **head, char **cmd_args)
 		tail = new_token;
 		i++;
 	}
+	return (EXIT_SUCCESS);
 }
 
-void	expand_and_append_command_line(char *str, t_list **head)
+int	expand_and_append_command_line(char *str, t_list **head)
 {
 	t_list	*expanded;
 	t_list	*tail;
@@ -54,17 +55,18 @@ void	expand_and_append_command_line(char *str, t_list **head)
 		tail->next = expanded;
 	}
 	else
-		append_command_line(head, str);
+		return (append_command_line(head, str));
+	return (EXIT_SUCCESS);
 }
 
-void	append_command_line(t_list **head, char *str)
+int	append_command_line(t_list **head, char *str)
 {
 	t_list	*new_node;
 	t_list	*tail;
 
 	new_node = malloc(sizeof(t_list));
-	// if (!new_node)
-	// 	malloc_error();
+	if (!new_node)
+		return (ft_puterr_malloc(), EXIT_FAILURE);
 	new_node->content = ft_strdup(str);
 	new_node->next = NULL;
 	if (!*head)
@@ -76,6 +78,7 @@ void	append_command_line(t_list **head, char *str)
 			tail = tail->next;
 		tail->next = new_node;
 	}
+	return (EXIT_SUCCESS);
 }
 
 char	**list_to_args(t_list *head)
@@ -95,13 +98,37 @@ char	**list_to_args(t_list *head)
 	}
 	result = malloc(sizeof(char *) * (count + 1));
 	if (!result)
-		return (NULL);
+		return (ft_puterr_malloc());
 	cur = head;
 	while (i < count)
 	{
 		result[i++] = ft_strdup(cur->content);
+		if (!result)
+			return (free_allocated_data(result, i), ft_puterr_malloc());
 		cur = cur->next;
 	}
-	result[i] = NULL;
+	return (result[i] = NULL, result);
+}
+
+char	**expand_file_line(t_list *fileline)
+{
+	char	**result;
+	t_list	*head;
+	t_list	*cur;
+
+	head = NULL;
+	append_command_line(&head, fileline->content);
+	cur = fileline;
+	while (cur)
+	{
+		if (check_wildcard_expand(cur->content))
+			expand_and_append_command_line(cur->content, &head);
+		else
+			append_command_line(&head, cur->content);
+		cur = cur->next;
+	}
+	result = list_to_args(head);
+	free_list(head);
+	free_list(fileline);
 	return (result);
 }

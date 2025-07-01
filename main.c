@@ -24,7 +24,7 @@
 // 	return (true);
 // }
 
-static int init_minishell(t_env *env, char **envp)
+static int	init_minishell(t_env *env, char **envp)
 {
 	rl_outstream = stderr;
 	setup_interactive_signal_handlers();
@@ -36,11 +36,11 @@ static int init_minishell(t_env *env, char **envp)
 	return (EXIT_SUCCESS);
 }
 
-static void line_executer(char *input, t_env *env)
+static void	line_executer(char *input, t_env *env)
 {
 	t_token		*head;
 	t_tree_node	*root;
-	
+
 	head = lexer(input);
 	root = parser(head, env);
 	if (root)
@@ -52,8 +52,8 @@ static void line_executer(char *input, t_env *env)
 
 int	main(int ac, char **av, char **envp)
 {
-	char		*input;
-	t_env		env;
+	char	*input;
+	t_env	env;
 
 	(void)ac;
 	(void)av;

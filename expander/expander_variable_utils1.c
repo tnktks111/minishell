@@ -49,6 +49,7 @@ char	*create_expanded_str(char *str, char *val, char *variable, size_t i)
 	free(before);
 	free(after);
 	free(val);
+	free(str);
 	return (expanded_str);
 }
 
@@ -76,9 +77,15 @@ char	*expand_individual_variable(char *str, t_env *env)
 
 char	*expand_every_variable(char *str, t_env *env)
 {
-	while (check_variable_expand(str))
+	char	*result;
+	char	*temp;
+
+	temp = ft_strdup(str);
+	while (check_variable_expand(temp))
 	{
-		str = expand_individual_variable(str, env);
+		temp = expand_individual_variable(temp, env);
 	}
-	return (str);
+	result = ft_strdup(temp);
+	free(temp);
+	return (result);
 }

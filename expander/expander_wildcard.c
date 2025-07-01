@@ -82,46 +82,22 @@ void	init_wildcard_array(int *src, char *str, size_t str_len)
 	}
 }
 
-char	*expand_filename_wildcard(char *filename, char **files)
+char	*expand_filename_wildcard(char *filename, bool *error)
 {
-	int		is_wildcard[PATH_MAX];
-	size_t	i;
-	int		matches;
-	char	*result;
+	t_list	*file_list;
+	char	**filename_args;
+	char	**result;
+	char	*expanded;
 
-	result = NULL;
-	init_wildcard_array(is_wildcard, filename, ft_strlen(filename));
-	matches = 0;
-	i = 0;
-	while (files[i])
-	{
-		if (ft_ismatch(files[i], filename, is_wildcard, ft_strlen(filename)))
-		{
-			if (matches == 0)
-				result = ft_strdup(files[i]);
-			matches++;
-		}
-		i++;
-	}
-	if (matches > 1)
-		return (error_ambiguous_redirect(filename), NULL);
-	if (matches == 0)
-		return (ft_strdup(filename));
-	return (result);
+	filename_args = malloc(sizeof(char *) * 2);
+	if (!filename_args)
+		return (NULL);
+	filename_args[0] = ft_strdup(filename);
+	filename_args[1] = NULL;
+	get_cmd_line_list(&file_list, filename_args);
+	result = expand_file_line(file_list);
+	expanded = ft_strdup(result[1]);
+	if (count_args(result) > 2)
+		return (free_splited_data(result), *error = true, NULL);
+	return (free_splited_data(result), expanded);
 }
-
-// char	*expand_filename_wildcard(char *filename, char **files)
-// {
-// 	char	**filename_args;
-// 	t_list	*file_list;
-// 	char	**result;
-
-// 	filename_args = malloc(sizeof(char *) * 2);
-// 	if (!filename_args)
-// 		return (NULL);
-// 	filename_args[0] = ft_strdup(filename);
-// 	filename_args[1] = NULL;
-// 	get_cmd_line_list(&file_list, filename_args);
-// 	result = expand_cmd_line(file_list);
-// 	return (result[0]);
-// }
