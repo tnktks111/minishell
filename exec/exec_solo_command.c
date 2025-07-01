@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 14:15:17 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 15:01:11 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ static unsigned char	exec_solo_builtin(t_tree_node *cmd_node, t_env *env)
 	int				saved_std_fds[3];
 	unsigned char	status;
 
-	if (save_std_fds(saved_std_fds) == EXIT_FAILURE)
+	if (ft_strcmp(cmd_node->data.command.args[0], "exit") != 0
+		&& save_std_fds(saved_std_fds) == EXIT_FAILURE)
 	{
 		unlink_tmpfile(cmd_node);
 		return (EXIT_FAILURE);
