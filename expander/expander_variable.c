@@ -62,7 +62,7 @@ char	**expand_cmd_variable(char **cmd_args, t_env *env)
 	while (cmd_args[i])
 	{
 		if (check_variable_expand(cmd_args[i]))
-			expanded = expand_every_variable(cmd_args[i], env);
+			expanded = expand_every_variable(ft_strdup(cmd_args[i]), env);
 		else
 			expanded = ft_strdup(cmd_args[i]);
 		if (expanded && expanded[0] != '\0')
@@ -73,4 +73,29 @@ char	**expand_cmd_variable(char **cmd_args, t_env *env)
 	}
 	new_args[j] = NULL;
 	return (new_args);
+}
+
+int	handle_file_wildcard(t_redirect *cur, char *temp, char *redir_file)
+{
+	char	*exp_file;
+	bool	error;
+
+	error = false;
+	if (check_wildcard_expand(temp))
+	{
+		exp_file = expand_filename_wildcard(temp, &error);
+		free(temp);
+		if (!exp_file && !error)
+			return (EXIT_FAILURE);
+		if (error)
+		{
+			error_redir(redir_file);
+			cur->filename = redir_file;
+			return (ERROR_REDIR);
+		}
+		temp = exp_file;
+	}
+	takeoff_quotes(temp);
+	cur->filename = temp;
+	return (EXIT_SUCCESS);
 }

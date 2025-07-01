@@ -43,31 +43,26 @@ void	takeoff_quotes(char *str)
 
 int	expand_filename(t_redirect *cur, t_env *env)
 {
-	char	*redir_filename;
-	char	*exp_filename;
+	char	*redir_file;
 	char	*temp;
-	bool	error;
+	int		status;
 
-	error = false;
-	redir_filename = ft_strdup(cur->filename);
-	if (cur->filename && cur->kind != REDIR_HEREDOC)
+	if (!cur->filename || cur->kind == REDIR_HEREDOC)
+		return (EXIT_SUCCESS);
+	redir_file = ft_strdup(cur->filename);
+	temp = expand_every_variable(cur->filename, env);
+	if (!temp || *temp == '\0')
 	{
-		temp = expand_every_variable(cur->filename, env);
-		if (check_wildcard_expand(temp))
-		{
-			exp_filename = expand_filename_wildcard(temp, &error);
-			free(temp);
-			temp = exp_filename;
-			if (!exp_filename && !error)
-				return (EXIT_FAILURE);
-			else if (error)
-				return (cur->filename = redir_filename,
-					error_ambiguous_redirect(redir_filename), ERROR_AMBIGUOS);
-		}
-		takeoff_quotes(temp);
-		cur->filename = temp;
+		free(temp);
+		error_redir(redir_file);
+		cur->filename = redir_file;
+		return (ERROR_REDIR);
 	}
-	return (free(redir_filename), EXIT_SUCCESS);
+	status = handle_file_wildcard(cur, temp, redir_file);
+	if (status != EXIT_SUCCESS)
+		return (status);
+	free(redir_file);
+	return (EXIT_SUCCESS);
 }
 
 void	expand_cmd_args(t_tree_node *simple_cmd_node, t_env *env)
@@ -81,6 +76,7 @@ void	expand_cmd_args(t_tree_node *simple_cmd_node, t_env *env)
 	cmd_args = simple_cmd_node->data.command.args;
 	variable_expanded = expand_cmd_variable(cmd_args, env);
 	free_splited_data(cmd_args);
+	simple_cmd_node->data.command.args = variable_expanded;
 	if (variable_expanded[0])
 	{
 		wildcard_expanded = expand_cmd_wildcard(variable_expanded);
@@ -111,7 +107,7 @@ int	expander(t_tree_node *simple_cmd_node, t_env *env)
 		res_status = expand_filename(cur, env);
 		if (res_status == EXIT_FAILURE)
 			return (EXIT_FAILURE);
-		else if (res_status == ERROR_AMBIGUOS)
+		else if (res_status == ERROR_REDIR)
 			return (EXIT_FAILURE);
 		cur = cur->next;
 	}

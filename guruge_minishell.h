@@ -29,7 +29,7 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-# define ERROR_AMBIGUOS 1
+# define ERROR_REDIR 1
 
 /* lexer prototype */
 
@@ -130,6 +130,7 @@ char			*expand_individual_variable(char *str, t_env *env);
 char			*expand_every_variable(char *str, t_env *env);
 char			**expand_cmd_variable(char **cmd_args, t_env *env);
 
+int				handle_file_wildcard(t_redirect *cur, char *temp, char *redir_file);
 bool			check_wildcard_expand(char *str);
 char			**expand_cmd_wildcard(char **cmd_args);
 void			init_wildcard_array(int *src, char *str, size_t str_len);
@@ -154,7 +155,7 @@ bool			check_paren_syntax_error(t_token *head);
 bool			check_closed_paren_syntax_error(t_token *head);
 bool			check_cosecutive_paren_syntax_error(t_token *head);
 void			handle_syntax_error(t_env *env);
-void			error_ambiguous_redirect(char *filename);
+void			error_redir(char *filename);
 void			error_unexpected_token(char *token_str);
 bool			is_status_meta(t_status status);
 bool			is_status_splitable(t_status status);

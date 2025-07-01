@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	error_ambiguous_redirect(char *filename)
+void	error_redir(char *filename)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
 	ft_putstr_fd(filename, STDERR_FILENO);
