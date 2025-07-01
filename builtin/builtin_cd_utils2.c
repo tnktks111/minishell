@@ -6,15 +6,16 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 15:43:37 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 17:56:37 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 17:18:27 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	bindpwd(t_env *env);
-int	absolute_pathname(const char *string);
-int	change_to_directory(char *path);
+int		bindpwd(t_env *env);
+int		absolute_pathname(const char *string);
+int		change_to_directory(char *path);
+void	free_for_find_cdpath(char *s1, char *s2, char **splitted_data);
 
 int	bindpwd(t_env *env)
 {
@@ -63,4 +64,11 @@ int	change_to_directory(char *path)
 	}
 	free(abs_path);
 	return (1);
+}
+
+void	free_for_find_cdpath(char *s1, char *s2, char **splitted_data)
+{
+	free(s1);
+	free(s2);
+	free_splited_data(splitted_data);
 }

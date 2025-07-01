@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 15:35:15 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 18:32:04 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 17:19:52 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,33 +19,51 @@ static char		*_decide_dirname(t_tree_node *cmd_node, t_env *env,
 					bool *print_path, bool *find_success);
 unsigned char	builtin_cd(t_tree_node *cmd_node, t_env *env);
 
+static int	_try_one_cdpath(char *cdpath, char *dirname, bool *find_success)
+{
+	char	*tmp;
+
+	tmp = join_path(cdpath, dirname);
+	if (!tmp)
+		return (2);
+	if (change_to_directory(tmp))
+	{
+		*find_success = true;
+		if (cdpath[0])
+			printf("%s\n", tmp);
+		free(tmp);
+		return (0);
+	}
+	else
+	{
+		free(tmp);
+		return (1);
+	}
+}
+
 static int	_find_cdpath(char *dirname, t_env *env, bool *find_success)
 {
 	char	*cdpath;
 	char	**cdpath_arr;
-	char	*tmp;
 	size_t	i;
 
 	cdpath = ft_search("CDPATH", env);
-	if (!cdpath || !cdpath[0])
+	if (!cdpath)
+		return (free(dirname), 2);
+	if (!cdpath[0])
 		return (free(cdpath), 1);
 	cdpath_arr = ft_split(cdpath, ':');
 	if (!cdpath_arr)
-		return (free(cdpath), 2);
+		return (free(dirname), free(cdpath), 2);
 	i = 0;
 	while (cdpath_arr[i])
 	{
-		tmp = join_path(cdpath_arr[i], dirname);
-		if (change_to_directory(tmp))
-		{
-			if (cdpath_arr[i][0])
-				printf("%s\n", tmp);
-			return (free(tmp), *find_success = true, bindpwd(env));
-		}
-		else
-			free(tmp);
+		if (_try_one_cdpath(cdpath_arr[i++], dirname, find_success) == 2)
+			return (free_for_find_cdpath(dirname, cdpath, cdpath_arr), 2);
+		if (*find_success == true)
+			return (free_for_find_cdpath(dirname, cdpath, cdpath_arr), 0);
 	}
-	return (1);
+	return (free_for_find_cdpath(dirname, cdpath, cdpath_arr), 1);
 }
 
 static int	_edge_case_handler(t_tree_node *cmd_node, t_env *env,
@@ -53,7 +71,7 @@ static int	_edge_case_handler(t_tree_node *cmd_node, t_env *env,
 {
 	static const char	*target[3] = {"HOME", NULL, "OLDPWD"};
 	static const char	*errmsg[3] = {"HOME not set", "too many arguments",
-		"OLDPWD not set"};
+			"OLDPWD not set"};
 	size_t				code;
 
 	if (!cmd_node->data.command.args[1])
@@ -90,17 +108,17 @@ static char	*_decide_dirname(t_tree_node *cmd_node, t_env *env,
 	code = _edge_case_handler(cmd_node, env, print_path, &dirname);
 	if (code == 1)
 	{
-		dirname = cmd_node->data.command.args[1];
-		if (absolute_pathname(dirname))
-		{
-			if (_find_cdpath(dirname, env, find_success) != 1)
-				return (NULL);
-		}
+		dirname = ft_strdup(cmd_node->data.command.args[1]);
+		if (!dirname)
+			return (ft_puterr_malloc());
+		if (absolute_pathname(dirname) && _find_cdpath(dirname, env,
+				find_success) != 1)
+			return (NULL);
 		if (dirname[0] != '/')
 		{
-			tmp = join_path(cwd, cmd_node->data.command.args[1]);
+			tmp = join_path(cwd, dirname);
 			if (change_to_directory(tmp))
-				return (free(tmp), *find_success = true, NULL);
+				return (free(tmp), free(dirname), *find_success = true, NULL);
 			free(tmp);
 		}
 	}
@@ -127,7 +145,8 @@ unsigned char	builtin_cd(t_tree_node *cmd_node, t_env *env)
 	{
 		if (printpath)
 			printf("%s\n", dirname);
+		free(dirname);
 		return (bindpwd(env));
 	}
-	return (builtin_error("cd", dirname, strerror(errno)), 1);
+	return (builtin_error("cd", dirname, strerror(errno)), free(dirname), 1);
 }

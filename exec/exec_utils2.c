@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:39:36 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 12:49:54 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 15:21:52 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	find_builtin(t_tree_node *cmd_node, t_env *env)
 		return ;
 	if (!is_builtin(cmd_node->data.command.args[0]))
 		return ;
-	exit_status = exec_builtin(cmd_node, env);
+	exit_status = exec_builtin(cmd_node, env, NULL);
 	free_for_exit(env, exit_status);
 }
 

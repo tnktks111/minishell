@@ -6,13 +6,13 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:37:47 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 16:22:55 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 15:36:05 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-unsigned char	exec_builtin(t_tree_node *node, t_env *env)
+unsigned char	exec_builtin(t_tree_node *node, t_env *env, int *saved_std_fds)
 {
 	if (ft_strcmp(node->data.command.args[0], "echo") == 0)
 		return (builtin_echo(node, env));
@@ -27,7 +27,7 @@ unsigned char	exec_builtin(t_tree_node *node, t_env *env)
 	if (ft_strcmp(node->data.command.args[0], "env") == 0)
 		return (builtin_env(node, env));
 	if (ft_strcmp(node->data.command.args[0], "exit") == 0)
-		return (builtin_exit(node, env));
+		return (builtin_exit(node, env, saved_std_fds));
 	else
 		return (EXIT_FAILURE);
 }

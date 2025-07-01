@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/30 19:22:15 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 17:18:43 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void			exec_command_helper(t_tree_node *cmd_node, t_env *env);
 
 int				exec_solo_cmd(t_tree_node *curr, t_env *env);
 
-unsigned char	exec_builtin(t_tree_node *node, t_env *env);
+unsigned char	exec_builtin(t_tree_node *node, t_env *env, int *saved_std_fds);
 int				exec_redirection(t_redirect *redirect);
 
 int				wcoredump(int status);
@@ -84,8 +84,8 @@ void			find_builtin(t_tree_node *cmd_node, t_env *env);
 void			find_path(char **args, t_env *env);
 bool			is_builtin(char *s);
 bool			is_directory(char *path);
-int				save_std_fds(int saved_std_fds[3]);
-void			restore_std_fds(int saved_fds[3]);
+int				*save_std_fds(void);
+void			restore_std_fds(int *saved_fds);
 void			find_path_failure_handler(char *cmd_name, int errnum,
 					t_env *env);
 void			execve_failure_handler(char *cmd_name, int errnum, t_env *env);
@@ -118,13 +118,14 @@ unsigned char	builtin_pwd(t_tree_node *node, t_env *env);
 unsigned char	builtin_export(t_tree_node *node, t_env *env);
 unsigned char	builtin_unset(t_tree_node *node, t_env *env);
 unsigned char	builtin_env(t_tree_node *node, t_env *env);
-unsigned char	builtin_exit(t_tree_node *node, t_env *env);
+unsigned char	builtin_exit(t_tree_node *node, t_env *env, int *saved_std_fds);
 int				sh_mktmpfd(char **file_path_ptr);
 
 int				bindpwd(t_env *env);
 int				absolute_pathname(const char *string);
 char			*make_absolute(char *path);
 int				change_to_directory(char *path);
+void			free_for_find_cdpath(char *s1, char *s2, char **splitted_data);
 
 void			free_splited_data(char **data);
 char			**free_allocated_data(char **datas, size_t allocated);

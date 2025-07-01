@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 15:01:11 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 15:48:47 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,11 @@ int						exec_solo_cmd(t_tree_node *curr, t_env *env);
 
 static unsigned char	exec_solo_builtin(t_tree_node *cmd_node, t_env *env)
 {
-	int				saved_std_fds[3];
+	int				*saved_std_fds;
 	unsigned char	status;
 
-	if (ft_strcmp(cmd_node->data.command.args[0], "exit") != 0
-		&& save_std_fds(saved_std_fds) == EXIT_FAILURE)
+	saved_std_fds = save_std_fds();
+	if (!saved_std_fds)
 	{
 		unlink_tmpfile(cmd_node);
 		return (EXIT_FAILURE);
@@ -34,7 +34,7 @@ static unsigned char	exec_solo_builtin(t_tree_node *cmd_node, t_env *env)
 		restore_std_fds(saved_std_fds);
 		return (EXIT_FAILURE);
 	}
-	status = exec_builtin(cmd_node, env);
+	status = exec_builtin(cmd_node, env, saved_std_fds);
 	restore_std_fds(saved_std_fds);
 	unlink_tmpfile(cmd_node);
 	return (status);

@@ -6,51 +6,56 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 16:59:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 12:46:46 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/01 15:49:00 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int		save_std_fds(int saved_std_fds[3]);
-void	restore_std_fds(int saved_fds[3]);
+int		*save_std_fds(void);
+void	restore_std_fds(int *saved_std_fds);
 void	find_path_failure_handler(char *cmd_name, int errnum, t_env *env);
 void	execve_failure_handler(char *cmd_name, int errnum, t_env *env);
 
-int	save_std_fds(int saved_std_fds[3])
+int	*save_std_fds(void)
 {
+	int *saved_std_fds;
+
+	saved_std_fds = (int *)malloc(sizeof(int) * 3);
+	if (!saved_std_fds)
+		return (ft_puterr_malloc());
 	saved_std_fds[0] = dup(STDIN_FILENO);
 	if (saved_std_fds[0] == -1)
-	{
-		perror("dup()");
-		return (EXIT_FAILURE);
-	}
+		return (perror_string("dup()"), NULL);
 	saved_std_fds[1] = dup(STDOUT_FILENO);
 	if (saved_std_fds[1] == -1)
 	{
 		perror("dup()");
 		close(saved_std_fds[0]);
-		return (EXIT_FAILURE);
+		return (perror_string("dup()"), NULL);
 	}
 	saved_std_fds[2] = dup(STDERR_FILENO);
 	if (saved_std_fds[2] == -1)
 	{
-		perror("dup()");
 		close(saved_std_fds[0]);
 		close(saved_std_fds[1]);
-		return (EXIT_FAILURE);
+		return (perror_string("dup()"), NULL);
 	}
-	return (EXIT_SUCCESS);
+	return (saved_std_fds);
 }
 
-void	restore_std_fds(int saved_std_fds[3])
+void	restore_std_fds(int *saved_std_fds)
 {
+	if (!saved_std_fds)
+		return ;
 	dup2(saved_std_fds[0], STDIN_FILENO);
 	dup2(saved_std_fds[1], STDOUT_FILENO);
 	dup2(saved_std_fds[2], STDERR_FILENO);
 	close(saved_std_fds[0]);
 	close(saved_std_fds[1]);
 	close(saved_std_fds[2]);
+	free(saved_std_fds);
+	saved_std_fds = NULL;
 }
 
 void	find_path_failure_handler(char *cmd_name, int errnum, t_env *env)
