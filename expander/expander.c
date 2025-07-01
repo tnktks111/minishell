@@ -67,8 +67,7 @@ int	expand_filename(t_redirect *cur, t_env *env)
 		takeoff_quotes(temp);
 		cur->filename = temp;
 	}
-	free(redir_filename);
-	return (EXIT_SUCCESS);
+	return (free(redir_filename), EXIT_SUCCESS);
 }
 
 void	expand_cmd_args(t_tree_node *simple_cmd_node, t_env *env)
@@ -133,4 +132,5 @@ int	expand_ast(t_tree_node *node, t_env *env)
 	if (expand_ast(node->left, env) == EXIT_FAILURE || expand_ast(node->right,
 			env) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }
