@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 16:59:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 18:24:10 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 10:21:00 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int		*save_std_fds(void);
 void	restore_std_fds(int *saved_std_fds);
 void	find_path_failure_handler(char *cmd_name, int errnum, t_env *env);
 void	execve_failure_handler(char *cmd_name, int errnum, t_env *env);
+void	n_wait(size_t n);
 
 int	*save_std_fds(void)
 {
@@ -93,5 +94,17 @@ void	execve_failure_handler(char *cmd_name, int errnum, t_env *env)
 	{
 		ft_puterr_general(cmd_name, strerror(errnum));
 		free_for_exit(env, 127);
+	}
+}
+
+void	n_wait(size_t n)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < n)
+	{
+		wait(NULL);
+		i++;
 	}
 }

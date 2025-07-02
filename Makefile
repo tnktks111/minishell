@@ -6,7 +6,7 @@
 #    By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/17 19:06:08 by ttanaka           #+#    #+#              #
-#    Updated: 2025/07/01 20:45:05 by ttanaka          ###   ########.fr        #
+#    Updated: 2025/07/02 10:11:33 by ttanaka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,6 +63,7 @@ SRCS = 	builtin/builtin_cd.c \
 		free/free_all.c \
 		here_doc/here_doc.c \
 		here_doc/here_doc_expander.c \
+		here_doc/here_doc_pipeline.c \
 		here_doc/here_doc_quotes.c \
 		here_doc/here_doc_tmpfile.c \
 		here_doc/here_doc_utils.c \
