@@ -36,6 +36,28 @@ t_token	*get_redir_tail(t_token *head, t_token *tail)
 	return (tail);
 }
 
+t_redirect	*extract_subshell_redirects(t_token *head, t_token *tail)
+{
+	t_redirect	*redirect_head;
+	t_token		*cur;
+
+	if (!head || !tail)
+		return (NULL);
+	redirect_head = NULL;
+	cur = head;
+	while (cur && cur->status != RIGHT_PAREN)
+		cur = cur->next;
+	while (cur && cur != tail->next && cur->status != PIPE)
+	{
+		if (cur->status == REDIRECT)
+		{
+			append_redirects(&redirect_head, cur);
+		}
+		cur = cur->next;
+	}
+	return (redirect_head);
+}
+
 t_tree_node	*parse_paren(t_create_tree *tree, t_token *head, t_token *tail)
 {
 	t_token	*paren_tail;

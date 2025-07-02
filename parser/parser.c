@@ -41,7 +41,7 @@ t_tree_node	*create_subshell_node(t_tree_node *cur_root, t_token *head,
 		return (NULL);
 	node->kind = NODE_SUBSHELL;
 	redir_tail = get_redir_tail(head, tail);
-	node->data.command.redirects = extract_redirects(head, redir_tail);
+	node->data.command.redirects = extract_subshell_redirects(head, redir_tail);
 	node->data.command.args = extract_args(head, tail);
 	node->left = cur_root;
 	node->right = NULL;

@@ -85,6 +85,7 @@ t_tree_node		*create_simple_cmd_node(t_token *head, t_token *tail);
 //()()
 t_tree_node		*parse_paren(t_create_tree *tree, t_token *head, t_token *tail);
 t_token			*get_redir_tail(t_token *head, t_token *tail);
+t_redirect		*extract_subshell_redirects(t_token *head, t_token *tail);
 t_tree_node		*create_subshell_node(t_tree_node *cur_root, t_token *head,
 					t_token *tail);
 //
@@ -145,19 +146,5 @@ void			free_list(t_list *list);
 void			free_redirects(t_redirect *redirect);
 void			free_tree_node(t_tree_node *node);
 void			free_all(t_env *env);
-
-/*errors*/
-bool			check_syntax_error(t_token *head);
-bool			check_paren_syntax_error(t_token *head);
-bool			check_closed_paren_syntax_error(t_token *head);
-bool			check_cosecutive_paren_syntax_error(t_token *head);
-void			handle_syntax_error(t_env *env);
-void			error_redir(char *filename);
-void			error_unexpected_token(char *token_str);
-bool			is_status_meta(t_status status);
-bool			is_status_splitable(t_status status);
-bool			is_status_paren(t_status status);
-bool			check_op_placement(t_token *head);
-bool			check_redirect_placement(t_token *head);
 
 #endif

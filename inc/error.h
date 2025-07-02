@@ -30,4 +30,18 @@ void	error_numeric_arg_required(char *cmd_name, char *arg);
 void	error_not_a_valid_identifier(char *cmd_name, char *arg);
 void	error_illegal_arguments(char *cmd_name, char *arg);
 
+bool	check_syntax_error(t_token *head);
+bool	check_paren_syntax_error(t_token *head);
+bool	check_closed_paren_syntax_error(t_token *head);
+bool	check_cosecutive_paren_syntax_error(t_token *head);
+void	handle_syntax_error(t_env *env);
+bool	is_status_meta(t_status status);
+bool	is_status_splitable(t_status status);
+bool	is_status_paren(t_status status);
+bool	check_op_placement(t_token *head);
+bool	check_redirect_placement(t_token *head);
+
+void	error_redir(char *filename);
+void	error_unexpected_token(char *token_str);
+
 #endif
