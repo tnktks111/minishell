@@ -57,7 +57,8 @@ bool	check_closed_paren_syntax_error(t_token *head)
 			next = cur->next;
 			while (next && next->status == SPLITABLE)
 				next = next->next;
-			if (next && next->status == RIGHT_PAREN)
+			if (next && (next->status == RIGHT_PAREN
+					|| is_status_meta(next->status)))
 			{
 				error_unexpected_token(next->str);
 				return (true);

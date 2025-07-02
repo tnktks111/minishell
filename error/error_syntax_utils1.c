@@ -74,12 +74,13 @@ bool	check_op_placement(t_token *head)
 		return (false);
 	while (cur)
 	{
-		if (is_status_meta(cur->status))
+		if (is_status_meta(cur->status) || cur->status == RIGHT_PAREN)
 		{
 			if (prev_is_meta)
 				return (error_unexpected_token(temp), true);
 			temp = cur->str;
-			prev_is_meta = true;
+			if (is_status_meta(cur->status))
+				prev_is_meta = true;
 		}
 		if (!is_status_splitable(cur->status) && !is_status_meta(cur->status))
 			prev_is_meta = false;
