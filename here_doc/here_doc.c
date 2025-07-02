@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:35:53 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/02 11:46:24 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 13:15:56 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,9 @@ int	prepare_here_doc(t_tree_node *node, t_env *env)
 	int			res;
 
 	res = EXIT_SUCCESS;
-	if (node->right)
-		curr = node->right->data.command.redirects;
-	else
-		curr = node->data.command.redirects;
+	if (node->kind == NODE_SUBSHELL && prepare_entire_here_docs(node, env) == EXIT_FAILURE)
+		res = EXIT_FAILURE;
+	curr = node->data.command.redirects;
 	while (curr)
 	{
 		if (curr->kind == REDIR_HEREDOC)
@@ -39,7 +38,7 @@ int	prepare_here_doc(t_tree_node *node, t_env *env)
 			if (res == EXIT_SUCCESS)
 			{
 				tmpfile = here_doc_handler(curr, env);
-				res = (!tmpfile);
+				res = (tmpfile == NULL);
 			}
 			free(curr->filename);
 			curr->filename = tmpfile;
@@ -131,6 +130,9 @@ char	*here_doc_handler(t_redirect *redirect, t_env *env)
 	if (pid == -1)
 		return (_here_doc_fork_error_handler(env));
 	if (pid == 0)
+	{
+		env->is_child = true;
 		free_for_exit(env, _exec_hd_child(redirect, fd, is_expandable, env));
+	}
 	return (_exec_here_doc_parent_process(tmpfile, &status, fd, env));
 }

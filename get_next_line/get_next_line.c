@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 22:29:18 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 21:19:08 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 12:09:14 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ char	*get_next_line(char *s, int fd)
 	}
 	if (fd < 0)
 		return (NULL);
-	ft_putstr_fd(s, STDOUT_FILENO);
+	ft_putstr_fd(s, STDERR_FILENO);
 	res.str = NULL;
 	res.len = 0;
 	res.cap = 0;

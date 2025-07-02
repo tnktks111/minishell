@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/02 11:54:14 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 13:35:40 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,12 @@ unsigned char	exec_ast(t_tree_node *root, t_env *env)
 	while (curr->kind == NODE_AND || curr->kind == NODE_OR)
 		curr = curr->left;
 	prev_exit_status = exec_pipeline(curr, env);
-	if (prev_exit_status == HEREDOC_SIGINT)
-		return (env->prev_exit_status = 130, free_for_exec_ast(env));
 	curr = curr->parent;
 	while (curr->kind == NODE_AND || curr->kind == NODE_OR)
 	{
 		if ((prev_exit_status == 0 && curr->kind == NODE_AND)
 			|| (prev_exit_status && curr->kind == NODE_OR))
-		{
 			prev_exit_status = exec_pipeline(curr->right, env);
-			if (prev_exit_status == HEREDOC_SIGINT)
-				return (env->prev_exit_status = 130, free_for_exec_ast(env));
-		}
 		curr = curr->parent;
 	}
 	return (free_for_exec_ast(env));
@@ -52,11 +46,6 @@ int	exec_pipeline(t_tree_node *node_pipeline, t_env *env)
 	env->envp = decode_table(env, false);
 	env->envp_is_malloced = true;
 	node_pipeline->data.pipeline.exit_status = exec_pl_cmds(node_pipeline, env);
-	if (node_pipeline->data.pipeline.exit_status == HEREDOC_SIGINT)
-	{
-		env->prev_exit_status = HEREDOC_SIGINT;
-		return (HEREDOC_SIGINT);
-	}
 	if (node_pipeline->data.pipeline.have_bang == true)
 	{
 		env->prev_exit_status = !node_pipeline->data.pipeline.exit_status;
@@ -79,8 +68,6 @@ int	exec_pl_cmds(t_tree_node *node_pipeline, t_env *env)
 
 	if (expand_ast(node_pipeline, env) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
-	if (prepare_pl_here_docs(node_pipeline, env) == EXIT_FAILURE)
-		return (env->prev_exit_status);
 	curr = node_pipeline->left;
 	fd.read_fd = STDIN_FILENO;
 	if (curr->kind == NODE_SIMPLE_COMMAND || curr->kind == NODE_SUBSHELL)
@@ -88,13 +75,12 @@ int	exec_pl_cmds(t_tree_node *node_pipeline, t_env *env)
 	while (curr->kind == NODE_PIPE)
 		curr = curr->left;
 	cnt = exec_loop(curr, &fd, env, &pid);
-	if (cnt == EXIT_FAILURE || cnt == HEREDOC_SIGINT)
-		return (unlink_all_tmpfiles(node_pipeline), cnt);
+	if (cnt == EXIT_FAILURE)
+		return (EXIT_FAILURE);
 	setup_parent_wait_signal_handlers();
 	waitpid(pid, &status, 0);
 	n_wait(cnt - 1);
 	setup_interactive_signal_handlers();
-	unlink_all_tmpfiles(node_pipeline);
 	return (status_handler(status));
 }
 

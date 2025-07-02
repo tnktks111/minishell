@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 16:41:09 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 20:04:30 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 13:53:41 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,13 @@ static void	line_executer(char *input, t_env *env)
 	if (root)
 	{
 		env->root = root;
+		if (prepare_entire_here_docs(root, env) == EXIT_FAILURE)
+		{
+			env->prev_exit_status = 130 ;
+			free_tree_node(env->root);
+			return ;
+		}
+		print_tree(root);
 		exec_ast(root, env);
 	}
 }

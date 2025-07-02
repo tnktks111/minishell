@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/02 10:10:40 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 12:50:47 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,19 +24,14 @@ static unsigned char	exec_solo_builtin(t_tree_node *cmd_node, t_env *env)
 
 	saved_std_fds = save_std_fds();
 	if (!saved_std_fds)
-	{
-		unlink_tmpfile(cmd_node);
 		return (EXIT_FAILURE);
-	}
 	if (exec_redirection(cmd_node->data.command.redirects) == EXIT_FAILURE)
 	{
-		unlink_tmpfile(cmd_node);
 		restore_std_fds(saved_std_fds);
 		return (EXIT_FAILURE);
 	}
 	status = exec_builtin(cmd_node, env, saved_std_fds);
 	restore_std_fds(saved_std_fds);
-	unlink_tmpfile(cmd_node);
 	return (status);
 }
 
@@ -69,7 +64,7 @@ int	exec_solo_cmd(t_tree_node *cmd_node, t_env *env)
 
 	if (cmd_node->kind == NODE_SIMPLE_COMMAND && cmd_node->data.command.args[0]
 		&& ft_set_underscore(cmd_node, env) == EXIT_FAILURE)
-		return (unlink_tmpfile(cmd_node), EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	if (cmd_node->kind == NODE_SIMPLE_COMMAND && cmd_node->data.command.args
 		&& is_builtin(cmd_node->data.command.args[0]))
 		return (exec_solo_builtin(cmd_node, env));
@@ -77,14 +72,12 @@ int	exec_solo_cmd(t_tree_node *cmd_node, t_env *env)
 	{
 		pid = fork();
 		if (pid == -1)
-			return (perror_string("fork"), unlink_tmpfile(cmd_node),
-				EXIT_FAILURE);
+			return (perror_string("fork"), EXIT_FAILURE);
 		if (pid == 0)
 			exec_child_process_of_solo_cmd(cmd_node, env);
 		setup_parent_wait_signal_handlers();
 		wait(&wait_status);
 		setup_interactive_signal_handlers();
-		unlink_tmpfile(cmd_node);
 		return (status_handler(wait_status));
 	}
 }
