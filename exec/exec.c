@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/02 10:37:43 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 11:05:34 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ unsigned char	exec_ast(t_tree_node *root, t_env *env)
 	curr = curr->parent;
 	while (curr->kind == NODE_AND || curr->kind == NODE_OR)
 	{
-		if ((prev_exit_status == 0 && curr->kind == NODE_AND) || (prev_exit_status && curr->kind == NODE_OR))
+		if ((prev_exit_status == 0 && curr->kind == NODE_AND)
+			|| (prev_exit_status && curr->kind == NODE_OR))
 		{
 			prev_exit_status = exec_pipeline(curr->right, env);
 			if (prev_exit_status == HEREDOC_SIGINT)
@@ -67,8 +68,6 @@ int	exec_pipeline(t_tree_node *node_pipeline, t_env *env)
 		return (node_pipeline->data.pipeline.exit_status);
 	}
 }
-
-
 
 int	exec_pl_cmds(t_tree_node *node_pipeline, t_env *env)
 {

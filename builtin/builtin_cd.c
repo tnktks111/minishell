@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 15:35:15 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/02 10:48:39 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 11:07:34 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static int	_edge_case_handler(t_tree_node *cmd_node, t_env *env,
 {
 	static const char	*target[3] = {"HOME", NULL, "OLDPWD"};
 	static const char	*errmsg[3] = {"HOME not set", "too many arguments",
-			"OLDPWD not set"};
+		"OLDPWD not set"};
 	size_t				code;
 
 	if (!cmd_node->data.command.args[1])
