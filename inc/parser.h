@@ -13,7 +13,7 @@
 #ifndef PARSER_H
 # define PARSER_H
 
-# include "libft/inc/libft.h"
+# include "../libft/inc/libft.h"
 # include "struct.h"
 # include <dirent.h>
 # include <fcntl.h>
@@ -121,16 +121,20 @@ char			**list_to_args(t_list *head);
 
 size_t			count_args(char **args);
 bool			check_variable_expand(char *str);
+bool			check_if_splittable(char *str);
+int				variable_expand_append_command_line(char *str, t_list **head,
+					t_env *env);
 char			*get_variable_str(char *src);
 char			*expand_individual_variable(char *str, t_env *env);
 char			*expand_every_variable(char *str, t_env *env);
 char			**expand_cmd_variable(char **cmd_args, t_env *env);
+char			**ft_split_isspace(char const *s);
+char			*expand_file_variable(char *str, t_env *env, bool *redir_error);
 
 int				handle_file_wildcard(t_redirect *cur, char *temp,
 					char *redir_file);
 bool			check_wildcard_expand(char *str);
 char			**expand_cmd_wildcard(char **cmd_args);
-void			init_wildcard_array(int *src, char *str, size_t str_len);
 char			*expand_filename_wildcard(char *filename, bool *error);
 char			**expand_cmd_line(t_list *cmdline);
 char			**expand_file_line(t_list *fileline);

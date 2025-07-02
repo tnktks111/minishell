@@ -42,11 +42,10 @@ static void	line_executer(char *input, t_env *env)
 		env->root = root;
 		if (prepare_entire_here_docs(root, env) == EXIT_FAILURE)
 		{
-			env->prev_exit_status = 130 ;
+			env->prev_exit_status = 130;
 			free_tree_node(env->root);
 			return ;
 		}
-		print_tree(root);
 		exec_ast(root, env);
 	}
 }

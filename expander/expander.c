@@ -46,12 +46,14 @@ int	expand_filename(t_redirect *cur, t_env *env)
 	char	*redir_file;
 	char	*temp;
 	int		status;
+	bool	error;
 
+	error = false;
 	if (!cur->filename || cur->kind == REDIR_HEREDOC)
 		return (EXIT_SUCCESS);
 	redir_file = ft_strdup(cur->filename);
-	temp = expand_every_variable(cur->filename, env);
-	if (!temp || *temp == '\0')
+	temp = expand_file_variable(cur->filename, env, &error);
+	if (!temp || *temp == '\0' || error)
 	{
 		free(temp);
 		error_redir(redir_file);

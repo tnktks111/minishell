@@ -34,26 +34,27 @@ bool	check_wildcard_expand(char *str)
 	return (false);
 }
 
-char	**expand_cmd_line(t_list *cmdline)
+char	**expand_cmd_line(t_list *cmd_line)
 {
 	char	**result;
-	t_list	*head;
 	t_list	*cur;
+	t_list	*head;
 
 	head = NULL;
-	append_command_line(&head, cmdline->content);
-	cur = cmdline->next;
+	cur = cmd_line;
 	while (cur)
 	{
 		if (check_wildcard_expand(cur->content))
+		{
 			expand_and_append_command_line(cur->content, &head);
+		}
 		else
 			append_command_line(&head, cur->content);
 		cur = cur->next;
 	}
 	result = list_to_args(head);
 	free_list(head);
-	free_list(cmdline);
+	free_list(cmd_line);
 	return (result);
 }
 
@@ -65,21 +66,6 @@ char	**expand_cmd_wildcard(char **cmd_args)
 	get_cmd_line_list(&cmd_line, cmd_args);
 	result = expand_cmd_line(cmd_line);
 	return (result);
-}
-
-void	init_wildcard_array(int *src, char *str, size_t str_len)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < str_len)
-	{
-		if (str[i] == '*')
-			src[i] = 1;
-		else
-			src[i] = 0;
-		i++;
-	}
 }
 
 char	*expand_filename_wildcard(char *filename, bool *error)

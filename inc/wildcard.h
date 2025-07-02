@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft/inc/libft.h"
+#include "../libft/inc/libft.h"
 #include "minishell.h"
 #include <dirent.h>
 #include <linux/limits.h>

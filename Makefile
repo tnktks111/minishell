@@ -58,6 +58,8 @@ SRCS = 	builtin/builtin_cd.c \
 		expander/expander_wildcard_utils1.c \
 		expander/expander_variable.c \
 		expander/expander_variable_utils1.c \
+		expander/expander_variable_utils2.c \
+		expander/expander_variable_utils3.c \
 		free/free1.c \
 		free/free2.c \
 		free/free_all.c \
@@ -89,7 +91,6 @@ SRCS = 	builtin/builtin_cd.c \
 		ft_glob/matching.c \
 		get_next_line/get_next_line.c \
 		get_next_line/get_next_line_utils.c \
-		tmp/print_debug.c \
 		main.c 
 
 OBJS = $(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS))

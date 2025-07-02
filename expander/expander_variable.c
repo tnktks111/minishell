@@ -47,33 +47,33 @@ size_t	count_args(char **args)
 	return (count);
 }
 
-char	**expand_cmd_variable(char **cmd_args, t_env *env)
-{
-	char	**new_args;
-	size_t	i;
-	size_t	j;
-	char	*expanded;
+// char	**expand_cmd_variable(char **cmd_args, t_env *env)
+// {
+// 	char	**new_args;
+// 	size_t	i;
+// 	size_t	j;
+// 	char	*expanded;
 
-	new_args = malloc(sizeof(char *) * (count_args(cmd_args) + 1));
-	if (!new_args)
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (cmd_args[i])
-	{
-		if (check_variable_expand(cmd_args[i]))
-			expanded = expand_every_variable(ft_strdup(cmd_args[i]), env);
-		else
-			expanded = ft_strdup(cmd_args[i]);
-		if (expanded && expanded[0] != '\0')
-			new_args[j++] = expanded;
-		else
-			free(expanded);
-		i++;
-	}
-	new_args[j] = NULL;
-	return (new_args);
-}
+// 	new_args = malloc(sizeof(char *) * (count_args(cmd_args) + 1));
+// 	if (!new_args)
+// 		return (NULL);
+// 	i = 0;
+// 	j = 0;
+// 	while (cmd_args[i])
+// 	{
+// 		if (check_variable_expand(cmd_args[i]))
+// 			expanded = expand_every_variable(ft_strdup(cmd_args[i]), env);
+// 		else
+// 			expanded = ft_strdup(cmd_args[i]);
+// 		if (expanded && expanded[0] != '\0')
+// 			new_args[j++] = expanded;
+// 		else
+// 			free(expanded);
+// 		i++;
+// 	}
+// 	new_args[j] = NULL;
+// 	return (new_args);
+// }
 
 int	handle_file_wildcard(t_redirect *cur, char *temp, char *redir_file)
 {

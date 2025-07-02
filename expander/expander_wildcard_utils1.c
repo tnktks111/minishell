@@ -49,10 +49,13 @@ int	expand_and_append_command_line(char *str, t_list **head)
 	{
 		if (!*head)
 			*head = expanded;
-		tail = *head;
-		while (tail->next)
-			tail = tail->next;
-		tail->next = expanded;
+		else
+		{
+			tail = *head;
+			while (tail->next)
+				tail = tail->next;
+			tail->next = expanded;
+		}
 	}
 	else
 		return (append_command_line(head, str));
