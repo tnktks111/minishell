@@ -6,7 +6,7 @@
 #    By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/17 19:06:08 by ttanaka           #+#    #+#              #
-#    Updated: 2025/07/02 10:11:33 by ttanaka          ###   ########.fr        #
+#    Updated: 2025/07/02 11:03:44 by ttanaka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,8 +51,8 @@ SRCS = 	builtin/builtin_cd.c \
 		exec/exec_builtin.c \
 		exec/exec_solo_command.c \
 		exec/exec_redirection.c \
-		exec/exec_signal.c \
-		exec/exec_signal_utils1.c \
+		exec/exec_signal_1.c \
+		exec/exec_signal_2.c \
 		expander/expander.c \
 		expander/expander_wildcard.c \
 		expander/expander_wildcard_utils1.c \
