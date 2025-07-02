@@ -6,26 +6,14 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 04:53:42 by sguruge           #+#    #+#             */
-/*   Updated: 2025/06/29 15:55:04 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 10:59:03 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCT_H
 # define STRUCT_H
 
-# include "libft/inc/libft.h"
-# include <dirent.h>
-# include <fcntl.h>
-# include <limits.h>
-# include <readline/history.h>
-# include <readline/readline.h>
-# include <stdbool.h>
-# include <stdlib.h>
-# include <sys/errno.h>
-# include <sys/stat.h>
-# include <sys/types.h>
-# include <sys/wait.h>
-# include <unistd.h>
+# include "minishell.h"
 
 # define DEFAULT_TMPDIR "."
 # ifndef PATH_MAX

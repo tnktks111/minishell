@@ -6,17 +6,19 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 10:40:08 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 15:47:38 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 10:51:50 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
 static long long	ft_strtol_for_exit(char *s, bool *error);
+static void			free_for_builtin_exit(t_env *env, unsigned char exit_status,
+						int *saved_std_fds);
 unsigned char		builtin_exit(t_tree_node *node, t_env *env,
 						int *saved_std_fds);
 
-long long	ft_strtol_for_exit(char *s, bool *error)
+static long long	ft_strtol_for_exit(char *s, bool *error)
 {
 	long long	sign;
 	long long	num;
@@ -44,7 +46,7 @@ long long	ft_strtol_for_exit(char *s, bool *error)
 	return (sign * num);
 }
 
-void	free_for_builtin_exit(t_env *env, unsigned char exit_status,
+static void	free_for_builtin_exit(t_env *env, unsigned char exit_status,
 		int *saved_std_fds)
 {
 	restore_std_fds(saved_std_fds);

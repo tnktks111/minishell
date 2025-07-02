@@ -6,12 +6,14 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 15:35:15 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 18:09:18 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 10:48:39 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
+static int		_try_one_cdpath(char *cdpath, char *dirname,
+					bool *find_success);
 static int		_find_cdpath(char *dirname, t_env *env, bool *find_success);
 static int		_edge_case_handler(t_tree_node *cmd_node, t_env *env,
 					bool *print_path, char **dirname);
@@ -71,7 +73,7 @@ static int	_edge_case_handler(t_tree_node *cmd_node, t_env *env,
 {
 	static const char	*target[3] = {"HOME", NULL, "OLDPWD"};
 	static const char	*errmsg[3] = {"HOME not set", "too many arguments",
-		"OLDPWD not set"};
+			"OLDPWD not set"};
 	size_t				code;
 
 	if (!cmd_node->data.command.args[1])

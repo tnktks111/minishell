@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 16:29:27 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 23:05:26 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 11:01:42 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	free_int_matrix(int **matrix);
 void	destroy_entire_tree_recursive(t_wc_tree *root);
 void	**free_wc_allocated_data(t_wc_tree **datas, size_t allocated);
+void	free_tree_node(t_tree_node *node);
 
 void	free_int_matrix(int **matrix)
 {

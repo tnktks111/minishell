@@ -6,13 +6,13 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 15:03:28 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 12:02:51 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 11:02:15 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void	free_tree_node(t_tree_node *node);
+void	free_token(t_token *head, t_token *tail);
 void	free_redirects(t_redirect *redirect);
 void	free_list(t_list *list);
 void	free_splited_data(char **data);

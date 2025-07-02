@@ -1,19 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_signal.c                                      :+:      :+:    :+:   */
+/*   exec_signal_2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sguruge <sguruge@student.42tokyo.jp>       #+#  +:+       +#+        */
+/*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-07-02 00:27:44 by sguruge           #+#    #+#             */
-/*   Updated: 2025-07-02 00:27:44 by sguruge          ###   ########.fr       */
+/*   Created: 2025/07/02 00:27:46 by sguruge           #+#    #+#             */
+/*   Updated: 2025/07/02 10:43:52 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void	setup_interactive_signal_handlers(void);
-void	setup_here_doc_signal_handlers(void);
 void	setup_parent_wait_signal_handlers(void);
 void	setup_child_signal_handlers(void);
 

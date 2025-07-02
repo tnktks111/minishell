@@ -6,17 +6,17 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/02 10:19:47 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 10:37:43 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
 unsigned char	exec_ast(t_tree_node *root, t_env *env);
-int				exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env,
-					pid_t *lastpid);
 int				exec_pipeline(t_tree_node *node_pipeline, t_env *env);
 int				exec_pl_cmds(t_tree_node *node_pipeline, t_env *env);
+int				exec_loop(t_tree_node *node, t_pipefd *fd, t_env *env,
+					pid_t *lastpid);
 void			exec_command_helper(t_tree_node *cmd_node, t_env *env);
 
 unsigned char	exec_ast(t_tree_node *root, t_env *env)

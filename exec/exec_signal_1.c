@@ -1,23 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_signal_utils1.c                               :+:      :+:    :+:   */
+/*   exec_signal_1.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sguruge <sguruge@student.42tokyo.jp>       #+#  +:+       +#+        */
+/*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-07-02 00:27:46 by sguruge           #+#    #+#             */
-/*   Updated: 2025-07-02 00:27:46 by sguruge          ###   ########.fr       */
+/*   Created: 2025/07/02 00:27:44 by sguruge           #+#    #+#             */
+/*   Updated: 2025/07/02 10:44:27 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-static void	interactive_sigint_handler(int signo);
-static void	here_doc_sigint_handler(int signo);
-void		setup_interactive_signal_handlers(void);
-void		setup_here_doc_signal_handlers(void);
-void		setup_parent_wait_signal_handlers(void);
-void		setup_child_signal_handlers(void);
+void	setup_interactive_signal_handlers(void);
+void	setup_here_doc_signal_handlers(void);
 
 static void	interactive_sigint_handler(int signo)
 {
