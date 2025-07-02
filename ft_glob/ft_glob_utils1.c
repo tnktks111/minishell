@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:51:33 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 23:06:15 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 15:07:47 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ t_wc_tree	**_gen_base_dir_file_array(char *base_dir, bool show_hidden_files)
 	t_wc_tree		**children;
 
 	cnt = _cnt_base_dir_file(base_dir, show_hidden_files);
-	children = (t_wc_tree **)calloc(cnt + 1, sizeof(t_wc_tree *));
+	children = (t_wc_tree **)ft_calloc(cnt + 1, sizeof(t_wc_tree *));
 	if (!children)
 		return (NULL);
 	dir = opendir(base_dir);

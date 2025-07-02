@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:35:53 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/02 13:15:56 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 15:33:55 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ int	prepare_here_doc(t_tree_node *node, t_env *env)
 	int			res;
 
 	res = EXIT_SUCCESS;
-	if (node->kind == NODE_SUBSHELL && prepare_entire_here_docs(node, env) == EXIT_FAILURE)
+	if (node->kind == NODE_SUBSHELL && prepare_entire_here_docs(node,
+			env) == EXIT_FAILURE)
 		res = EXIT_FAILURE;
 	curr = node->data.command.redirects;
 	while (curr)
@@ -64,7 +65,7 @@ static int	_exec_hd_child(t_redirect *redirect, int fd, bool is_expandable,
 	s = get_next_line("> ", STDIN_FILENO);
 	while (s)
 	{
-		if (g_rcv_heredoc_sig == 1)
+		if (g_rcv_sigint == 1)
 			break ;
 		if (ft_gnl_strcmp(s, redirect->filename) == 0)
 			return (free(s), close(fd), 0);
@@ -77,8 +78,8 @@ static int	_exec_hd_child(t_redirect *redirect, int fd, bool is_expandable,
 		s = get_next_line("> ", STDIN_FILENO);
 	}
 	close(fd);
-	if (g_rcv_heredoc_sig == 1)
-		return (free(s), g_rcv_heredoc_sig = 0, 130);
+	if (g_rcv_sigint == 1)
+		return (free(s), g_rcv_sigint = 0, 130);
 	ft_putchar_fd('\n', STDERR_FILENO);
 	error_heredoc_delimited_by_eof(redirect->filename);
 	close(fd);

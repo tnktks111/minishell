@@ -6,20 +6,53 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:39:36 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/02 11:24:43 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 17:29:52 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
+bool	is_builtin(char *s);
+void	find_builtin(t_tree_node *cmd_node, t_env *env);
 /*search "PATH" in env and return prefix table*/
 char		**get_path_prefix(t_env *env);
-/*check whether the cmd is builtin and exec*/
-void		find_builtin(t_tree_node *cmd_node, t_env *env);
+static int	try_one_prefix(char *prefix, char **args, t_env *env,
+		int *last_errno);
 /*loop prefix table and try execve*/
 void		find_path(char **args, t_env *env);
-/*check whether the cmd is builtin or not*/
-bool		is_builtin(char *s);
+
+bool	is_builtin(char *s)
+{
+	if (!s)
+		return (false);
+	if (ft_strcmp(s, "echo") == 0)
+		return (true);
+	if (ft_strcmp(s, "cd") == 0)
+		return (true);
+	if (ft_strcmp(s, "pwd") == 0)
+		return (true);
+	if (ft_strcmp(s, "export") == 0)
+		return (true);
+	if (ft_strcmp(s, "unset") == 0)
+		return (true);
+	if (ft_strcmp(s, "env") == 0)
+		return (true);
+	if (ft_strcmp(s, "exit") == 0)
+		return (true);
+	return (false);
+}
+
+void	find_builtin(t_tree_node *cmd_node, t_env *env)
+{
+	unsigned char	exit_status;
+
+	if (ft_strchr(cmd_node->data.command.args[0], '/'))
+		return ;
+	if (!is_builtin(cmd_node->data.command.args[0]))
+		return ;
+	exit_status = exec_builtin(cmd_node, env, NULL);
+	free_for_exit(env, exit_status);
+}
 
 char	**get_path_prefix(t_env *env)
 {
@@ -40,18 +73,6 @@ char	**get_path_prefix(t_env *env)
 		free_for_exit(env, EXIT_FAILURE);
 	}
 	return (res);
-}
-
-void	find_builtin(t_tree_node *cmd_node, t_env *env)
-{
-	unsigned char	exit_status;
-
-	if (ft_strchr(cmd_node->data.command.args[0], '/'))
-		return ;
-	if (!is_builtin(cmd_node->data.command.args[0]))
-		return ;
-	exit_status = exec_builtin(cmd_node, env, NULL);
-	free_for_exit(env, exit_status);
 }
 
 static int	try_one_prefix(char *prefix, char **args, t_env *env,
@@ -85,9 +106,8 @@ void	find_path(char **args, t_env *env)
 	if (!prefix_table[0])
 	{
 		free_splitted_data(prefix_table);
-		ft_puterr_general(args[0], strerror(ENOENT));
-		free_for_exit(env, 126);
-	}
+		return ;
+	}	
 	i = -1;
 	while (prefix_table[++i])
 	{
@@ -99,25 +119,4 @@ void	find_path(char **args, t_env *env)
 	}
 	free_splitted_data(prefix_table);
 	find_path_failure_handler(args[0], l_errno, env);
-}
-
-bool	is_builtin(char *s)
-{
-	if (!s)
-		return (false);
-	if (ft_strcmp(s, "echo") == 0)
-		return (true);
-	if (ft_strcmp(s, "cd") == 0)
-		return (true);
-	if (ft_strcmp(s, "pwd") == 0)
-		return (true);
-	if (ft_strcmp(s, "export") == 0)
-		return (true);
-	if (ft_strcmp(s, "unset") == 0)
-		return (true);
-	if (ft_strcmp(s, "env") == 0)
-		return (true);
-	if (ft_strcmp(s, "exit") == 0)
-		return (true);
-	return (false);
 }

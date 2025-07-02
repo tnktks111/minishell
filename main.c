@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 16:41:09 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/02 13:53:41 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 15:44:17 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #define GREEN "\1\033[32m\2"
 #define RESET "\1\033[0m\2"
 
-volatile sig_atomic_t	g_rcv_heredoc_sig;
+volatile sig_atomic_t	g_rcv_sigint;
 
 static int	init_minishell(t_env *env, char **envp)
 {
@@ -50,6 +50,12 @@ static void	line_executer(char *input, t_env *env)
 	}
 }
 
+static void interactive_sigint_rcver(t_env *env)
+{
+	env->prev_exit_status = 130;
+	g_rcv_sigint = 0;
+}
+
 int	main(int ac, char **av, char **envp)
 {
 	char	*input;
@@ -57,12 +63,14 @@ int	main(int ac, char **av, char **envp)
 
 	(void)ac;
 	(void)av;
-	g_rcv_heredoc_sig = 0;
+	g_rcv_sigint = 0;
 	if (init_minishell(&env, envp) == EXIT_FAILURE)
 		return (1);
 	while (1)
 	{
 		input = readline(GREEN "minishell$ " RESET);
+		if (g_rcv_sigint == 1)
+			interactive_sigint_rcver(&env);
 		if (input == NULL)
 			break ;
 		if (input[0])

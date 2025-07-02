@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/02 13:35:40 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 14:08:39 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ unsigned char	exec_ast(t_tree_node *root, t_env *env)
 	while (curr->kind == NODE_AND || curr->kind == NODE_OR)
 		curr = curr->left;
 	prev_exit_status = exec_pipeline(curr, env);
+	if (prev_exit_status == -1)
+		return (env->prev_exit_status = 130, free_for_exec_ast(env));
 	curr = curr->parent;
 	while (curr->kind == NODE_AND || curr->kind == NODE_OR)
 	{
@@ -46,6 +48,11 @@ int	exec_pipeline(t_tree_node *node_pipeline, t_env *env)
 	env->envp = decode_table(env, false);
 	env->envp_is_malloced = true;
 	node_pipeline->data.pipeline.exit_status = exec_pl_cmds(node_pipeline, env);
+	if (node_pipeline->data.pipeline.exit_status == -1)
+	{
+		env->prev_exit_status = 130;
+		return (-1);
+	}
 	if (node_pipeline->data.pipeline.have_bang == true)
 	{
 		env->prev_exit_status = !node_pipeline->data.pipeline.exit_status;

@@ -6,18 +6,19 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 00:27:44 by sguruge           #+#    #+#             */
-/*   Updated: 2025/07/02 10:44:27 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 15:39:15 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void	setup_interactive_signal_handlers(void);
-void	setup_here_doc_signal_handlers(void);
+void		setup_interactive_signal_handlers(void);
+void		setup_here_doc_signal_handlers(void);
 
 static void	interactive_sigint_handler(int signo)
 {
 	(void)signo;
+	g_rcv_sigint = 1;
 	ft_putchar_fd('\n', STDERR_FILENO);
 	rl_on_new_line();
 	rl_replace_line("", 0);
@@ -27,7 +28,7 @@ static void	interactive_sigint_handler(int signo)
 static void	here_doc_sigint_handler(int signo)
 {
 	(void)signo;
-	g_rcv_heredoc_sig = 1;
+	g_rcv_sigint = 1;
 	return ;
 }
 

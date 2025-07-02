@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/08 09:49:58 by sguruge           #+#    #+#             */
-/*   Updated: 2025/07/02 11:03:10 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 15:41:04 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,15 @@
 # include <sys/wait.h>
 # include <unistd.h>
 # include "../libft/inc/libft.h"
-# include "get_next_line.h"
 # include "struct.h"
 # include "error.h"
 # include "exec.h"
+# include "free.h"
+# include "get_next_line.h"
 # include "parser.h"
 # include "wildcard.h"
-# include "free.h"
 
-extern volatile sig_atomic_t	g_rcv_heredoc_sig;
+extern volatile sig_atomic_t	g_rcv_sigint;
 
 void							print_tree(t_tree_node *node);
 void							print_tokens(t_token *head);
