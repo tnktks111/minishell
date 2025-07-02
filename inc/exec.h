@@ -84,7 +84,7 @@ int				sh_mktmpfd(char **file_path_ptr);
 int				file_iswdir(char *filepath);
 void			unlink_tmpfile(t_tree_node *node_simplecmd);
 void			unlink_pl_tmpfiles(t_tree_node *node_pipeline);
-void 			unlink_all_tmpfiles(t_tree_node *node);
+void			unlink_all_tmpfiles(t_tree_node *node);
 
 /*builtin*/
 /*cd*/

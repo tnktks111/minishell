@@ -12,12 +12,12 @@
 
 #include "../inc/minishell.h"
 
-bool	is_builtin(char *s);
-void	find_builtin(t_tree_node *cmd_node, t_env *env);
+bool		is_builtin(char *s);
+void		find_builtin(t_tree_node *cmd_node, t_env *env);
 /*search "PATH" in env and return prefix table*/
 char		**get_path_prefix(t_env *env);
 static int	try_one_prefix(char *prefix, char **args, t_env *env,
-		int *last_errno);
+				int *last_errno);
 /*loop prefix table and try execve*/
 void		find_path(char **args, t_env *env);
 
@@ -107,7 +107,7 @@ void	find_path(char **args, t_env *env)
 	{
 		free_splitted_data(prefix_table);
 		return ;
-	}	
+	}
 	i = -1;
 	while (prefix_table[++i])
 	{

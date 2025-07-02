@@ -15,6 +15,9 @@
 
 # define _POSIX_C_SOURCE 200809L
 
+#define GREEN "\1\033[32m\2"
+#define RESET "\1\033[0m\2"
+
 # include <dirent.h>
 # include <fcntl.h>
 # include <limits.h>

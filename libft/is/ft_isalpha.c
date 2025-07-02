@@ -26,12 +26,3 @@ int	ft_isalpha(int c)
 {
 	return (ft_islower(c) || ft_isupper(c));
 }
-
-// int main()
-// {
-// 	for (int i = 0; i < 1000; i++)
-// 	{
-// 		if (!(isalpha(i)) != !(ft_isalpha(i)))
-// 			printf("Fail at %d\n%d,%d\n", i, isalpha(i), ft_isalpha(i));
-// 	}
-// }

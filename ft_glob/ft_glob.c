@@ -120,25 +120,3 @@ int	ft_glob(char *pattern, t_list **res_head)
 	*res_head = info.res;
 	return (info.total_cnt);
 }
-
-// int main(void)
-// {
-//     t_list  *head = NULL;
-//     t_list  *current;
-//     int     match_count;
-
-//     match_count = ft_glob("*", &head);
-
-//     printf("Total matches: %d\n", match_count);
-//     printf("--- Matched Paths ---\n");
-
-//     current = head;
-//     while (current)
-//     {
-//         printf("%s\n", (char *)current->content);
-//         current = current->next;
-//     }
-//     printf("---------------------\n");
-
-//     return (0);
-// }

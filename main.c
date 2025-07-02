@@ -12,10 +12,6 @@
 
 #include "inc/minishell.h"
 
-#define RED "\1\033[31m\2"
-#define GREEN "\1\033[32m\2"
-#define RESET "\1\033[0m\2"
-
 volatile sig_atomic_t	g_rcv_sigint;
 
 static int	init_minishell(t_env *env, char **envp)
@@ -50,7 +46,7 @@ static void	line_executer(char *input, t_env *env)
 	}
 }
 
-static void interactive_sigint_rcver(t_env *env)
+static void	interactive_sigint_rcver(t_env *env)
 {
 	env->prev_exit_status = 130;
 	g_rcv_sigint = 0;

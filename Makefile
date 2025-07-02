@@ -13,10 +13,8 @@
 NAME = minishell
 
 CC = cc
-# CC = gcc
 
 CFLAGS = -Wall -Wextra -Werror
-# CFLAGS = -g -fsanitize=address
 
 RM = rm -f
 MKDIR = mkdir -p
@@ -113,7 +111,7 @@ $(LIBFT_A):
 
 $(OBJS_DIR)/%.o: %.c
 		$(MKDIR) $(dir $@)
-		$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
+		$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 		$(RM) -r $(OBJS_DIR)
@@ -126,4 +124,6 @@ fclean:
 
 re:		fclean all
 
-.PHONY: all clean fclean re
+bonus: 	all
+
+.PHONY: all clean fclean re bonus

@@ -94,30 +94,3 @@ char	**ft_split_isspace(char const *s)
 	}
 	return (words[len] = NULL, words);
 }
-
-// int	main(void)
-// {
-// 	char ***tests = (char ***)malloc(sizeof(char **) * 9);
-// 	char **words = ft_split_isspace("aaaaaaa");
-// 	printf("%s\n", words[0]);
-// 	tests[0] = ft_split_isspace("Hello World");
-// 	tests[1] = ft_split_isspace("Hello                             World");
-// 	tests[2] = ft_split_isspace("       Leading and trailing spaces       ");
-// 	tests[3] = ft_split_isspace("            ");
-// 	tests[4] = ft_split_isspace("JustOneWord");
-// 	tests[5] = ft_split_isspace("");
-// 	tests[6] = ft_split_isspace(NULL);
-// 	tests[7] = ft_split_isspace("Split\0by\0null");
-// 	int j;
-// 	for (int i = 0; i < 6; i++)
-// 	{
-// 		printf("-test%d-\n", i);
-// 		j = 0;
-// 		while (tests[i][j])
-// 		{
-// 			printf("%d: %s\n", j + 1, tests[i][j]);
-// 			j++;
-// 		}
-// 		printf("\n");
-// 	}
-// }

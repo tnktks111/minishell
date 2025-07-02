@@ -16,13 +16,3 @@ int	ft_isalnum(int c)
 {
 	return ((ft_isalpha(c) || ft_isdigit(c)));
 }
-
-// // compile with ft_isalpha.c and ft_isalnum.c
-// int main()
-// {
-// 	for (int i = 0; i < 255; i++)
-// 	{
-// 		if (!(isalnum(i)) != !(ft_isalnum(i)))
-// 			printf("Fail at %d", i);
-// 	}
-// }

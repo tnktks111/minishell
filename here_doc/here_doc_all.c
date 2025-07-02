@@ -16,7 +16,7 @@ static void	unlink_for_error(t_tree_node *node);
 static int	prepare_pl_here_docs(t_tree_node *node_pipeline, t_env *env);
 static void	unlink_prev_pls(t_tree_node *node_andor);
 int			prepare_entire_here_docs(t_tree_node *root, t_env *env);
-void 		unlink_all_tmpfiles(t_tree_node *node);
+void		unlink_all_tmpfiles(t_tree_node *node);
 
 static void	unlink_for_error(t_tree_node *node)
 {
@@ -85,7 +85,7 @@ int	prepare_entire_here_docs(t_tree_node *root, t_env *env)
 	return (EXIT_SUCCESS);
 }
 
-void unlink_all_tmpfiles(t_tree_node *node)
+void	unlink_all_tmpfiles(t_tree_node *node)
 {
 	if (!node)
 		return ;
