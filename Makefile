@@ -6,7 +6,7 @@
 #    By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/06/17 19:06:08 by ttanaka           #+#    #+#              #
-#    Updated: 2025/07/02 11:03:44 by ttanaka          ###   ########.fr        #
+#    Updated: 2025/07/02 11:21:17 by ttanaka          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -89,7 +89,7 @@ SRCS = 	builtin/builtin_cd.c \
 		ft_glob/matching.c \
 		get_next_line/get_next_line.c \
 		get_next_line/get_next_line_utils.c \
-		tmp/file_expander.c \
+		tmp/print_debug.c \
 		main.c 
 
 OBJS = $(patsubst %.c,$(OBJS_DIR)/%.o,$(SRCS))
