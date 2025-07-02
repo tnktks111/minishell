@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sguruge <sguruge@student.42tokyo.jp>       #+#  +:+       +#+        */
+/*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-07-02 00:36:59 by sguruge           #+#    #+#             */
-/*   Updated: 2025-07-02 00:36:59 by sguruge          ###   ########.fr       */
+/*   Created: 2025/07/02 00:36:59 by sguruge           #+#    #+#             */
+/*   Updated: 2025/07/02 10:29:51 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,15 +105,16 @@ void			find_path_failure_handler(char *cmd_name, int errnum,
 void			execve_failure_handler(char *cmd_name, int errnum, t_env *env);
 
 /*here_doc*/
-int				prepare_here_doc(t_tree_node *node, t_env *env, int *pipefd);
-char			*here_doc_handler(t_redirect *redirect, t_env *env,
-					int *pipefd);
+int				prepare_pl_here_docs(t_tree_node *node_pipeline, t_env *env);
+int				prepare_here_doc(t_tree_node *node, t_env *env);
+char			*here_doc_handler(t_redirect *redirect, t_env *env);
 char			*here_doc_expander(char *s, t_env *env);
 bool			have_quotes(char *limiter);
 int				remove_quotes(t_redirect *redirect);
 void			unlink_tmpfile(t_tree_node *node_simplecmd);
 void			unlink_all_tmpfiles(t_tree_node *node_pipeline);
 int				file_iswdir(char *filepath);
+void			n_wait(size_t n);
 
 void			perror_string(char *str);
 void			ft_puterr_general(char *cmd_name, char *errmsg);
