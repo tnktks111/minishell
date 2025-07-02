@@ -23,10 +23,6 @@
 size_t			cnt_depth(char *pattern);
 t_wildcard_type	judge_chr_type(char c, bool *in_squote, bool *in_dquote);
 t_wildcard_type	*create_type_arr(char *pattern);
-int				*_is_wildcard_splitter(size_t window_size, size_t len,
-					t_wildcard_type *type_array_start);
-char			*_ptn_sec_splitter(char *pattern_start, size_t window_size,
-					size_t len, t_wildcard_type *type_array_start);
 int				_init_pattern_and_wc_secs(t_wildcard_type *type_array,
 					t_matching_info *info, char *pattern);
 int				_init_matching_info(t_matching_info *info, char *pattern);
