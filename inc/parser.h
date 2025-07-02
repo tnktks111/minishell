@@ -1,19 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   guruge_minishell.h                                 :+:      :+:    :+:   */
+/*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
+/*   By: sguruge <sguruge@student.42tokyo.jp>       #+#  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/18 09:00:44 by sguruge           #+#    #+#             */
-/*   Updated: 2025/07/01 22:16:15 by ttanaka          ###   ########.fr       */
+/*   Created: 2025-07-02 00:19:08 by sguruge           #+#    #+#             */
+/*   Updated: 2025-07-02 00:19:08 by sguruge          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GURUGE_MINISHELL_H
-# define GURUGE_MINISHELL_H
+#ifndef PARSER_H
+# define PARSER_H
 
-// # include "ft_glob/wildcard.h"
 # include "libft/inc/libft.h"
 # include "struct.h"
 # include <dirent.h>
@@ -74,10 +73,6 @@ t_tree_node		*create_pipeline_node(t_tree_node *left, t_token *head,
 					t_token *tail);
 t_tree_node		*create_pipeline_tree(t_token *head, t_token *tail,
 					t_create_tree *tree);
-//
-t_token			*get_redir_tail(t_token *head, t_token *tail);
-t_tree_node		*create_subshell_node(t_tree_node *cur_root, t_token *head,
-					t_token *tail);
 // redirect cmd
 char			**extract_args(t_token *head, t_token *tail);
 t_redirect_kind	get_redirect_kind(t_token *redirect_token);
@@ -89,6 +84,9 @@ t_redirect		*extract_redirects(t_token *head, t_token *tail);
 t_tree_node		*create_simple_cmd_node(t_token *head, t_token *tail);
 //()()
 t_tree_node		*parse_paren(t_create_tree *tree, t_token *head, t_token *tail);
+t_token			*get_redir_tail(t_token *head, t_token *tail);
+t_tree_node		*create_subshell_node(t_tree_node *cur_root, t_token *head,
+					t_token *tail);
 //
 t_tree_node		*create_tree(t_token *head, t_token *tail);
 // utils
@@ -110,9 +108,6 @@ t_tree_node		*parser(t_token *head, t_env *env);
 
 /* expander */
 
-size_t			_cnt_tmp_dir_file(void);
-char			**gen_tmp_dir_file_array(void);
-
 int				ft_ismatch(char *str, char *pattern, int *is_wildcard,
 					size_t pat_len);
 void			init_dp_table(int *dp, int *is_wildcard, size_t size);
@@ -130,7 +125,8 @@ char			*expand_individual_variable(char *str, t_env *env);
 char			*expand_every_variable(char *str, t_env *env);
 char			**expand_cmd_variable(char **cmd_args, t_env *env);
 
-int				handle_file_wildcard(t_redirect *cur, char *temp, char *redir_file);
+int				handle_file_wildcard(t_redirect *cur, char *temp,
+					char *redir_file);
 bool			check_wildcard_expand(char *str);
 char			**expand_cmd_wildcard(char **cmd_args);
 void			init_wildcard_array(int *src, char *str, size_t str_len);
@@ -146,6 +142,7 @@ int				expand_ast(t_tree_node *node, t_env *env);
 
 int				ft_glob(char *pattern, t_list **res_head);
 void			free_list(t_list *list);
+void			free_redirects(t_redirect *redirect);
 void			free_tree_node(t_tree_node *node);
 void			free_all(t_env *env);
 

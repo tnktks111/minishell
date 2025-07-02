@@ -19,86 +19,42 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-typedef enum e_wildcard_type
-{
-	PLAIN_CHR,
-	EXPANDABLE_ASTERISK,
-	QUOTE,
-	SLASH
-}							t_wildcard_type;
-
-typedef struct s_wildcard_tree
-{
-	char					*path;
-	char					*filename;
-	struct s_wildcard_tree	*parent;
-	struct s_wildcard_tree	**children;
-}							t_wc_tree;
-
-typedef struct s_split_vars
-{
-	size_t					l;
-	size_t					r;
-	size_t					idx;
-	size_t					cnt;
-}							t_split_vars;
-
-typedef struct s_matching_info
-{
-	t_list					*res;
-	int						**is_wildcard;
-	char					**ptn_secs;
-	size_t					depth;
-	int						total_cnt;
-	size_t					head_slash_cnt;
-	bool					contain_tail_slash;
-	bool					is_abs_path;
-	bool					error_happened;
-}							t_matching_info;
-
 // init.c
-size_t						cnt_depth(char *pattern);
-t_wildcard_type				judge_chr_type(char c, bool *in_squote,
-								bool *in_dquote);
-t_wildcard_type				*create_type_arr(char *pattern);
-int							*_is_wildcard_splitter(size_t window_size,
-								size_t len, t_wildcard_type *type_array_start);
-char						*_ptn_sec_splitter(char *pattern_start,
-								size_t window_size, size_t len,
-								t_wildcard_type *type_array_start);
-int							_init_pattern_and_wc_secs(t_wildcard_type *type_array,
-								t_matching_info *info, char *pattern);
-int							_init_matching_info(t_matching_info *info,
-								char *pattern);
+size_t			cnt_depth(char *pattern);
+t_wildcard_type	judge_chr_type(char c, bool *in_squote, bool *in_dquote);
+t_wildcard_type	*create_type_arr(char *pattern);
+int				*_is_wildcard_splitter(size_t window_size, size_t len,
+					t_wildcard_type *type_array_start);
+char			*_ptn_sec_splitter(char *pattern_start, size_t window_size,
+					size_t len, t_wildcard_type *type_array_start);
+int				_init_pattern_and_wc_secs(t_wildcard_type *type_array,
+					t_matching_info *info, char *pattern);
+int				_init_matching_info(t_matching_info *info, char *pattern);
 
 // matching.c
-void						ft_int_array_swap(int *a, int *b, size_t size);
-void						ft_init_int_array(int *arr, size_t size);
-void						init_dp_table(int *dp, int *is_wildcard,
-								size_t size);
-int							ft_ismatch(char *str, char *pattern,
-								int *is_wildcard, size_t pat_len);
+void			ft_int_array_swap(int *a, int *b, size_t size);
+void			ft_init_int_array(int *arr, size_t size);
+void			init_dp_table(int *dp, int *is_wildcard, size_t size);
+int				ft_ismatch(char *str, char *pattern, int *is_wildcard,
+					size_t pat_len);
 
 // utils.c
-bool						judge_contain_tail_slash(char *pattern);
-char						*join_path(char *dir, char *file);
-t_wc_tree					*_create_wildcard_tree_node(char *parent_path,
-								char *filename);
-size_t						_cnt_base_dir_file(char *base_dir,
-								bool show_hidden_files);
-t_wc_tree					**_gen_base_dir_file_array(char *base_dir,
-								bool show_hidden_files);
+bool			judge_contain_tail_slash(char *pattern);
+char			*join_path(char *dir, char *file);
+t_wc_tree		*_create_wildcard_tree_node(char *parent_path, char *filename);
+size_t			_cnt_base_dir_file(char *base_dir, bool show_hidden_files);
+t_wc_tree		**_gen_base_dir_file_array(char *base_dir,
+					bool show_hidden_files);
 
 // utils2.c
-bool						is_hidden(char *filename);
-char						*create_n_slashes(size_t n);
-size_t						cnt_head_slashes(char *pattern);
-bool						is_valid_pattern_chr(t_wildcard_type type);
+bool			is_hidden(char *filename);
+char			*create_n_slashes(size_t n);
+size_t			cnt_head_slashes(char *pattern);
+bool			is_valid_pattern_chr(t_wildcard_type type);
 
-char						*adjust_result(char *result, bool is_abs_path,
-								bool contain_tail_slash);
+char			*adjust_result(char *result, bool is_abs_path,
+					bool contain_tail_slash);
 
-void						destroy_entire_tree_recursive(t_wc_tree *root);
+void			destroy_entire_tree_recursive(t_wc_tree *root);
 
-void						**free_wc_allocated_data(t_wc_tree **datas,
-								size_t allocated);
+void			**free_wc_allocated_data(t_wc_tree **datas, size_t allocated);

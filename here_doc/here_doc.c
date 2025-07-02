@@ -61,7 +61,7 @@ static int	_exec_hd_child(t_redirect *redirect, int fd, bool is_expandable,
 	while (s)
 	{
 		if (g_rcv_heredoc_sig == 1)
-			break;
+			break ;
 		if (ft_gnl_strcmp(s, redirect->filename) == 0)
 			return (free(s), close(fd), 0);
 		if (is_expandable)
@@ -73,7 +73,7 @@ static int	_exec_hd_child(t_redirect *redirect, int fd, bool is_expandable,
 		s = get_next_line("> ", STDIN_FILENO);
 	}
 	close(fd);
-	if (g_rcv_heredoc_sig == 1)	
+	if (g_rcv_heredoc_sig == 1)
 		return (free(s), g_rcv_heredoc_sig = 0, 130);
 	ft_putchar_fd('\n', STDERR_FILENO);
 	error_heredoc_delimited_by_eof(redirect->filename);

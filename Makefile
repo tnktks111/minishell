@@ -51,7 +51,8 @@ SRCS = 	builtin/builtin_cd.c \
 		exec/exec_builtin.c \
 		exec/exec_solo_command.c \
 		exec/exec_redirection.c \
-		exec/signal.c \
+		exec/exec_signal.c \
+		exec/exec_signal_utils1.c \
 		expander/expander.c \
 		expander/expander_wildcard.c \
 		expander/expander_wildcard_utils1.c \

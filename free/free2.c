@@ -54,3 +54,19 @@ void	**free_wc_allocated_data(t_wc_tree **datas, size_t allocated)
 	free(datas);
 	return (NULL);
 }
+
+void	free_tree_node(t_tree_node *node)
+{
+	if (!node)
+		return ;
+	free_tree_node(node->left);
+	free_tree_node(node->right);
+	if (node->kind == NODE_SIMPLE_COMMAND || node->kind == NODE_SUBSHELL)
+	{
+		if (node->data.command.redirects)
+			free_redirects(node->data.command.redirects);
+		if (node->data.command.args)
+			free_splited_data(node->data.command.args);
+	}
+	free(node);
+}
