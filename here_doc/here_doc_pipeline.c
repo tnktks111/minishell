@@ -6,11 +6,24 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 10:07:11 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/02 10:11:51 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 11:55:41 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+
+static void unlink_for_error(t_tree_node *node)
+{
+	t_tree_node *curr;
+	
+	curr = node;
+	while (curr->kind == NODE_PIPE)
+	{
+		unlink_tmpfile(curr->right);
+		curr = curr->left;
+	}
+	unlink_tmpfile(curr);
+}
 
 int	prepare_pl_here_docs(t_tree_node *node_pipeline, t_env *env)
 {
@@ -25,7 +38,10 @@ int	prepare_pl_here_docs(t_tree_node *node_pipeline, t_env *env)
 	while (curr->kind == NODE_PIPE)
 	{
 		if (prepare_here_doc(curr, env) == EXIT_FAILURE)
+		{
+			unlink_for_error(curr);
 			return (EXIT_FAILURE);
+		}
 		curr = curr->parent;
 	}
 	return (EXIT_SUCCESS);

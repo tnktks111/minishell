@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:35:53 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/02 10:07:02 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 11:46:24 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,9 @@ int	prepare_here_doc(t_tree_node *node, t_env *env)
 {
 	t_redirect	*curr;
 	char		*tmpfile;
+	int			res;
 
+	res = EXIT_SUCCESS;
 	if (node->right)
 		curr = node->right->data.command.redirects;
 	else
@@ -33,15 +35,18 @@ int	prepare_here_doc(t_tree_node *node, t_env *env)
 	{
 		if (curr->kind == REDIR_HEREDOC)
 		{
-			tmpfile = here_doc_handler(curr, env);
-			if (!tmpfile)
-				return (EXIT_FAILURE);
+			tmpfile = NULL;
+			if (res == EXIT_SUCCESS)
+			{
+				tmpfile = here_doc_handler(curr, env);
+				res = (!tmpfile);
+			}
 			free(curr->filename);
 			curr->filename = tmpfile;
 		}
 		curr = curr->next;
 	}
-	return (EXIT_SUCCESS);
+	return (res);
 }
 
 static char	*_here_doc_fork_error_handler(t_env *env)

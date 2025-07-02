@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:30:34 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/02 10:36:52 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 11:58:41 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,10 @@ void	unlink_tmpfile(t_tree_node *node_simplecmd)
 	while (curr)
 	{
 		if (curr->kind == REDIR_HEREDOC)
-			unlink(curr->filename);
+		{
+			if (curr->filename != NULL)
+				unlink(curr->filename);
+		}
 		curr = curr->next;
 	}
 }

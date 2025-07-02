@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/10 21:15:54 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/02 11:24:43 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 11:54:14 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int	exec_pl_cmds(t_tree_node *node_pipeline, t_env *env)
 		curr = curr->left;
 	cnt = exec_loop(curr, &fd, env, &pid);
 	if (cnt == EXIT_FAILURE || cnt == HEREDOC_SIGINT)
-		return (cnt);
+		return (unlink_all_tmpfiles(node_pipeline), cnt);
 	setup_parent_wait_signal_handlers();
 	waitpid(pid, &status, 0);
 	n_wait(cnt - 1);
