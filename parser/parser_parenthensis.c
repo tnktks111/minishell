@@ -47,7 +47,8 @@ t_redirect	*extract_subshell_redirects(t_token *head, t_token *tail)
 	cur = head;
 	while (cur && cur->status != RIGHT_PAREN)
 		cur = cur->next;
-	while (cur && cur != tail->next && cur->status != PIPE)
+	while (cur && cur != tail->next && cur->status != PIPE
+		&& cur->status != NORMAL)
 	{
 		if (cur->status == REDIRECT)
 		{
