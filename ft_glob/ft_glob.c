@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 11:51:25 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/29 16:55:05 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 11:24:43 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ int	ft_glob(char *pattern, t_list **res_head)
 		return (-1);
 	_build_wc_tree_recursive(root, 0, &info);
 	destroy_entire_tree_recursive(root);
-	free_splited_data(info.ptn_secs);
+	free_splitted_data(info.ptn_secs);
 	free_int_matrix(info.is_wildcard);
 	*res_head = info.res;
 	return (info.total_cnt);

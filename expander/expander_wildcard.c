@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander_wildcard.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sguruge <sguruge@student.42tokyo.jp>       #+#  +:+       +#+        */
+/*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025-06-24 05:15:08 by sguruge           #+#    #+#             */
-/*   Updated: 2025-06-24 05:15:08 by sguruge          ###   ########.fr       */
+/*   Created: 2025/06/24 05:15:08 by sguruge           #+#    #+#             */
+/*   Updated: 2025/07/02 11:24:43 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,11 +100,11 @@ char	*expand_filename_wildcard(char *filename, bool *error)
 	if (count_args(result) > 2)
 	{
 		free(expanded);
-		free_splited_data(filename_args);
-		free_splited_data(result);
+		free_splitted_data(filename_args);
+		free_splitted_data(result);
 		return (*error = true, NULL);
 	}
-	free_splited_data(filename_args);
-	free_splited_data(result);
+	free_splitted_data(filename_args);
+	free_splitted_data(result);
 	return (expanded);
 }

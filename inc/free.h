@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 11:00:46 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/02 11:02:54 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 11:24:43 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ unsigned char	free_for_exec_ast(t_env *env);
 void			free_token(t_token *head, t_token *tail);
 void			free_redirects(t_redirect *redirect);
 void			free_list(t_list *list);
-void			free_splited_data(char **data);
+void			free_splitted_data(char **data);
 char			**free_allocated_data(char **datas, size_t allocated);
 
 void			free_tree_node(t_tree_node *node);

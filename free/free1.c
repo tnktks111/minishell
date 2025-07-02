@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 15:03:28 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/02 11:02:15 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 11:24:43 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	free_token(t_token *head, t_token *tail);
 void	free_redirects(t_redirect *redirect);
 void	free_list(t_list *list);
-void	free_splited_data(char **data);
+void	free_splitted_data(char **data);
 char	**free_allocated_data(char **datas, size_t allocated);
 
 void	free_token(t_token *head, t_token *tail)
@@ -60,7 +60,7 @@ void	free_list(t_list *list)
 	}
 }
 
-void	free_splited_data(char **data)
+void	free_splitted_data(char **data)
 {
 	size_t	i;
 

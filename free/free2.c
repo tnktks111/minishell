@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 16:29:27 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/02 11:01:42 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 11:24:43 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void	free_tree_node(t_tree_node *node)
 		if (node->data.command.redirects)
 			free_redirects(node->data.command.redirects);
 		if (node->data.command.args)
-			free_splited_data(node->data.command.args);
+			free_splitted_data(node->data.command.args);
 	}
 	free(node);
 }

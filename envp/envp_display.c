@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 12:01:43 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 16:16:27 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 11:24:43 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,6 @@ void	display_env(t_env *env, bool print_declare)
 			ft_putstr_fd("declare -x ", STDOUT_FILENO);
 		ft_putendl_fd(env_tab[i++], STDOUT_FILENO);
 	}
-	free_splited_data(env_tab);
+	free_splitted_data(env_tab);
 	return ;
 }

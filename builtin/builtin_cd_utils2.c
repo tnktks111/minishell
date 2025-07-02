@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 15:43:37 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 17:18:27 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 11:24:43 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,5 +70,5 @@ void	free_for_find_cdpath(char *s1, char *s2, char **splitted_data)
 {
 	free(s1);
 	free(s2);
-	free_splited_data(splitted_data);
+	free_splitted_data(splitted_data);
 }

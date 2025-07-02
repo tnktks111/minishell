@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 14:33:04 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/30 10:40:35 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 11:24:43 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,6 @@ char	*make_absolute(char *path)
 	unused_section_init(path_sections, unused_section);
 	len = cnt_abs_path_len(path_sections, unused_section);
 	abs_path = path_compresser(path_sections, unused_section, len);
-	free_splited_data(path_sections);
+	free_splitted_data(path_sections);
 	return (abs_path);
 }

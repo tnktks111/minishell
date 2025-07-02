@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 20:32:15 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/06/28 16:38:05 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 11:24:43 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	free_table(t_env *env)
 		}
 	}
 	if (env->envp_is_malloced == true)
-		free_splited_data(env->envp);
+		free_splitted_data(env->envp);
 }
 
 t_env_node	*_create_env_node(char *key, char *val, t_env *env)

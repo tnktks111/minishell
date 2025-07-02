@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 20:57:22 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/01 17:40:59 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 11:24:43 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	expand_cmd_args(t_tree_node *simple_cmd_node, t_env *env)
 	wildcard_expanded = NULL;
 	cmd_args = simple_cmd_node->data.command.args;
 	variable_expanded = expand_cmd_variable(cmd_args, env);
-	free_splited_data(cmd_args);
+	free_splitted_data(cmd_args);
 	simple_cmd_node->data.command.args = variable_expanded;
 	if (variable_expanded[0])
 	{
@@ -91,7 +91,7 @@ void	expand_cmd_args(t_tree_node *simple_cmd_node, t_env *env)
 	}
 	else
 		simple_cmd_node->data.command.args = ft_calloc(1, sizeof(char *));
-	free_splited_data(variable_expanded);
+	free_splitted_data(variable_expanded);
 }
 
 int	expander(t_tree_node *simple_cmd_node, t_env *env)

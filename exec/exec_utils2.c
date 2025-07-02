@@ -6,7 +6,7 @@
 /*   By: ttanaka <ttanaka@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 19:39:36 by ttanaka           #+#    #+#             */
-/*   Updated: 2025/07/02 11:06:56 by ttanaka          ###   ########.fr       */
+/*   Updated: 2025/07/02 11:24:43 by ttanaka          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	find_path(char **args, t_env *env)
 	l_errno = ENOENT;
 	if (!prefix_table[0])
 	{
-		free_splited_data(prefix_table);
+		free_splitted_data(prefix_table);
 		ft_puterr_general(args[0], strerror(ENOENT));
 		free_for_exit(env, 126);
 	}
@@ -93,11 +93,11 @@ void	find_path(char **args, t_env *env)
 	{
 		if (try_one_prefix(prefix_table[i], args, env, &l_errno) == 1)
 		{
-			free_splited_data(prefix_table);
+			free_splitted_data(prefix_table);
 			free_for_exit(env, EXIT_FAILURE);
 		}
 	}
-	free_splited_data(prefix_table);
+	free_splitted_data(prefix_table);
 	find_path_failure_handler(args[0], l_errno, env);
 }
 
